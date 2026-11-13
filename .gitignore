@@ -1,0 +1,4 @@
+# ignore editor temp / backups
+*.swp
+*~
+*.bak

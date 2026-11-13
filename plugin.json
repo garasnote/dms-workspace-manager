@@ -1,0 +1,24 @@
+{
+    "id": "workspaceManager",
+    "name": "Niri Workspace Manager",
+    "description": "Create, name and switch niri workspaces; launch app templates and snapshot the current session for later.",
+    "version": "1.0.0",
+    "author": "jposo",
+    "type": "composite",
+    "capabilities": ["daemon", "dash-tab", "launcher", "niri-workspaces"],
+    "icon": "dashboard_customize",
+    "components": {
+        "daemon": "./WorkspaceDaemon.qml",
+        "dash": "./WorkspaceDash.qml",
+        "launcher": "./WorkspaceLauncher.qml"
+    },
+    "settings": "./WorkspaceSettings.qml",
+    "trigger": "ws",
+    "dash": {
+        "icon": "dashboard_customize",
+        "title": "Workspaces"
+    },
+    "requires_dms": ">=1.7.0",
+    "dependencies": ["niri"],
+    "permissions": ["settings_read", "settings_write", "process"]
+}

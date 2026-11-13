@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "name": "Dev Work",
+      "workspace": "Dev Work",
+      "notes": "Zed + GitComet + Hermes agent shell.",
+      "apps": ["zeditor", "gitcomet", "hermes-agent"]
+    },
+    {
+      "name": "Gaming",
+      "workspace": "Gaming",
+      "notes": "Launch games through MangoHUD (mangohud %command%). Start focusgame to suspend background apps (install separately).",
+      "apps": ["lutris", "prismlauncher", "vesktop"]
+    },
+    {
+      "name": "Chill",
+      "workspace": "Chill",
+      "notes": "Browser + chat + music.",
+      "apps": ["/opt/zen-browser-bin/zen-bin", "vesktop", "sonora"]
+    }
+  ]
+}
