@@ -2,6 +2,28 @@
   "version": 1,
   "templates": [
     {
+      "name": "Dev Work",
+      "emoji": "💻",
+      "workspace": "Dev Work",
+      "notes": "Zed + GitComet + a terminal running the Hermes agent (hermes-agent needs a TTY, so it is wrapped in ghostty -e).",
+      "apps": [
+        {
+          "name": "gitcomet",
+          "cmd": "gitcomet",
+          "appId": "gitcomet"
+        },
+        {
+          "name": "zeditor",
+          "cmd": "zeditor"
+        },
+        {
+          "name": "Hermes agent",
+          "cmd": "ghostty -e hermes-agent",
+          "appId": "com.mitchellh.ghostty"
+        }
+      ]
+    },
+    {
       "name": "JobApp",
       "emoji": "🧳",
       "workspace": "JobApp",
@@ -25,26 +47,25 @@
       ]
     },
     {
-      "name": "Dev Work",
-      "emoji": "💻",
-      "workspace": "Dev Work",
-      "notes": "",
+      "name": "Gaming",
+      "emoji": "🎮",
+      "workspace": "Gaming",
+      "notes": "Launch games through MangoHUD (mangohud %command%). Start focusgame to suspend background apps (install separately).",
       "apps": [
-        {
-          "name": "gitcomet",
-          "cmd": "gitcomet",
-          "appId": "gitcomet"
-        },
-        {
-          "name": "dev.zed.Zed",
-          "cmd": "/usr/lib/zed/zed-editor zed-cli:///tmp/.tmpL8pXTR/socket",
-          "appId": "dev.zed.Zed"
-        },
-        {
-          "name": "gcr-prompter",
-          "cmd": "/usr/lib/gcr-prompter",
-          "appId": "gcr-prompter"
-        }
+        "lutris",
+        "prismlauncher",
+        "vesktop"
+      ]
+    },
+    {
+      "name": "Chill",
+      "emoji": "🧊",
+      "workspace": "Chill",
+      "notes": "Browser + chat + music.",
+      "apps": [
+        "/opt/zen-browser-bin/zen-bin",
+        "vesktop",
+        "sonora"
       ]
     }
   ]

@@ -612,13 +612,15 @@ PluginComponent {
             return;
         }
 
-        if (findWorkspaceByName(arg)) {
-            focusByName(arg, done);
+        // A template wins over a plain workspace of the same name: activating an
+        // environment should also reopen whatever it is missing.
+        if (findTemplateByName(arg)) {
+            launchTemplate(arg, false, done);
             return;
         }
 
-        if (findTemplateByName(arg)) {
-            launchTemplate(arg, false, done);
+        if (findWorkspaceByName(arg)) {
+            focusByName(arg, done);
             return;
         }
 
