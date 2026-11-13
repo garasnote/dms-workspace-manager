@@ -35,10 +35,11 @@ DashTabComponent {
     property string liveDraftId: ""
     property string liveDraftName: ""
     property string liveDraftEmoji: ""
+    property string pendingDelete: ""
 
     readonly property string statusText: statusObj ? (statusObj.message || "") : ""
 
-    implicitHeight: DashMetrics.defaultFittedTabHeight
+    implicitHeight: DashMetrics.tabDefaultHeight
 
     // ------------------------------------------------------------- state sync
 
@@ -201,6 +202,23 @@ DashTabComponent {
     function captureLive(w) {
         send("previewWorkspace", String(w.id), w.name || ("Workspace " + w.idx), w.emoji || "");
         pane = 0;
+    }
+
+    // Two-step delete: the trash button arms, a second click removes.
+    function requestDelete(name) {
+        if (pendingDelete === name) {
+            pendingDelete = "";
+            send("deleteTemplate", name);
+            return;
+        }
+        pendingDelete = name;
+        deleteArmTimer.restart();
+    }
+
+    Timer {
+        id: deleteArmTimer
+        interval: 4000
+        onTriggered: root.pendingDelete = ""
     }
 
     // -------------------------------------------------------------------- view
@@ -489,13 +507,14 @@ DashTabComponent {
                                 }
 
                                 DActionButton {
+                                    readonly property bool armed: root.pendingDelete === templateCard.modelData.name
                                     buttonSize: Theme.iconButtonSize
-                                    iconName: "delete"
+                                    iconName: armed ? "delete_forever" : "delete"
                                     iconSize: Theme.iconSizeSmall
                                     iconColor: Theme.error
-                                    backgroundColor: Theme.surfaceContainerHighest
-                                    Accessible.name: "Delete template"
-                                    onClicked: root.send("deleteTemplate", templateCard.modelData.name)
+                                    backgroundColor: armed ? Theme.errorContainer : Theme.surfaceContainerHighest
+                                    Accessible.name: armed ? "Click again to delete" : "Delete template"
+                                    onClicked: root.requestDelete(templateCard.modelData.name)
                                 }
                             }
 
