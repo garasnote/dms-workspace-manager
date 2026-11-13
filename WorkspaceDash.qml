@@ -445,6 +445,14 @@ DashTabComponent {
                     font.weight: Font.Bold
                 }
 
+                StyledText {
+                    width: parent.width
+                    text: "Deleting a template never closes a workspace — close workspaces from the Live pane."
+                    color: Theme.onSurfaceVariant
+                    font.pixelSize: Theme.fontSizeSmall
+                    wrapMode: Text.Wrap
+                }
+
                 Repeater {
                     model: root.templateList
 
