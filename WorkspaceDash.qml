@@ -119,7 +119,7 @@ DashTabComponent {
                     anchors.left: parent.left
                     anchors.leftMargin: Theme.spacingM
                     anchors.verticalCenter: parent.verticalCenter
-                    text: modelData.name + (modelData.workspace ? "  →  " + modelData.workspace : "")
+                    text: (modelData.emoji ? modelData.emoji + " " : "") + modelData.name + (modelData.workspace ? "  →  " + modelData.workspace : "")
                     color: Theme.surfaceText
                     font.pixelSize: Theme.fontSizeMedium
                 }

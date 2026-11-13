@@ -33,6 +33,9 @@ Every action is a `dms ipc call workspaceManager <fn> [arg]`:
 | `activate "<name-or-index>"` | Focus a named workspace by name, an unnamed one by index (`"2"`), or launch the template with that name. |
 | `launch "<template>"` | Launch every app in a template, on its named workspace (if any). |
 | `record "<name>"` | Snapshot the focused workspace's windows into a template (saved to `templates.json`). |
+| `name "<name>" "<emoji>"` | Rename the focused workspace and (optionally) give it an emoji glyph in the bar indicator. |
+| `syncIcons` | Re-apply every template's emoji to its workspace name in the bar indicator. |
+| `showNames "true\|false"` | Toggle the "Names" option on the bar's workspace switcher so names show next to the emoji. |
 | `focusId "<id>"` | Focus a workspace by its niri id (used by the dash; unambiguous across outputs). |
 | `reload` | Re-read `templates.json`. |
 | `list` | Print workspaces and templates. |
@@ -69,6 +72,7 @@ Templates live in `templates.json` next to this README:
   "templates": [
     {
       "name": "Dev Work",
+      "emoji": "💻",
       "workspace": "Dev Work",
       "notes": "Zed + GitComet + Hermes agent shell.",
       "apps": ["zeditor", "gitcomet", "hermes-agent"]
@@ -80,6 +84,8 @@ Templates live in `templates.json` next to this README:
 Fields:
 
 - `name` — unique template name (used by `activate`/`launch`/`record`).
+- `emoji` — optional glyph shown in the bar's workspace indicator for this
+  workspace (stored via DMS's workspace-name icon map).
 - `workspace` — optional niri workspace name. When set and the
   "Launch templates into their named workspace" setting is on, launching
   creates/focuses that workspace first. Leave empty to launch on the current
@@ -92,6 +98,24 @@ Fields:
 
 Edit the file, then run `dms ipc call workspaceManager reload` (or press
 Reload in Settings).
+
+## Workspace indicator (top-left)
+
+When a template's workspace is created, the plugin:
+
+1. names the niri workspace (e.g. `Dev Work`), and
+2. registers its emoji as the workspace-name icon, so the bar indicator shows
+   the glyph (💻 / 🎮 / 🧊).
+
+To also show the name next to the emoji, the plugin can toggle the bar's
+workspace switcher "Names" option:
+
+```bash
+dms ipc call workspaceManager showNames true
+```
+
+Run `syncIcons` any time you edit `templates.json` to (re)apply emojis, and
+use `name` to rename/emoji the focused workspace on the fly.
 
 ## Recording a session
 

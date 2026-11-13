@@ -56,8 +56,9 @@ Item {
 
         for (const t of templateList) {
             const count = (t.apps || []).length;
+            const emoji = t.emoji ? t.emoji + " " : "";
             items.push({
-                name: "Launch: " + t.name,
+                name: emoji + "Launch: " + t.name,
                 icon: "material:rocket_launch",
                 comment: count + " apps" + (t.workspace ? " · " + t.workspace : " · current workspace"),
                 action: JSON.stringify({ t: "launch", name: t.name }),

@@ -40,18 +40,21 @@ PluginComponent {
         return [
             {
                 name: "Dev Work",
+                emoji: "💻",
                 workspace: "Dev Work",
                 notes: "Zed + GitComet + Hermes agent shell.",
                 apps: ["zeditor", "gitcomet", "hermes-agent"]
             },
             {
                 name: "Gaming",
+                emoji: "🎮",
                 workspace: "Gaming",
                 notes: "Launch games through MangoHUD (mangohud %command%). Start focusgame to suspend background apps (install separately).",
                 apps: ["lutris", "prismlauncher", "vesktop"]
             },
             {
                 name: "Chill",
+                emoji: "🧊",
                 workspace: "Chill",
                 notes: "Browser + chat + music.",
                 apps: ["/opt/zen-browser-bin/zen-bin", "vesktop", "sonora"]
@@ -120,6 +123,42 @@ PluginComponent {
             return { name: app, cmd: app };
         const cmd = (app && (app.cmd || app.name)) || "";
         return { name: (app && app.name) || cmd, cmd: cmd };
+    }
+
+    // DMS's bar workspace indicator reads SettingsData.getWorkspaceNameIcon(name)
+    // and renders { type: "text", value: emoji } as a glyph. Name stays clean so
+    // the indicator can show the emoji next to the name without doubling it.
+    function applyWorkspaceIcon(name, emoji) {
+        if (!name || !emoji)
+            return;
+        if (typeof SettingsData === "undefined" || !SettingsData.setWorkspaceNameIcon)
+            return;
+        SettingsData.setWorkspaceNameIcon(name, { type: "text", value: emoji });
+    }
+
+    // Toggle the "Names" option on every workspace switcher widget so the bar
+    // shows the niri workspace name (e.g. "Dev Work") next to the emoji glyph.
+    function setWorkspaceNamesShown(on) {
+        if (typeof SettingsData === "undefined" || !SettingsData.updateBarWidget)
+            return 0;
+        const bars = SettingsData.barConfigs || [];
+        let n = 0;
+        for (const bar of bars) {
+            if (!bar || !bar.id)
+                continue;
+            for (const sectionId of ["left", "center", "right"]) {
+                const list = bar[sectionId + "Widgets"] || [];
+                for (let i = 0; i < list.length; i++) {
+                    const entry = list[i];
+                    const id = typeof entry === "string" ? entry : (entry.id || entry.widgetId || "");
+                    if (id !== "workspaceSwitcher")
+                        continue;
+                    SettingsData.updateBarWidget(bar.id, sectionId, i, { showWorkspaceName: on });
+                    n++;
+                }
+            }
+        }
+        return n;
     }
 
     // ------------------------------------------------------------- niri reads
@@ -194,7 +233,7 @@ PluginComponent {
     // Create a new workspace on the focused output by focusing the always-empty
     // workspace at the end and, optionally, naming it. niri keeps a fresh empty
     // workspace at the bottom, so this behaves like "new workspace".
-    function createWorkspace(name, done) {
+    function createWorkspace(name, emoji, done) {
         const idx = lastWorkspaceIdx();
         focusByIndex(idx, (ok, err) => {
             if (!ok) {
@@ -209,9 +248,27 @@ PluginComponent {
                 return;
             }
             niri(["action", "set-workspace-name", trimmed], (out2, code2) => {
+                if (code2 === 0)
+                    applyWorkspaceIcon(trimmed, emoji);
                 if (done)
                     done(code2 === 0, code2 === 0 ? "" : (out2 || "set-workspace-name failed"));
             });
+        });
+    }
+
+    // Rename the focused workspace and (optionally) give it an emoji glyph.
+    function renameFocused(name, emoji, done) {
+        const trimmed = (name || "").trim();
+        if (!trimmed) {
+            if (done)
+                done(false, "name is required");
+            return;
+        }
+        niri(["action", "set-workspace-name", trimmed], (out, code) => {
+            if (code === 0)
+                applyWorkspaceIcon(trimmed, emoji);
+            if (done)
+                done(code === 0, code === 0 ? "" : (out || "set-workspace-name failed"));
         });
     }
 
@@ -256,6 +313,7 @@ PluginComponent {
         const apps = (t.apps || []).map(normalizeApp).filter(a => a.cmd);
         const useNamed = (pluginData && pluginData.launchIntoNamedWorkspace) !== false;
         const wsName = (t.workspace || "").trim();
+        const emoji = t.emoji || "";
 
         function afterFocus() {
             let i = 0;
@@ -273,10 +331,12 @@ PluginComponent {
         }
 
         if (useNamed && wsName) {
+            if (emoji)
+                applyWorkspaceIcon(wsName, emoji);
             if (findWorkspaceByName(wsName))
                 focusByName(wsName, afterFocus);
             else
-                createWorkspace(wsName, afterFocus);
+                createWorkspace(wsName, emoji, afterFocus);
         } else {
             afterFocus();
         }
@@ -371,7 +431,8 @@ PluginComponent {
         for (const t of templates) {
             const count = (t.apps || []).length;
             const ws = t.workspace ? `  [workspace: ${t.workspace}]` : "";
-            lines.push(` - ${t.name}${ws}  (${count} apps)`);
+            const emoji = t.emoji ? `${t.emoji} ` : "";
+            lines.push(` - ${emoji}${t.name}${ws}  (${count} apps)`);
         }
         return lines.join("\n");
     }
@@ -382,7 +443,7 @@ PluginComponent {
         target: "workspaceManager"
 
         function create(name: string): string {
-            root.createWorkspace(name, (ok, err) => {
+            root.createWorkspace(name, "", (ok, err) => {
                 if (!ok) {
                     if (ToastService)
                         ToastService.showError("Workspace Manager", err || "Failed to create workspace");
@@ -419,6 +480,34 @@ PluginComponent {
                     ToastService.showError("Workspace Manager", err || "Record failed");
             });
             return "QUEUED";
+        }
+
+        function name(workspaceName: string, emoji: string): string {
+            root.renameFocused(workspaceName, emoji, (ok, err) => {
+                if (!ok && ToastService)
+                    ToastService.showError("Workspace Manager", err || "Rename failed");
+            });
+            return "QUEUED";
+        }
+
+        function syncIcons(): string {
+            let n = 0;
+            for (const t of root.templates) {
+                const wsName = (t.workspace || t.name || "").trim();
+                if (wsName && t.emoji) {
+                    root.applyWorkspaceIcon(wsName, t.emoji);
+                    n++;
+                }
+            }
+            return "OK: applied " + n + " workspace icons";
+        }
+
+        function showNames(on: string): string {
+            const enable = on === "true" || on === "1" || on === "on";
+            const n = root.setWorkspaceNamesShown(enable);
+            if (n <= 0)
+                return "ERROR: no workspace switcher widget found";
+            return "OK: showWorkspaceName=" + (enable ? "true" : "false") + " on " + n + " widget(s)";
         }
 
         function reload(): string {
