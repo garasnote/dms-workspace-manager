@@ -184,6 +184,12 @@ PluginComponent {
         return (data && data.type === "text") ? (data.value || "") : "";
     }
 
+    function forgetWorkspaceIcon(name) {
+        if (!name || typeof SettingsData === "undefined" || !SettingsData.removeWorkspaceNameIcon)
+            return;
+        SettingsData.removeWorkspaceNameIcon(name);
+    }
+
     // Toggle the "Names" option on every workspace switcher widget so the bar
     // shows the niri workspace name next to the emoji glyph.
     function setWorkspaceNamesShown(on) {
@@ -599,6 +605,66 @@ PluginComponent {
         });
     }
 
+    // Close a live workspace. `closeWindows` also closes every window it holds;
+    // either way the name is unset so the workspace goes away once it is empty.
+    // Unnamed workspaces only need their windows closed.
+    function closeWorkspace(id, closeWindows, done) {
+        const numericId = parseInt(id, 10);
+        if (isNaN(numericId)) {
+            if (done)
+                done(false, "invalid workspace id");
+            return;
+        }
+
+        const ws = (NiriService.allWorkspaces || []).find(w => String(w.id) === String(numericId));
+        if (!ws) {
+            if (done)
+                done(false, `workspace ${numericId} not found`);
+            return;
+        }
+
+        const wsName = ws.name || "";
+        const wins = (NiriService.windows || []).filter(w => String(w.workspace_id) === String(numericId));
+
+        if (closeWindows) {
+            for (const win of wins) {
+                if (!niriAction("CloseWindow", { id: win.id }))
+                    niri(["action", "close-window", "--id", String(win.id)], () => {});
+            }
+        }
+
+        const label = wsName || `workspace #${ws.idx}`;
+        const finish = () => {
+            if (wsName)
+                forgetWorkspaceIcon(wsName);
+            const summary = closeWindows
+                ? `Closed ${label} and ${wins.length} window${wins.length === 1 ? "" : "s"}`
+                : `Removed the name ${label}${wins.length ? " (windows kept)" : ""}`;
+            publishStatus(summary);
+            publishLive();
+            if (done)
+                done(true, summary);
+        };
+
+        if (!wsName) {
+            finish();
+            return;
+        }
+
+        if (niriAction("UnsetWorkspaceName", { reference: { Id: numericId } })) {
+            finish();
+            return;
+        }
+        niri(["action", "unset-workspace-name", "--workspace", String(numericId)], (out, code) => {
+            if (code === 0) {
+                finish();
+                return;
+            }
+            if (done)
+                done(false, out || "unset-workspace-name failed");
+        });
+    }
+
     function activate(name, done) {
         const arg = String(name || "").trim();
         if (!arg) {
@@ -962,9 +1028,28 @@ PluginComponent {
             return "QUEUED";
         }
 
+        // closeWindows: "true" closes every window on the workspace, "false"
+        // only removes the workspace name (empty windows stay put).
+        function closeWorkspace(id: string, closeWindows: string): string {
+            const withWindows = closeWindows === "true" || closeWindows === "1" || closeWindows === "on";
+            root.closeWorkspace(id, withWindows, (ok, err) => {
+                if (!ok && ToastService)
+                    ToastService.showError("Workspace Manager", err || "Close failed");
+            });
+            return "QUEUED";
+        }
+
         function refreshLive(): string {
             root.publishLive();
             return "OK";
+        }
+
+        function forgetIcon(workspaceName: string): string {
+            if (!workspaceName)
+                return "ERROR: name is required";
+            root.forgetWorkspaceIcon(workspaceName);
+            root.publishLive();
+            return "OK: forgot icon for " + workspaceName;
         }
 
         function syncIcons(): string {

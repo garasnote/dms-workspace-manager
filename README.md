@@ -56,6 +56,15 @@ overwrites that template.
 - Every workspace with its emoji, output, index, window count and app list.
 - **Focus**, **Save…** (sends that workspace to the capture card) and
   **Rename** (sets the niri workspace name + emoji glyph in the bar indicator).
+- **Close** asks first, then offers:
+  - **Close + N windows** — closes every window on it and removes the name, so
+    the workspace is gone;
+  - **Unname only** — drops the name and leaves the windows where they are
+    (useful to demote a named workspace back to a normal one);
+  - **Cancel**.
+
+Deleting a row in the **Templates** pane only deletes the *template*; it never
+closes a workspace. Workspaces are closed from the **Live** pane.
 
 ## Workspace indicator (top-left)
 
@@ -92,6 +101,8 @@ dms ipc call workspaceManager <fn> [args]
 | `record "<name>"` | Alias for `previewRecord` (capture without saving). |
 | `name "<name>" "<emoji>"` | Rename the focused workspace + set its glyph. |
 | `rename "<id>" "<name>" "<emoji>"` | Rename a workspace by id. |
+| `closeWorkspace "<id>" "true\|false"` | Close a workspace: `true` also closes its windows, `false` only removes the name (windows stay). Named and empty workspaces disappear; unnamed ones only go when their windows are closed. |
+| `forgetIcon "<name>"` | Remove a workspace-name icon (glyph) entry. |
 | `focusId "<id>"` | Focus a workspace by niri id. |
 | `syncIcons` | Re-apply template emoji to their workspaces. |
 | `showNames "true\|false"` | Toggle the bar widget's workspace "Names" option. |
@@ -171,6 +182,19 @@ rest are left alone. `alwaysLaunch` apps always count as missing.
 
 Not perfect for apps that share a binary (two Ghostty windows both look like
 `ghostty`), which is what the bolt toggle is for.
+
+## Closing workspaces
+
+niri has no "delete workspace" verb. A workspace disappears when it is empty and
+unnamed, so closing one means:
+
+1. close its windows (optional), then
+2. unset its name (`unset-workspace-name`), which also clears its emoji entry.
+
+`dms ipc call workspaceManager closeWorkspace <id> true`
+
+Named workspaces persist while empty, which is why `Gaming` and `Chill` stay in
+the bar with no windows; close them from the Live pane when you want them gone.
 
 ## Capturing a session
 

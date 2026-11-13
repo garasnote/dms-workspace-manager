@@ -36,6 +36,7 @@ DashTabComponent {
     property string liveDraftName: ""
     property string liveDraftEmoji: ""
     property string pendingDelete: ""
+    property string closeArmId: ""
 
     readonly property string statusText: statusObj ? (statusObj.message || "") : ""
 
@@ -219,6 +220,24 @@ DashTabComponent {
         id: deleteArmTimer
         interval: 4000
         onTriggered: root.pendingDelete = ""
+    }
+
+    // Closing a live workspace is destructive, so it always goes through a
+    // confirm strip: close everything, or only forget the name.
+    function armClose(id) {
+        closeArmId = (closeArmId === String(id)) ? "" : String(id);
+        closeTimer.restart();
+    }
+
+    function closeWorkspace(w, withWindows) {
+        closeArmId = "";
+        send("closeWorkspace", String(w.id), withWindows ? "true" : "false");
+    }
+
+    Timer {
+        id: closeTimer
+        interval: 8000
+        onTriggered: root.closeArmId = ""
     }
 
     // -------------------------------------------------------------------- view
@@ -683,6 +702,8 @@ DashTabComponent {
                         required property var modelData
 
                         readonly property bool editing: root.liveDraftId === String(modelData.id)
+                        readonly property bool closing: root.closeArmId === String(modelData.id)
+                        readonly property bool named: (modelData.name || "") !== ""
 
                         width: content.width
                         height: liveColumn.implicitHeight + Theme.spacingM * 2
@@ -748,7 +769,7 @@ DashTabComponent {
                                 }
 
                                 DButton {
-                                    text: liveCard.editing ? "Close" : "Rename"
+                                    text: liveCard.editing ? "Done" : "Rename"
                                     iconName: "edit"
                                     variant: "tonal"
                                     onClicked: {
@@ -757,6 +778,57 @@ DashTabComponent {
                                         else
                                             root.startLiveEdit(liveCard.modelData);
                                     }
+                                }
+
+                                DButton {
+                                    text: "Close"
+                                    iconName: "delete"
+                                    variant: liveCard.closing ? "filled" : "tonal"
+                                    enabled: liveCard.named || liveCard.modelData.windowCount > 0
+                                    Accessible.name: "Close this workspace"
+                                    onClicked: root.armClose(liveCard.modelData.id)
+                                }
+                            }
+
+                            // close confirm strip
+                            Row {
+                                width: parent.width
+                                spacing: Theme.spacingS
+                                visible: liveCard.closing
+
+                                StyledText {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: Math.max(120, parent.width * 0.42)
+                                    text: "Close " + (liveCard.modelData.name || ("workspace #" + liveCard.modelData.idx)) + "?"
+                                    color: Theme.surfaceText
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    wrapMode: Text.Wrap
+                                }
+
+                                DButton {
+                                    height: 36
+                                    text: liveCard.modelData.windowCount > 0
+                                          ? "Close + " + liveCard.modelData.windowCount + " windows"
+                                          : "Remove workspace"
+                                    iconName: "close"
+                                    variant: "filled"
+                                    onClicked: root.closeWorkspace(liveCard.modelData, liveCard.modelData.windowCount > 0)
+                                }
+
+                                DButton {
+                                    height: 36
+                                    text: "Unname only"
+                                    iconName: "label_off"
+                                    variant: "tonal"
+                                    visible: liveCard.named && liveCard.modelData.windowCount > 0
+                                    onClicked: root.closeWorkspace(liveCard.modelData, false)
+                                }
+
+                                DButton {
+                                    height: 36
+                                    text: "Cancel"
+                                    variant: "text"
+                                    onClicked: root.closeArmId = ""
                                 }
                             }
 

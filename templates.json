@@ -67,6 +67,19 @@
         "vesktop",
         "sonora"
       ]
+    },
+    {
+      "name": "btop",
+      "emoji": "",
+      "workspace": "Workspace 1",
+      "notes": "",
+      "apps": [
+        {
+          "name": "com.mitchellh.ghostty",
+          "cmd": "/usr/bin/ghostty -e sh -c systemd-run --user --scope 'btop'",
+          "appId": "com.mitchellh.ghostty"
+        }
+      ]
     }
   ]
 }
