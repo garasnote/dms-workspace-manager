@@ -11,15 +11,13 @@ import qs.Modules.Plugins
 // action is reachable from a terminal or a niri keybind:
 //
 //   dms ipc call workspaceManager create "Dev Work"
-//   dms ipc call workspaceManager activate "Gaming"
-//   dms ipc call workspaceManager launch "Chill"
+//   dms ipc call workspaceManager launch "Gaming"
 //   dms ipc call workspaceManager record "My Snapshot"
-//   dms ipc call workspaceManager reload
 //   dms ipc call workspaceManager list
 //
-// Reads are done through NiriService (live, reactive). Writes go through
-// `niri msg` so ordering between "focus workspace" and "spawn" is guaranteed
-// by niri itself.
+// Structured results (live workspaces, record preview, per-template diffs) are
+// published as plugin global vars so the dash surface can render them
+// reactively without parsing IPC stdout.
 
 PluginComponent {
     id: root
@@ -27,11 +25,30 @@ PluginComponent {
     property var popoutService: null
     property var templates: []
     property string templatesPath: ""
+    property var _cmdlineCache: ({})
+
+    // Refresh cooldown so a burst of niri window events is one publish.
+    Timer {
+        id: liveRefreshTimer
+        interval: 250
+        onTriggered: root.publishLive()
+    }
+
+    Connections {
+        target: NiriService
+        function onWindowsChanged() {
+            liveRefreshTimer.restart();
+        }
+        function onWorkspacesChanged() {
+            liveRefreshTimer.restart();
+        }
+    }
 
     Component.onCompleted: {
         templatesPath = (pluginService && pluginService.getPluginPath)
             ? pluginService.getPluginPath(pluginId) + "/templates.json" : "";
         loadTemplates();
+        publishLive();
     }
 
     // ---------------------------------------------------------------- templates
@@ -43,7 +60,18 @@ PluginComponent {
                 emoji: "💻",
                 workspace: "Dev Work",
                 notes: "Zed + GitComet + Hermes agent shell.",
-                apps: ["zeditor", "gitcomet", "hermes-agent"]
+                apps: [
+                    "zeditor",
+                    "gitcomet",
+                    { name: "Hermes agent", cmd: "ghostty -e hermes-agent", appId: "com.mitchellh.ghostty", alwaysLaunch: true }
+                ]
+            },
+            {
+                name: "JobApp",
+                emoji: "🧳",
+                workspace: "JobApp",
+                notes: "Job applications: browser + password manager + agent shell.",
+                apps: ["zen-browser", "keepassxc"]
             },
             {
                 name: "Gaming",
@@ -114,20 +142,33 @@ PluginComponent {
         pluginService.setGlobalVar(pluginId, "templatesVersion", Date.now());
     }
 
+    function publishStatus(message) {
+        if (!pluginService)
+            return;
+        pluginService.setGlobalVar(pluginId, "status", { message: String(message || ""), at: Date.now() });
+    }
+
     function findTemplateByName(name) {
         return (templates || []).find(t => t.name === name) || null;
     }
 
     function normalizeApp(app) {
         if (typeof app === "string")
-            return { name: app, cmd: app };
-        const cmd = (app && (app.cmd || app.name)) || "";
-        return { name: (app && app.name) || cmd, cmd: cmd };
+            return { name: app, cmd: app, appId: "", alwaysLaunch: false };
+        return {
+            name: (app && app.name) || (app && app.cmd) || "",
+            cmd: (app && (app.cmd || app.name)) || "",
+            appId: (app && app.appId) || "",
+            alwaysLaunch: !!(app && app.alwaysLaunch)
+        };
+    }
+
+    function templateApps(t) {
+        return (t.apps || []).map(normalizeApp).filter(a => a.cmd);
     }
 
     // DMS's bar workspace indicator reads SettingsData.getWorkspaceNameIcon(name)
-    // and renders { type: "text", value: emoji } as a glyph. Name stays clean so
-    // the indicator can show the emoji next to the name without doubling it.
+    // and renders { type: "text", value: emoji } as a glyph.
     function applyWorkspaceIcon(name, emoji) {
         if (!name || !emoji)
             return;
@@ -136,8 +177,15 @@ PluginComponent {
         SettingsData.setWorkspaceNameIcon(name, { type: "text", value: emoji });
     }
 
+    function emojiForWorkspace(name) {
+        if (!name || typeof SettingsData === "undefined" || !SettingsData.getWorkspaceNameIcon)
+            return "";
+        const data = SettingsData.getWorkspaceNameIcon(name);
+        return (data && data.type === "text") ? (data.value || "") : "";
+    }
+
     // Toggle the "Names" option on every workspace switcher widget so the bar
-    // shows the niri workspace name (e.g. "Dev Work") next to the emoji glyph.
+    // shows the niri workspace name next to the emoji glyph.
     function setWorkspaceNamesShown(on) {
         if (typeof SettingsData === "undefined" || !SettingsData.updateBarWidget)
             return 0;
@@ -163,6 +211,10 @@ PluginComponent {
 
     // ------------------------------------------------------------- niri reads
 
+    function focusedWorkspaceRecord() {
+        return (NiriService.allWorkspaces || []).find(ws => ws.is_focused === true) || null;
+    }
+
     function focusedOutputWorkspaces() {
         const src = (NiriService.currentOutputWorkspaces && NiriService.currentOutputWorkspaces.length)
             ? NiriService.currentOutputWorkspaces
@@ -184,7 +236,7 @@ PluginComponent {
     }
 
     function currentWorkspaceName() {
-        const focused = (NiriService.allWorkspaces || []).find(ws => ws.is_focused === true);
+        const focused = focusedWorkspaceRecord();
         return focused ? (focused.name || "") : "";
     }
 
@@ -197,22 +249,44 @@ PluginComponent {
         });
     }
 
-    function focusByIndex(idx, done) {
-        niri(["action", "focus-workspace", String(idx)], (out, code) => {
-            if (done)
-                done(code === 0, code === 0 ? "" : (out || "focus-workspace failed"));
-        });
+    // Actions go over NiriService's single request socket when it is connected,
+    // so "focus workspace" and the spawns that follow are processed in order by
+    // niri. The `niri msg` fallback opens a fresh connection per call, so there
+    // the caller awaits each step instead.
+    function niriAction(action, fields) {
+        if (typeof NiriService === "undefined" || !NiriService.send)
+            return false;
+        const req = { Action: {} };
+        req.Action[action] = fields || {};
+        return NiriService.send(req);
     }
 
     function focusByName(name, done) {
+        if (niriAction("FocusWorkspace", { reference: { Name: name } })) {
+            if (done)
+                done(true, "");
+            return;
+        }
         niri(["action", "focus-workspace", name], (out, code) => {
             if (done)
                 done(code === 0, code === 0 ? "" : (out || "focus-workspace failed"));
         });
     }
 
+    function focusByIndex(idx, done) {
+        if (niriAction("FocusWorkspace", { reference: { Index: idx } })) {
+            if (done)
+                done(true, "");
+            return;
+        }
+        niri(["action", "focus-workspace", String(idx)], (out, code) => {
+            if (done)
+                done(code === 0, code === 0 ? "" : (out || "focus-workspace failed"));
+        });
+    }
+
     // `niri msg action focus-workspace` only accepts index or name, so focusing
-    // by workspace id goes through NiriService's request socket instead.
+    // by workspace id goes through NiriService directly.
     function focusById(id, done) {
         const ok = NiriService.switchToWorkspace(id);
         if (done)
@@ -228,11 +302,240 @@ PluginComponent {
         });
     }
 
+    function spawnApps(apps, done) {
+        let i = 0;
+        function next() {
+            if (i >= apps.length) {
+                if (done)
+                    done();
+                return;
+            }
+            const cmd = apps[i].cmd;
+            i++;
+            if (niriAction("SpawnSh", { command: cmd })) {
+                next();
+                return;
+            }
+            spawnShell(cmd, next);
+        }
+        next();
+    }
+
+    // ------------------------------------------------------------- app matching
+
+    function basename(path) {
+        const s = String(path || "").trim();
+        const i = s.lastIndexOf("/");
+        return i >= 0 ? s.substring(i + 1) : s;
+    }
+
+    function lastSegment(id) {
+        const s = String(id || "").trim();
+        const i = s.lastIndexOf(".");
+        return i >= 0 ? s.substring(i + 1) : s;
+    }
+
+    function pushKey(keys, value) {
+        const k = String(value || "").toLowerCase().trim();
+        if (k && keys.indexOf(k) < 0)
+            keys.push(k);
+    }
+
+    // Keys a template app can be recognised by: its app id (and its last dotted
+    // segment) plus the basename of every token in the command, so wrappers
+    // like `mangohud game` still match a running `game` process.
+    function keysForApp(app) {
+        const a = normalizeApp(app);
+        const keys = [];
+        if (a.appId) {
+            pushKey(keys, a.appId);
+            pushKey(keys, lastSegment(a.appId));
+        }
+        const tokens = String(a.cmd || "").trim().split(/\s+/);
+        for (const tok of tokens)
+            pushKey(keys, basename(tok.replace(/^["']|["']$/g, "")));
+        return keys;
+    }
+
+    function keysForWindow(w) {
+        const keys = [];
+        if (w.app_id) {
+            pushKey(keys, w.app_id);
+            pushKey(keys, lastSegment(w.app_id));
+        }
+        if (w._cmdline) {
+            const tokens = String(w._cmdline).trim().split(/\s+/);
+            for (const tok of tokens.slice(0, 4))
+                pushKey(keys, basename(tok));
+        }
+        return keys;
+    }
+
+    // Prefix/substring matching with a length floor, so "zen" matches
+    // "/opt/zen-browser-bin/zen-bin" without matching single letters.
+    function keysMatch(a, b) {
+        if (!a || !b)
+            return false;
+        if (a === b)
+            return true;
+        if (a.length < 3 || b.length < 3)
+            return false;
+        return a.indexOf(b) >= 0 || b.indexOf(a) >= 0;
+    }
+
+    function appMatchesWindow(keys, wkeys) {
+        for (const k of keys) {
+            for (const wk of wkeys) {
+                if (keysMatch(k, wk))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    // Windows on one workspace, enriched with their process cmdline (cached by
+    // pid, since /proc reads are a fork per window).
+    function collectWindows(workspaceId, done) {
+        const wins = (NiriService.windows || []).filter(w => String(w.workspace_id) === String(workspaceId));
+        if (wins.length === 0) {
+            done([]);
+            return;
+        }
+
+        const out = [];
+        let remaining = wins.length;
+
+        wins.forEach(w => {
+            const pid = w.pid;
+            const cached = pid ? _cmdlineCache[pid] : null;
+            if (cached !== undefined && cached !== null) {
+                out.push(Object.assign({}, w, { _cmdline: cached }));
+                remaining--;
+                if (remaining === 0)
+                    done(out);
+                return;
+            }
+            readCmdline(pid, (cmdline) => {
+                out.push(Object.assign({}, w, { _cmdline: cmdline }));
+                remaining--;
+                if (remaining === 0)
+                    done(out);
+            });
+        });
+    }
+
+    function readCmdline(pid, done) {
+        if (!pid) {
+            done("");
+            return;
+        }
+        Proc.runCommand(
+            "wsm.cmdline." + pid,
+            ["sh", "-c", "tr '\\0' ' ' < /proc/" + pid + "/cmdline 2>/dev/null"],
+            (out, code) => {
+                const value = code === 0 ? out.trim() : "";
+                _cmdlineCache[pid] = value;
+                done(value);
+            }
+        );
+    }
+
+    function windowLabel(w) {
+        return w.app_id || w.title || ("window-" + w.id);
+    }
+
+    // --------------------------------------------------------------- diff logic
+
+    // What a template expects vs what is actually open on its workspace.
+    function computeDiff(t, done) {
+        const apps = templateApps(t);
+        const wsName = (t.workspace || "").trim();
+        const ws = wsName ? findWorkspaceByName(wsName) : focusedWorkspaceRecord();
+
+        if (!ws) {
+            done({
+                workspace: wsName,
+                exists: false,
+                present: [],
+                missing: apps,
+                forceMissing: apps.filter(a => a.alwaysLaunch)
+            });
+            return;
+        }
+
+        collectWindows(ws.id, (wins) => {
+            const used = [];
+            const present = [];
+            const missing = [];
+
+            for (const app of apps) {
+                if (app.alwaysLaunch) {
+                    missing.push(app);
+                    continue;
+                }
+                const keys = keysForApp(app);
+                const hit = wins.find(w => used.indexOf(w.id) < 0 && appMatchesWindow(keys, keysForWindow(w)));
+                if (hit) {
+                    used.push(hit.id);
+                    present.push(app);
+                } else {
+                    missing.push(app);
+                }
+            }
+
+            done({
+                workspace: ws.name || wsName,
+                workspaceId: ws.id,
+                exists: true,
+                present: present,
+                missing: missing,
+                forceMissing: missing.filter(a => a.alwaysLaunch)
+            });
+        });
+    }
+
+    function diffSummary(diff) {
+        if (!diff)
+            return "";
+        const missing = (diff.missing || []).map(a => a.name).join(", ");
+        const present = (diff.present || []).map(a => a.name).join(", ");
+        let text = "";
+        if (diff.missing && diff.missing.length)
+            text += "opening " + diff.missing.length + ": " + missing;
+        if (diff.present && diff.present.length)
+            text += (text ? " | " : "") + "already open: " + present;
+        return text || "nothing to do";
+    }
+
+    // Publishes a per-template diff map for the manager UI.
+    function publishDiffs() {
+        const list = templates.slice();
+        const out = {};
+        let i = 0;
+
+        function step() {
+            if (i >= list.length) {
+                if (pluginService)
+                    pluginService.setGlobalVar(pluginId, "diffs", out);
+                return;
+            }
+            const t = list[i];
+            i++;
+            computeDiff(t, (diff) => {
+                out[t.name] = {
+                    missing: (diff.missing || []).map(a => a.name),
+                    present: (diff.present || []).map(a => a.name),
+                    exists: diff.exists,
+                    workspace: diff.workspace
+                };
+                step();
+            });
+        }
+        step();
+    }
+
     // ----------------------------------------------------------------- actions
 
-    // Create a new workspace on the focused output by focusing the always-empty
-    // workspace at the end and, optionally, naming it. niri keeps a fresh empty
-    // workspace at the bottom, so this behaves like "new workspace".
     function createWorkspace(name, emoji, done) {
         const idx = lastWorkspaceIdx();
         focusByIndex(idx, (ok, err) => {
@@ -256,7 +559,6 @@ PluginComponent {
         });
     }
 
-    // Rename the focused workspace and (optionally) give it an emoji glyph.
     function renameFocused(name, emoji, done) {
         const trimmed = (name || "").trim();
         if (!trimmed) {
@@ -272,8 +574,31 @@ PluginComponent {
         });
     }
 
-    // Focus a named workspace by name, focus an unnamed one by index, or fall
-    // back to launching a template with that name.
+    function renameWorkspaceById(id, name, emoji, done) {
+        const trimmed = (name || "").trim();
+        const numericId = parseInt(id, 10);
+        if (!trimmed || isNaN(numericId)) {
+            if (done)
+                done(false, "workspace id and name are required");
+            return;
+        }
+        const sent = niriAction("SetWorkspaceName", { name: trimmed, workspace: { Id: numericId } });
+        const finish = (ok, err) => {
+            if (ok)
+                applyWorkspaceIcon(trimmed, emoji);
+            publishLive();
+            if (done)
+                done(ok, err || "");
+        };
+        if (sent) {
+            finish(true, "");
+            return;
+        }
+        niri(["action", "set-workspace-name", "--workspace", String(numericId), trimmed], (out, code) => {
+            finish(code === 0, code === 0 ? "" : (out || "set-workspace-name failed"));
+        });
+    }
+
     function activate(name, done) {
         const arg = String(name || "").trim();
         if (!arg) {
@@ -293,7 +618,7 @@ PluginComponent {
         }
 
         if (findTemplateByName(arg)) {
-            launchTemplate(arg, done);
+            launchTemplate(arg, false, done);
             return;
         }
 
@@ -301,8 +626,9 @@ PluginComponent {
             done(false, `no workspace or template named "${arg}"`);
     }
 
-    // Launch every app in a template, optionally on its named workspace.
-    function launchTemplate(name, done) {
+    // Launch only what is missing on the target workspace. `force` re-runs every
+    // app in the template (app entries with alwaysLaunch still always run).
+    function launchTemplate(name, force, done) {
         const t = findTemplateByName(name);
         if (!t) {
             if (done)
@@ -310,110 +636,200 @@ PluginComponent {
             return;
         }
 
-        const apps = (t.apps || []).map(normalizeApp).filter(a => a.cmd);
-        const useNamed = (pluginData && pluginData.launchIntoNamedWorkspace) !== false;
+        const all = templateApps(t);
         const wsName = (t.workspace || "").trim();
         const emoji = t.emoji || "";
 
-        function afterFocus() {
-            let i = 0;
-            function next() {
-                if (i >= apps.length) {
-                    if (done)
-                        done(true, "");
-                    return;
-                }
-                const cmd = apps[i].cmd;
-                i++;
-                spawnShell(cmd, next);
-            }
-            next();
-        }
+        computeDiff(t, (diff) => {
+            const apps = force ? all : diff.missing;
+            if (pluginService)
+                pluginService.setGlobalVar(pluginId, "lastDiff", {
+                    template: name,
+                    missing: apps.map(a => a.name),
+                    present: (diff.present || []).map(a => a.name)
+                });
 
-        if (useNamed && wsName) {
+            const spawnNow = () => {
+                spawnApps(apps, () => {
+                    const summary = apps.length === 0
+                        ? `"${name}" is already complete`
+                        : `Opened ${apps.length} app${apps.length === 1 ? "" : "s"} for "${name}"`;
+                    publishStatus(summary);
+                    publishLive();
+                    if (done)
+                        done(true, summary);
+                });
+            };
+
+            if (!wsName) {
+                spawnNow();
+                return;
+            }
+
             if (emoji)
                 applyWorkspaceIcon(wsName, emoji);
-            if (findWorkspaceByName(wsName))
-                focusByName(wsName, afterFocus);
-            else
-                createWorkspace(wsName, emoji, afterFocus);
-        } else {
-            afterFocus();
-        }
-    }
 
-    // Snapshot the focused workspace's windows into a template and persist it.
-    function record(name, done) {
-        const trimmed = (name || "").trim();
-        if (!trimmed) {
-            if (done)
-                done(false, "name is required");
-            return;
-        }
-
-        snapshotFocusedWorkspace((apps) => {
-            const wsName = currentWorkspaceName() || trimmed;
-            const t = { name: trimmed, workspace: wsName, apps: apps };
-
-            const list = templates.slice();
-            const existing = list.findIndex(x => x.name === trimmed);
-            if (existing >= 0)
-                list[existing] = t;
-            else
-                list.push(t);
-
-            writeTemplates(list, (ok) => {
-                if (ok) {
-                    templates = list;
-                    publishTemplates();
-                }
-                if (done)
-                    done(ok, ok ? "" : "failed to save templates.json");
-            });
-        });
-    }
-
-    function snapshotFocusedWorkspace(done) {
-        // NiriService.focusedWorkspaceId can be a number or a string depending
-        // on which niri event populated it, so compare as strings.
-        const focusedId = String(NiriService.focusedWorkspaceId);
-        const wins = (NiriService.windows || []).filter(w => String(w.workspace_id) === focusedId);
-        const apps = [];
-        let remaining = wins.length;
-
-        if (remaining === 0) {
-            done(apps);
-            return;
-        }
-
-        wins.forEach((w) => {
-            readCmdline(w, (cmdline) => {
-                const cmd = cmdline || w.app_id || "";
-                apps.push({
-                    name: w.app_id || w.title || cmd || ("window-" + w.id),
-                    cmd: cmd,
-                    appId: w.app_id || ""
+            if (diff.exists && diff.workspaceId !== undefined) {
+                focusByName(wsName, (ok) => {
+                    if (ok)
+                        spawnNow();
+                    else if (done)
+                        done(false, "could not focus workspace");
                 });
-                remaining--;
-                if (remaining === 0)
-                    done(apps);
+                return;
+            }
+
+            createWorkspace(wsName, emoji, (ok, err) => {
+                if (ok)
+                    spawnNow();
+                else if (done)
+                    done(false, err || "could not create workspace");
             });
         });
     }
 
-    function readCmdline(w, done) {
-        const pid = w.pid;
-        if (!pid) {
-            done("");
+    // ------------------------------------------------------------- live/preview
+
+    function publishLive() {
+        if (!pluginService)
+            return;
+        const out = [];
+        for (const ws of (NiriService.allWorkspaces || [])) {
+            const wins = (NiriService.windows || []).filter(w => String(w.workspace_id) === String(ws.id));
+            out.push({
+                id: ws.id,
+                idx: ws.idx,
+                name: ws.name || "",
+                emoji: emojiForWorkspace(ws.name || ""),
+                output: ws.output || "",
+                focused: !!ws.is_focused,
+                windowCount: wins.length,
+                apps: wins.map(w => ({
+                    id: w.id,
+                    name: windowLabel(w),
+                    appId: w.app_id || "",
+                    title: w.title || "",
+                    pid: w.pid || 0
+                }))
+            });
+        }
+        out.sort((a, b) => {
+            if (a.output !== b.output)
+                return a.output < b.output ? -1 : 1;
+            return (a.idx || 0) - (b.idx || 0);
+        });
+        pluginService.setGlobalVar(pluginId, "live", out);
+        publishDiffs();
+    }
+
+    // Snapshot of a workspace for the record/confirm flow. Without an id it
+    // snapshots the focused workspace.
+    function publishPreview(name, emoji, workspaceId) {
+        const targetId = (workspaceId !== undefined && workspaceId !== null && String(workspaceId) !== "")
+            ? workspaceId
+            : (focusedWorkspaceRecord() ? focusedWorkspaceRecord().id : "");
+        const ws = (NiriService.allWorkspaces || []).find(w => String(w.id) === String(targetId)) || null;
+        const wsLabel = (ws && ws.name) ? ws.name : ((name || "").trim());
+
+        collectWindows(targetId, (wins) => {
+            const apps = wins.map(w => ({
+                name: windowLabel(w),
+                cmd: (w._cmdline && w._cmdline.trim()) ? w._cmdline.trim() : (w.app_id || ""),
+                appId: w.app_id || "",
+                title: w.title || ""
+            })).filter(a => a.cmd);
+            if (pluginService)
+                pluginService.setGlobalVar(pluginId, "preview", {
+                    name: (name || "").trim() || wsLabel,
+                    emoji: emoji || "",
+                    workspace: wsLabel,
+                    workspaceId: ws ? ws.id : -1,
+                    capturedAt: Date.now(),
+                    apps: apps
+                });
+        });
+    }
+
+    function clearPreview() {
+        if (pluginService)
+            pluginService.setGlobalVar(pluginId, "preview", null);
+    }
+
+    // ---------------------------------------------------------- template writes
+
+    function saveTemplateJson(json, done) {
+        let payload = null;
+        try {
+            payload = JSON.parse(json);
+        } catch (e) {
+            if (done)
+                done(false, "invalid JSON payload");
             return;
         }
-        Proc.runCommand(
-            "wsm.cmdline." + pid,
-            ["sh", "-c", "tr '\\0' ' ' < /proc/" + pid + "/cmdline 2>/dev/null"],
-            (out, code) => {
-                done(code === 0 ? out.trim() : "");
+
+        const t = payload && payload.template ? payload.template : payload;
+        const originalName = (payload && payload.originalName) || "";
+        if (!t || !t.name || !String(t.name).trim()) {
+            if (done)
+                done(false, "template name is required");
+            return;
+        }
+
+        const clean = {
+            name: String(t.name).trim(),
+            emoji: t.emoji || "",
+            workspace: (t.workspace || "").trim(),
+            notes: t.notes || "",
+            apps: templateApps(t).map(a => {
+                const out = { name: a.name || a.cmd, cmd: a.cmd };
+                if (a.appId)
+                    out.appId = a.appId;
+                if (a.alwaysLaunch)
+                    out.alwaysLaunch = true;
+                return out;
+            })
+        };
+
+        const list = templates.slice();
+        let idx = originalName ? list.findIndex(x => x.name === originalName) : -1;
+        if (idx < 0)
+            idx = list.findIndex(x => x.name === clean.name);
+        if (idx >= 0)
+            list[idx] = clean;
+        else
+            list.push(clean);
+
+        writeTemplates(list, (ok) => {
+            if (ok) {
+                templates = list;
+                publishTemplates();
+                if (clean.emoji && clean.workspace)
+                    applyWorkspaceIcon(clean.workspace, clean.emoji);
+                publishStatus(`Saved template "${clean.name}"`);
+                publishLive();
             }
-        );
+            if (done)
+                done(ok, ok ? "" : "failed to save templates.json");
+        });
+    }
+
+    function deleteTemplate(name, done) {
+        const list = templates.filter(t => t.name !== name);
+        if (list.length === templates.length) {
+            if (done)
+                done(false, `template not found: ${name}`);
+            return;
+        }
+        writeTemplates(list, (ok) => {
+            if (ok) {
+                templates = list;
+                publishTemplates();
+                publishStatus(`Deleted template "${name}"`);
+                publishLive();
+            }
+            if (done)
+                done(ok, ok ? "" : "failed to save templates.json");
+        });
     }
 
     // ------------------------------------------------------------------- list
@@ -423,8 +839,10 @@ PluginComponent {
         lines.push("Workspaces:");
         for (const ws of (NiriService.allWorkspaces || [])) {
             const marker = ws.is_focused ? "*" : " ";
-            const label = ws.name || ("#" + ws.idx);
-            lines.push(` ${marker} ${label}  (output=${ws.output}, idx=${ws.idx})`);
+            const emoji = emojiForWorkspace(ws.name || "");
+            const label = (emoji ? emoji + " " : "") + (ws.name || ("#" + ws.idx));
+            const wins = (NiriService.windows || []).filter(w => String(w.workspace_id) === String(ws.id));
+            lines.push(` ${marker} ${label}  (output=${ws.output}, idx=${ws.idx}, ${wins.length} windows)`);
         }
         lines.push("");
         lines.push("Templates:");
@@ -450,6 +868,7 @@ PluginComponent {
                 } else if (ToastService) {
                     ToastService.showInfo("Workspace Manager", name && name.trim() ? `Created workspace "${name.trim()}"` : "Created workspace");
                 }
+                root.publishLive();
             });
             return "QUEUED";
         }
@@ -463,21 +882,64 @@ PluginComponent {
         }
 
         function launch(name: string): string {
-            root.launchTemplate(name, (ok, err) => {
+            root.launchTemplate(name, false, (ok, err) => {
                 if (!ok && ToastService)
                     ToastService.showError("Workspace Manager", err || "Launch failed");
             });
             return "QUEUED";
         }
 
+        function launchAll(name: string): string {
+            root.launchTemplate(name, true, (ok, err) => {
+                if (!ok && ToastService)
+                    ToastService.showError("Workspace Manager", err || "Launch failed");
+            });
+            return "QUEUED";
+        }
+
+        function diff(name: string): string {
+            const t = root.findTemplateByName(name);
+            if (!t)
+                return `ERROR: template not found: ${name}`;
+            root.computeDiff(t, (d) => {
+                root.publishStatus(root.diffSummary(d));
+                root.publishLive();
+            });
+            return "QUEUED";
+        }
+
         function record(name: string): string {
-            root.record(name, (ok, err) => {
-                if (!ToastService)
-                    return;
-                if (ok)
-                    ToastService.showInfo("Workspace Manager", `Recorded session as "${name.trim()}"`);
-                else
-                    ToastService.showError("Workspace Manager", err || "Record failed");
+            root.publishPreview(name, "");
+            return "QUEUED";
+        }
+
+        function previewRecord(name: string, emoji: string): string {
+            root.publishPreview(name, emoji, "");
+            return "QUEUED";
+        }
+
+        function previewWorkspace(id: string, name: string, emoji: string): string {
+            root.publishPreview(name, emoji, id);
+            return "QUEUED";
+        }
+
+        function clearPreview(): string {
+            root.clearPreview();
+            return "OK";
+        }
+
+        function saveTemplate(json: string): string {
+            root.saveTemplateJson(json, (ok, err) => {
+                if (!ok && ToastService)
+                    ToastService.showError("Workspace Manager", err || "Save failed");
+            });
+            return "QUEUED";
+        }
+
+        function deleteTemplate(name: string): string {
+            root.deleteTemplate(name, (ok, err) => {
+                if (!ok && ToastService)
+                    ToastService.showError("Workspace Manager", err || "Delete failed");
             });
             return "QUEUED";
         }
@@ -490,6 +952,19 @@ PluginComponent {
             return "QUEUED";
         }
 
+        function rename(id: string, workspaceName: string, emoji: string): string {
+            root.renameWorkspaceById(id, workspaceName, emoji, (ok, err) => {
+                if (!ok && ToastService)
+                    ToastService.showError("Workspace Manager", err || "Rename failed");
+            });
+            return "QUEUED";
+        }
+
+        function refreshLive(): string {
+            root.publishLive();
+            return "OK";
+        }
+
         function syncIcons(): string {
             let n = 0;
             for (const t of root.templates) {
@@ -499,6 +974,7 @@ PluginComponent {
                     n++;
                 }
             }
+            root.publishLive();
             return "OK: applied " + n + " workspace icons";
         }
 
@@ -528,6 +1004,17 @@ PluginComponent {
 
         function list(): string {
             return root.listText();
+        }
+
+        // Snapshot of everything the manager UI sees, for scripting and tests.
+        function state(): string {
+            return JSON.stringify({
+                templates: root.templates,
+                live: root.pluginService ? root.pluginService.getGlobalVar(root.pluginId, "live", []) : [],
+                diffs: root.pluginService ? root.pluginService.getGlobalVar(root.pluginId, "diffs", ({})) : {},
+                preview: root.pluginService ? root.pluginService.getGlobalVar(root.pluginId, "preview", null) : null,
+                status: root.pluginService ? root.pluginService.getGlobalVar(root.pluginId, "status", null) : null
+            });
         }
     }
 }
