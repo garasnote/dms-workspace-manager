@@ -96,6 +96,23 @@ an existing window, never start a second copy) or `"alwaysLaunch": true` (always
 start, and never chase windows around). Settings → *Fix up windows after a
 launch* turns the reconcile pass off entirely.
 
+## Performance
+
+`bench/` holds an A/B harness and a report. Measured cost of the stills feature,
+8 windows, medians of 3:
+
+| | stills off | stills on, cache warm | stills on, cold open |
+|---|---:|---:|---:|
+| peak shell RSS while open | 57.1 MB | 62.7 MB | 67.3 MB |
+| dms CPU per open | 0.03 s | 0.03 s | 0.20 s |
+| niri CPU per open (8 s window) | 2.40 s | 2.42 s | 3.25 s |
+| clipboard not yours | 0 ms | 0 ms | 240 ms |
+| background CPU, panel shut | 0 | 0 | 0 |
+
+Read `bench/RESULTS.md` for the method and the caveats — chiefly that the cold
+arm's 389 ms panel-open latency is the dash tab's QML first-load, not captures
+(the stills-off arm shows the same 430 ms on its first open after a restart).
+
 ## Clicking a tile focuses that window
 
 Every window in a mini-map is a target: hover it and a ring appears, click it and

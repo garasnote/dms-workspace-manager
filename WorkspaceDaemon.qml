@@ -41,6 +41,15 @@ PluginComponent {
     property int _stillSeq: 0
     property int _stillActive: 0
 
+    // Let the panel paint before forking a shell per window; captures compete with
+    // the first frame otherwise, even though the measured open latency is dominated
+    // by the tab's QML load on the first open after a shell restart.
+    Timer {
+        id: stillKickTimer
+        interval: 350
+        onTriggered: root.pullStills(false)
+    }
+
     // One publish per burst of captures, so the cards are not rebuilt per window.
     Timer {
         id: stillPublishTimer
@@ -1479,7 +1488,7 @@ PluginComponent {
 
         function refreshLive(): string {
             root.publishLive();
-            root.pullStills(false);
+            stillKickTimer.restart();
             return "OK";
         }
 

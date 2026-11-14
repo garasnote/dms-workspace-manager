@@ -250,8 +250,8 @@ Item {
                     asynchronous: true
                     cache: false
                     smooth: true
-                    sourceSize.width: Math.max(32, Math.min(420, Math.round(width * 2)))
-                    sourceSize.height: Math.max(32, Math.min(420, Math.round(height * 2)))
+                    sourceSize.width: Math.max(32, Math.min(320, Math.round(width * 2)))
+                    sourceSize.height: Math.max(32, Math.min(320, Math.round(height * 2)))
                     opacity: modelData.onScreen ? 1 : 0.55
                 }
 
