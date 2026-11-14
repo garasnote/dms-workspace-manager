@@ -12,7 +12,7 @@ public git repo for the plugin.
 - A public repo with the plugin files at the root (`LICENSE`, `README.md`,
   `plugin.json`, the `*.qml` files, `templates.json`).
 - `README.md` — done.
-- `LICENSE` — done (MIT-0: no attribution required). The registry does not
+- `LICENSE` — done (MIT, same as DMS). The registry does not
   validate or even look at the license, so any license works; DMS itself ships
   MIT, which is why MIT was the starting point.
 - `screenshot.png` in the repo root. **Required**: `validate_links.py` rejects

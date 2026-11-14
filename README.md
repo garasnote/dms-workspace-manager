@@ -217,6 +217,5 @@ inner program re-launched.
 
 ## License
 
-MIT-0 (MIT No Attribution): do whatever you want with it, no credit required.
-There is no warranty, which is the point of keeping a license at all — it means
-a bug that eats your `templates.json` is not your liability.
+MIT — same license as DMS itself. Use it, change it, ship it; keep the copyright
+notice and the warranty disclaimer with it.

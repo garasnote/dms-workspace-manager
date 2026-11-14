@@ -4,7 +4,7 @@
     "description": "Create, name and switch niri workspaces; launch app templates and snapshot the current session for later.",
     "version": "1.0.0",
     "author": "jposo",
-    "license": "MIT-0",
+    "license": "MIT",
     "type": "composite",
     "capabilities": [
         "daemon",
