@@ -15,6 +15,13 @@ PluginSettings {
     }
 
     ToggleSetting {
+        settingKey: "showEmptyWorkspaces"
+        label: "Show empty workspaces"
+        description: "Empty unnamed workspaces are niri's filler; they are hidden so the list stays readable. Named ones always show."
+        defaultValue: false
+    }
+
+    ToggleSetting {
         settingKey: "liveThumbnails"
         label: "Live window previews"
         description: "Real screencopies inside the workspace mini-map where the compositor allows window capture (Hyprland, or DMS builds with ext-toplevel capture). On niri + DMS 2.1.x the mini-map falls back to app icons."

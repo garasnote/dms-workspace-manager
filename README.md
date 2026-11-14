@@ -53,38 +53,34 @@ overwrites that template.
 
 **The dash, visually**
 
-- Every template row carries an **icon strip** of its apps: full colour when
-  the app is already open on the target workspace, dimmed with a ring when
-  `Launch` would start it. You can read a template's state at a glance.
-- Live rows carry the workspace's windows as **grouped icon chips** (four
-  Ghostty terminals collapse into one chip with a `4` badge).
-- The Live pane opens with a **hero card** for the focused workspace: big emoji,
-  name, output/index/window count, then a **live mini-map** of the workspace —
-  columns and tiles drawn to scale from niri's own layout data, each tile with
-  the app icon and window title. It redraws on every niri event.
-- The pane switcher and refresh button are pinned; only the list scrolls.
+- **Live is the main tab.** Every workspace gets its own card: emoji + name,
+  output/index/window count, then a **mini-map of that workspace**, then its
+  actions directly underneath the preview — Focus, Save…, Rename, Close.
+- The mini-map is drawn from niri's own layout data (`pos_in_scrolling_layout`,
+  `tile_size`), so columns keep their relative widths and each tile shows the
+  app icon plus the window title. The focused window is ringed. It redraws on
+  every niri window/workspace event.
+- **Empty workspaces are hidden.** niri always keeps one empty workspace at the
+  bottom of each monitor, plus whatever empties you scrolled past; only
+  workspaces with windows, or with a name, are listed. The header shows
+  "N empty hidden". Settings → *Show empty workspaces* brings them back.
+- **Templates is the secondary tab**: the capture/confirm card lives there,
+  along with each template's icon strip (full colour = open, dimmed + ring =
+  would be launched), Launch/Relaunch, Edit and Delete.
+- Real **screencopy thumbnails** are attempted inside each tile where the
+  compositor allows window capture (Hyprland, or DMS builds with ext-toplevel
+  capture). On niri + DMS 2.1.x capture is unavailable, so tiles keep the icon
+  and title; Settings → *Live window previews* turns the attempt off entirely.
 
-**Live pixel thumbnails** (where supported): each mini-map tile tries a real
-screencopy of the window. That needs a compositor/DMS combination that can
-capture toplevels — Hyprland, or DMS builds with `WindowCaptureService` and
-ext-toplevel capture. On niri with DMS 2.1.x capture is unavailable, so tiles
-keep the icon + title instead; nothing breaks, and the toggle in Settings turns
-the attempt off entirely.
+**Live actions in detail**
 
-**Live pane**
-
-- Every workspace with its emoji, output, index, window count and app list.
-- **Focus**, **Save…** (sends that workspace to the capture card) and
-  **Rename** (sets the niri workspace name + emoji glyph in the bar indicator).
-- **Close** asks first, then offers:
-  - **Close + N windows** — closes every window on it and removes the name, so
-    the workspace is gone;
-  - **Unname only** — drops the name and leaves the windows where they are
-    (useful to demote a named workspace back to a normal one);
-  - **Cancel**.
-
-Deleting a row in the **Templates** pane only deletes the *template*; it never
-closes a workspace. Workspaces are closed from the **Live** pane.
+- **Focus** — switch to that workspace.
+- **Save…** — hand the workspace to the capture card in the Templates tab.
+- **Rename** — set the niri workspace name and its emoji glyph (shown in the bar
+  indicator); "Done" closes the editor.
+- **Close** — asks first, then either *Close + N windows* (closes every window
+  and removes the name, so the workspace is gone) or *Unname only* (keeps the
+  windows, drops the name).
 
 ## Workspace indicator (top-left)
 

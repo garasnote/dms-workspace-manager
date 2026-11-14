@@ -103,26 +103,41 @@ Item {
     }
 
     readonly property real pad: Theme.spacingS
-    readonly property real scaleFactor: {
+    readonly property real availW: Math.max(1, width - pad * 2)
+    readonly property real availH: Math.max(1, previewHeight - pad * 2)
+
+    // Scrollable tiling makes workspaces far wider than they are tall, so the
+    // preview scales each axis to fill the box: relative column widths stay
+    // true, and the mini-map uses the whole frame instead of a tiny strip.
+    readonly property real scaleX: {
         if (!hasWindows)
             return 1;
-        const availW = Math.max(1, width - pad * 2 - columnGap * Math.max(0, columns.length - 1));
-        const availH = Math.max(1, previewHeight - pad * 2 - cellGap);
-        return Math.min(availW / totalWidth, availH / totalHeight);
+        const gaps = columnGap * Math.max(0, columns.length - 1);
+        return Math.max(0.00001, (availW - gaps) / totalWidth);
     }
 
-    readonly property real contentWidth: totalWidth * scaleFactor + columnGap * Math.max(0, columns.length - 1)
-    readonly property real contentHeight: totalHeight * scaleFactor
+    readonly property real scaleY: {
+        if (!hasWindows)
+            return 1;
+        let mostCells = 0;
+        for (const column of columns)
+            mostCells = Math.max(mostCells, column.cells.length);
+        const gaps = cellGap * Math.max(0, mostCells - 1);
+        return Math.max(0.00001, (availH - gaps) / totalHeight);
+    }
+
+    readonly property real contentWidth: availW
+    readonly property real contentHeight: availH
 
     // Flattened cells with absolute coordinates, so one Repeater draws them all.
     readonly property var cells: {
         const out = [];
         let x = 0;
         for (const column of columns) {
-            const columnW = column.width * scaleFactor;
+            const columnW = column.width * scaleX;
             let y = 0;
             for (const cell of column.cells) {
-                const cellH = Math.max(1, cell.tileH || 1) * scaleFactor;
+                const cellH = Math.max(1, cell.tileH || 1) * scaleY;
                 out.push({
                     key: String(cell.id),
                     x: x,
@@ -198,8 +213,8 @@ Item {
         visible: root.hasWindows
         width: root.contentWidth
         height: root.contentHeight
-        x: Math.round((root.width - width) / 2)
-        y: Math.round((root.previewHeight - height) / 2)
+        x: root.pad
+        y: root.pad
 
         // frame around what the monitor is actually showing
         Rectangle {

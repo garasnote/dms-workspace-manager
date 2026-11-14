@@ -10,10 +10,10 @@ import "." as Local
 
 // Workspace Manager
 //
-// Two panes: Templates (edit / launch, diff-aware) and Live (rename, emoji,
-// save a live workspace as a template). All writes go through the daemon's
-// `workspaceManager` IPC target; structured state comes back as plugin global
-// vars so the UI stays reactive.
+// Live workspaces are the main view: every workspace gets a live mini-map with
+// its own actions underneath. Templates (saved environments) are the secondary
+// pane. All writes go through the daemon's `workspaceManager` IPC target;
+// structured state comes back as plugin global vars so the UI stays reactive.
 
 DashTabComponent {
     id: root
@@ -27,7 +27,7 @@ DashTabComponent {
     property var previewApps: []
     property var statusObj: PluginService.getGlobalVar(pluginId, "status", null)
 
-    property int pane: 0                     // 0 = templates, 1 = live
+    property int pane: 0                     // 0 = live (default), 1 = templates
     property string editingName: ""
     property var draft: null
     property string newAppText: ""
@@ -41,16 +41,26 @@ DashTabComponent {
 
     readonly property string statusText: statusObj ? (statusObj.message || "") : ""
     readonly property bool thumbnailsEnabled: !root.pluginData || root.pluginData.liveThumbnails !== false
-    readonly property var heroWorkspace: {
+    readonly property bool showEmpty: !root.pluginData || root.pluginData.showEmptyWorkspaces === true
+
+    // Empty, unnamed workspaces are niri's filler (there is always one at the
+    // bottom of every monitor); they would drown out the real ones.
+    readonly property var visibleLive: {
         const list = root.liveList || [];
-        return list.find(w => w.focused) || list[0] || null;
+        return list.filter(w => {
+            if (w.focused)
+                return true;
+            if ((w.windowCount || 0) > 0)
+                return true;
+            if ((w.name || "") !== "")
+                return true;
+            return root.showEmpty;
+        });
     }
-    readonly property int heroFocusedWindowId: {
-        const hero = root.heroWorkspace;
-        if (!hero || !hero.apps)
-            return -1;
-        const focused = hero.apps.find(a => a.focused);
-        return focused ? focused.id : -1;
+
+    readonly property int hiddenEmptyCount: {
+        const list = root.liveList || [];
+        return list.filter(w => !w.focused && !(w.windowCount > 0) && (w.name || "") === "").length;
     }
 
     implicitHeight: DashMetrics.tabDefaultHeight
@@ -91,20 +101,22 @@ DashTabComponent {
     }
 
     // The dash reveals the focused item when it opens; that can leave the list
-    // scrolled past the hero, so snap back once layout has settled.
+    // scrolled past the first workspace, so snap back once layout has settled.
     Timer {
         id: settleTimer
         interval: 200
         onTriggered: root.flickTop()
     }
 
+    onPaneChanged: {
+        flick.contentY = 0;
+        settleTimer.restart();
+    }
+
     function flickTop() {
         if (flick && flick.contentY !== 0)
             flick.contentY = 0;
     }
-
-    // Switching panes starts at the top, so the hero is the first thing seen.
-    onPaneChanged: flick.contentY = 0
 
     function refresh() {
         send("refreshLive");
@@ -175,6 +187,20 @@ DashTabComponent {
         return out;
     }
 
+    function focusedWindowId(apps) {
+        const list = apps || [];
+        const focused = list.find(a => a.focused);
+        return focused ? focused.id : -1;
+    }
+
+    function workspaceLabel(workspace) {
+        if (!workspace)
+            return "";
+        return workspace.name || ("Workspace " + workspace.idx);
+    }
+
+    // ---- templates editing
+
     function startEdit(t) {
         editingName = t.name;
         draft = clone(t);
@@ -230,6 +256,25 @@ DashTabComponent {
         draft = d;
     }
 
+    // Two-step delete: the trash button arms, a second click removes.
+    function requestDelete(name) {
+        if (pendingDelete === name) {
+            pendingDelete = "";
+            send("deleteTemplate", name);
+            return;
+        }
+        pendingDelete = name;
+        deleteArmTimer.restart();
+    }
+
+    Timer {
+        id: deleteArmTimer
+        interval: 4000
+        onTriggered: root.pendingDelete = ""
+    }
+
+    // ---- capture
+
     function removePreviewApp(index) {
         const apps = previewApps.slice();
         apps.splice(index, 1);
@@ -258,10 +303,13 @@ DashTabComponent {
         recordEmoji = "";
     }
 
+    // ---- live workspace actions
+
     function startLiveEdit(w) {
         liveDraftId = String(w.id);
         liveDraftName = w.name || ("Workspace " + w.idx);
         liveDraftEmoji = w.emoji || "";
+        closeArmId = "";
     }
 
     function saveLiveEdit() {
@@ -273,24 +321,7 @@ DashTabComponent {
 
     function captureLive(w) {
         send("previewWorkspace", String(w.id), w.name || ("Workspace " + w.idx), w.emoji || "");
-        pane = 0;
-    }
-
-    // Two-step delete: the trash button arms, a second click removes.
-    function requestDelete(name) {
-        if (pendingDelete === name) {
-            pendingDelete = "";
-            send("deleteTemplate", name);
-            return;
-        }
-        pendingDelete = name;
-        deleteArmTimer.restart();
-    }
-
-    Timer {
-        id: deleteArmTimer
-        interval: 4000
-        onTriggered: root.pendingDelete = ""
+        pane = 1;
     }
 
     // Closing a live workspace is destructive, so it always goes through a
@@ -317,25 +348,26 @@ DashTabComponent {
         anchors.fill: parent
         spacing: Theme.spacingS
 
-        // ---- header (pinned: stays put while the list scrolls)
+        // ---- pinned header
         Row {
             id: headerRow
+
             width: parent.width
             spacing: Theme.spacingXS
 
-                DButton {
-                    text: "Templates"
-                    iconName: "dashboard_customize"
-                    variant: root.pane === 0 ? "filled" : "tonal"
-                    onClicked: root.pane = 0
-                }
+            DButton {
+                text: "Live"
+                iconName: "space_dashboard"
+                variant: root.pane === 0 ? "filled" : "tonal"
+                onClicked: root.pane = 0
+            }
 
-                DButton {
-                    text: "Live"
-                    iconName: "space_dashboard"
-                    variant: root.pane === 1 ? "filled" : "tonal"
-                    onClicked: root.pane = 1
-                }
+            DButton {
+                text: "Templates"
+                iconName: "dashboard_customize"
+                variant: root.pane === 1 ? "filled" : "tonal"
+                onClicked: root.pane = 1
+            }
 
             DActionButton {
                 buttonSize: Theme.iconButtonSize
@@ -361,6 +393,7 @@ DashTabComponent {
 
         Flickable {
             id: flick
+
             focus: true
             activeFocusOnTab: true
             width: parent.width
@@ -377,716 +410,650 @@ DashTabComponent {
 
             Column {
                 id: content
+
                 width: flick.width
                 spacing: Theme.spacingM
 
-            // ---- record / confirm card
-            StyledRect {
-                width: parent.width
-                height: recordColumn.implicitHeight + Theme.spacingM * 2
-                radius: Theme.cornerRadius
-                color: Theme.surfaceContainerHigh
-
+                // =================================================== live pane
                 Column {
-                    id: recordColumn
-                    x: Theme.spacingM
-                    y: Theme.spacingM
-                    width: parent.width - Theme.spacingM * 2
+                    width: parent.width
                     spacing: Theme.spacingS
-
-                    StyledText {
-                        text: root.preview ? "Confirm what gets saved" : "Save a workspace as a template"
-                        color: Theme.surfaceText
-                        font.pixelSize: Theme.fontSizeMedium
-                        font.weight: Font.Bold
-                    }
-
-                    DTextField {
-                        id: recordNameField
-                        width: parent.width
-                        height: 40
-                        text: root.recordName
-                        placeholderText: "Template name (e.g. JobApp)"
-                        backgroundColor: Theme.surfaceContainerHighest
-                        textColor: Theme.surfaceText
-                        onTextEdited: root.recordName = text
-                    }
+                    visible: root.pane === 0
 
                     Row {
                         width: parent.width
-                        spacing: Theme.spacingS
+                        spacing: Theme.spacingXS
 
-                        DTextField {
-                            id: recordEmojiField
-                            width: 64
-                            height: 40
-                            text: root.recordEmoji
-                            placeholderText: "🧳"
-                            backgroundColor: Theme.surfaceContainerHighest
-                            textColor: Theme.surfaceText
-                            onTextEdited: root.recordEmoji = text
-                        }
-
-                        DButton {
-                            height: 40
-                            text: root.preview ? "Recapture" : "Capture"
-                            iconName: "photo_camera"
-                            variant: "tonal"
-                            onClicked: root.send("previewRecord", root.recordName, root.recordEmoji)
+                        StyledText {
+                            text: "Workspaces"
+                            color: Theme.surfaceText
+                            font.pixelSize: Theme.fontSizeLarge
+                            font.weight: Font.Bold
                         }
 
                         StyledText {
                             anchors.verticalCenter: parent.verticalCenter
-                            width: Math.max(0, parent.width - 64 - 150 - Theme.spacingS * 2)
-                            text: root.preview ? (root.preview.workspace + " · " + root.previewApps.length + " app(s)") : ""
-                            color: Theme.onSurfaceVariant
+                            width: Math.max(0, parent.width - 220)
+                            visible: root.hiddenEmptyCount > 0
+                            text: root.hiddenEmptyCount + " empty hidden"
+                            color: Theme.withAlpha(Theme.onSurfaceVariant, 0.8)
                             font.pixelSize: Theme.fontSizeSmall
                             elide: Text.ElideRight
                         }
                     }
 
                     Repeater {
-                        model: root.previewApps
+                        model: root.visibleLive
 
-                        delegate: Row {
+                        delegate: StyledRect {
+                            id: liveCard
+
                             required property var modelData
-                            required property int index
 
-                            width: recordColumn.width
-                            height: 30
-                            spacing: Theme.spacingS
+                            readonly property bool editing: root.liveDraftId === String(modelData.id)
+                            readonly property bool closing: root.closeArmId === String(modelData.id)
+                            readonly property bool named: (modelData.name || "") !== ""
 
-                            StyledText {
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: parent.width - 36
-                                text: (modelData.name || "") + "   ·   " + (modelData.cmd || "")
-                                color: Theme.surfaceText
-                                font.pixelSize: Theme.fontSizeSmall
-                                elide: Text.ElideMiddle
-                            }
+                            width: content.width
+                            height: liveColumn.implicitHeight + Theme.spacingM * 2
+                            radius: Theme.cornerRadius
+                            color: modelData.focused ? Theme.primaryContainer : Theme.surfaceContainerHigh
 
-                            DActionButton {
-                                anchors.verticalCenter: parent.verticalCenter
-                                buttonSize: Theme.iconButtonSize
-                                iconName: "close"
-                                iconSize: Theme.iconSizeSmall
-                                iconColor: Theme.surfaceText
-                                backgroundColor: Theme.surfaceContainerHighest
-                                Accessible.name: "Remove app"
-                                onClicked: root.removePreviewApp(index)
+                            Column {
+                                id: liveColumn
+
+                                x: Theme.spacingM
+                                y: Theme.spacingM
+                                width: parent.width - Theme.spacingM * 2
+                                spacing: Theme.spacingS
+
+                                // identity
+                                Row {
+                                    width: parent.width
+                                    spacing: Theme.spacingS
+
+                                    StyledText {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        text: liveCard.modelData.emoji ? liveCard.modelData.emoji : "◦"
+                                        font.pixelSize: Theme.fontSizeLarge
+                                    }
+
+                                    StyledText {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        text: root.workspaceLabel(liveCard.modelData)
+                                        color: Theme.surfaceText
+                                        font.pixelSize: Theme.fontSizeMedium
+                                        font.weight: Font.Bold
+                                    }
+
+                                    StyledText {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: Math.max(0, parent.width - 230)
+                                        text: liveCard.modelData.output + " · #" + liveCard.modelData.idx
+                                              + " · " + liveCard.modelData.windowCount + " windows"
+                                        color: Theme.onSurfaceVariant
+                                        font.pixelSize: Theme.fontSizeSmall
+                                        elide: Text.ElideRight
+                                    }
+                                }
+
+                                // the mini-map: every workspace gets one, empty
+                                // workspaces show a placeholder frame
+                                Local.WorkspacePreview {
+                                    width: parent.width
+                                    previewHeight: 88
+                                    workspace: liveCard.modelData
+                                    live: root.live
+                                    wantThumbnails: root.thumbnailsEnabled
+                                    activeWindowId: root.focusedWindowId(liveCard.modelData.apps)
+                                }
+
+                                // actions, directly under the preview
+                                Row {
+                                    width: parent.width
+                                    spacing: Theme.spacingXS
+
+                                    DButton {
+                                        text: "Focus"
+                                        iconName: "open_in_full"
+                                        variant: "tonal"
+                                        enabled: !liveCard.modelData.focused
+                                        onClicked: root.send("focusId", String(liveCard.modelData.id))
+                                    }
+
+                                    DButton {
+                                        text: "Save…"
+                                        iconName: "bookmark_add"
+                                        enabled: liveCard.modelData.windowCount > 0
+                                        onClicked: root.captureLive(liveCard.modelData)
+                                    }
+
+                                    DButton {
+                                        text: liveCard.editing ? "Done" : "Rename"
+                                        iconName: "edit"
+                                        variant: "tonal"
+                                        onClicked: {
+                                            if (liveCard.editing)
+                                                root.liveDraftId = "";
+                                            else
+                                                root.startLiveEdit(liveCard.modelData);
+                                        }
+                                    }
+
+                                    DButton {
+                                        text: "Close"
+                                        iconName: "delete"
+                                        variant: liveCard.closing ? "filled" : "tonal"
+                                        enabled: liveCard.named || liveCard.modelData.windowCount > 0
+                                        Accessible.name: "Close this workspace"
+                                        onClicked: root.armClose(liveCard.modelData.id)
+                                    }
+                                }
+
+                                // rename editor
+                                Row {
+                                    width: parent.width
+                                    spacing: Theme.spacingS
+                                    visible: liveCard.editing
+
+                                    DTextField {
+                                        width: 64
+                                        height: 36
+                                        text: root.liveDraftEmoji
+                                        placeholderText: "emoji"
+                                        backgroundColor: Theme.surfaceContainerHighest
+                                        textColor: Theme.surfaceText
+                                        onTextEdited: root.liveDraftEmoji = text
+                                    }
+
+                                    DTextField {
+                                        width: Math.max(120, parent.width - 64 - 90 - Theme.spacingS * 2)
+                                        height: 36
+                                        text: root.liveDraftName
+                                        placeholderText: "Workspace name"
+                                        backgroundColor: Theme.surfaceContainerHighest
+                                        textColor: Theme.surfaceText
+                                        onTextEdited: root.liveDraftName = text
+                                    }
+
+                                    DButton {
+                                        height: 36
+                                        text: "Save"
+                                        iconName: "save"
+                                        onClicked: root.saveLiveEdit()
+                                    }
+                                }
+
+                                // close confirm strip
+                                Row {
+                                    width: parent.width
+                                    spacing: Theme.spacingS
+                                    visible: liveCard.closing
+
+                                    StyledText {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: Math.max(120, parent.width * 0.38)
+                                        text: "Close " + root.workspaceLabel(liveCard.modelData) + "?"
+                                        color: Theme.surfaceText
+                                        font.pixelSize: Theme.fontSizeSmall
+                                        wrapMode: Text.Wrap
+                                    }
+
+                                    DButton {
+                                        height: 36
+                                        text: liveCard.modelData.windowCount > 0
+                                              ? "Close + " + liveCard.modelData.windowCount + " windows"
+                                              : "Remove workspace"
+                                        iconName: "close"
+                                        variant: "filled"
+                                        onClicked: root.closeWorkspace(liveCard.modelData, liveCard.modelData.windowCount > 0)
+                                    }
+
+                                    DButton {
+                                        height: 36
+                                        text: "Unname only"
+                                        iconName: "label_off"
+                                        variant: "tonal"
+                                        visible: liveCard.named && liveCard.modelData.windowCount > 0
+                                        onClicked: root.closeWorkspace(liveCard.modelData, false)
+                                    }
+
+                                    DButton {
+                                        height: 36
+                                        text: "Cancel"
+                                        variant: "text"
+                                        onClicked: root.closeArmId = ""
+                                    }
+                                }
                             }
                         }
                     }
 
                     StyledText {
                         width: parent.width
-                        visible: root.preview !== null && root.previewApps.length === 0
-                        text: "No windows on that workspace — open something first, then capture again."
+                        visible: root.visibleLive.length === 0
+                        text: "No workspaces reported yet."
+                        color: Theme.onSurfaceVariant
+                        font.pixelSize: Theme.fontSizeSmall
+                    }
+                }
+
+                // ============================================ templates pane
+                Column {
+                    width: parent.width
+                    spacing: Theme.spacingS
+                    visible: root.pane === 1
+
+                    // capture / confirm card
+                    StyledRect {
+                        width: parent.width
+                        height: recordColumn.implicitHeight + Theme.spacingM * 2
+                        radius: Theme.cornerRadius
+                        color: Theme.surfaceContainerHigh
+
+                        Column {
+                            id: recordColumn
+
+                            x: Theme.spacingM
+                            y: Theme.spacingM
+                            width: parent.width - Theme.spacingM * 2
+                            spacing: Theme.spacingS
+
+                            StyledText {
+                                text: root.preview ? "Confirm what gets saved" : "Save a workspace as a template"
+                                color: Theme.surfaceText
+                                font.pixelSize: Theme.fontSizeMedium
+                                font.weight: Font.Bold
+                            }
+
+                            DTextField {
+                                id: recordNameField
+
+                                width: parent.width
+                                height: 40
+                                text: root.recordName
+                                placeholderText: "Template name (e.g. JobApp)"
+                                backgroundColor: Theme.surfaceContainerHighest
+                                textColor: Theme.surfaceText
+                                onTextEdited: root.recordName = text
+                            }
+
+                            Row {
+                                width: parent.width
+                                spacing: Theme.spacingS
+
+                                DTextField {
+                                    id: recordEmojiField
+
+                                    width: 64
+                                    height: 40
+                                    text: root.recordEmoji
+                                    placeholderText: "🧳"
+                                    backgroundColor: Theme.surfaceContainerHighest
+                                    textColor: Theme.surfaceText
+                                    onTextEdited: root.recordEmoji = text
+                                }
+
+                                DButton {
+                                    height: 40
+                                    text: root.preview ? "Recapture" : "Capture"
+                                    iconName: "photo_camera"
+                                    variant: "tonal"
+                                    onClicked: root.send("previewRecord", root.recordName, root.recordEmoji)
+                                }
+
+                                StyledText {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    width: Math.max(0, parent.width - 64 - 150 - Theme.spacingS * 2)
+                                    text: root.preview ? (root.preview.workspace + " · " + root.previewApps.length + " app(s)") : ""
+                                    color: Theme.onSurfaceVariant
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    elide: Text.ElideRight
+                                }
+                            }
+
+                            Repeater {
+                                model: root.previewApps
+
+                                delegate: Row {
+                                    required property var modelData
+                                    required property int index
+
+                                    width: recordColumn.width
+                                    height: 30
+                                    spacing: Theme.spacingS
+
+                                    StyledText {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: parent.width - 36
+                                        text: (modelData.name || "") + "   ·   " + (modelData.cmd || "")
+                                        color: Theme.surfaceText
+                                        font.pixelSize: Theme.fontSizeSmall
+                                        elide: Text.ElideMiddle
+                                    }
+
+                                    DActionButton {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        buttonSize: Theme.iconButtonSize
+                                        iconName: "close"
+                                        iconSize: Theme.iconSizeSmall
+                                        iconColor: Theme.surfaceText
+                                        backgroundColor: Theme.surfaceContainerHighest
+                                        Accessible.name: "Remove app"
+                                        onClicked: root.removePreviewApp(index)
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                width: parent.width
+                                visible: root.preview !== null && root.previewApps.length === 0
+                                text: "No windows on that workspace — open something first, then capture again."
+                                color: Theme.onSurfaceVariant
+                                font.pixelSize: Theme.fontSizeSmall
+                                wrapMode: Text.Wrap
+                            }
+
+                            Row {
+                                visible: root.preview !== null
+                                spacing: Theme.spacingS
+
+                                DButton {
+                                    text: "Save template"
+                                    iconName: "save"
+                                    enabled: root.recordName.trim() !== "" && root.previewApps.length > 0
+                                    onClicked: root.savePreview()
+                                }
+
+                                DButton {
+                                    text: "Discard"
+                                    iconName: "undo"
+                                    variant: "text"
+                                    onClicked: {
+                                        root.send("clearPreview");
+                                        root.adoptPreview(null);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: "Templates"
+                        color: Theme.surfaceText
+                        font.pixelSize: Theme.fontSizeLarge
+                        font.weight: Font.Bold
+                    }
+
+                    StyledText {
+                        width: parent.width
+                        text: "Deleting a template never closes a workspace — close workspaces from the Live pane."
                         color: Theme.onSurfaceVariant
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.Wrap
                     }
 
-                    Row {
-                        visible: root.preview !== null
-                        spacing: Theme.spacingS
+                    Repeater {
+                        model: root.templateList
 
-                        DButton {
-                            text: "Save template"
-                            iconName: "save"
-                            enabled: root.recordName.trim() !== "" && root.previewApps.length > 0
-                            onClicked: root.savePreview()
-                        }
+                        delegate: StyledRect {
+                            id: templateCard
 
-                        DButton {
-                            text: "Discard"
-                            iconName: "undo"
-                            variant: "text"
-                            onClicked: {
-                                root.send("clearPreview");
-                                root.adoptPreview(null);
-                            }
-                        }
-                    }
-                }
-            }
+                            required property var modelData
 
-            // ---- templates
-            Column {
-                width: parent.width
-                spacing: Theme.spacingS
-                visible: root.pane === 0
+                            readonly property bool editing: root.editingName === modelData.name
+                            readonly property var missing: root.missingFor(modelData.name)
 
-                StyledText {
-                    text: "Templates"
-                    color: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeLarge
-                    font.weight: Font.Bold
-                }
+                            width: content.width
+                            height: templateColumn.implicitHeight + Theme.spacingM * 2
+                            radius: Theme.cornerRadius
+                            color: templateCard.editing ? Theme.primaryContainer : Theme.surfaceContainerHigh
 
-                StyledText {
-                    width: parent.width
-                    text: "Deleting a template never closes a workspace — close workspaces from the Live pane."
-                    color: Theme.onSurfaceVariant
-                    font.pixelSize: Theme.fontSizeSmall
-                    wrapMode: Text.Wrap
-                }
-
-                Repeater {
-                    model: root.templateList
-
-                    delegate: StyledRect {
-                        id: templateCard
-                        required property var modelData
-
-                        readonly property bool editing: root.editingName === modelData.name
-                        readonly property var missing: root.missingFor(modelData.name)
-                        width: content.width
-                        height: templateColumn.implicitHeight + Theme.spacingM * 2
-                        radius: Theme.cornerRadius
-                        color: templateCard.editing ? Theme.primaryContainer : Theme.surfaceContainerHigh
-
-                        Column {
-                            id: templateColumn
-                            x: Theme.spacingM
-                            y: Theme.spacingM
-                            width: parent.width - Theme.spacingM * 2
-                            spacing: Theme.spacingS
-
-                            // line 1: identity
-                            Row {
-                                width: parent.width
-                                spacing: Theme.spacingXS
-
-                                StyledText {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: (templateCard.modelData.emoji ? templateCard.modelData.emoji + "  " : "") + templateCard.modelData.name
-                                    color: Theme.surfaceText
-                                    font.pixelSize: Theme.fontSizeMedium
-                                    font.weight: Font.Bold
-                                }
-
-                                StyledText {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: Math.max(0, parent.width - 160)
-                                    text: (templateCard.modelData.workspace ? "→ " + templateCard.modelData.workspace + " · " : "")
-                                          + (templateCard.modelData.apps || []).length + " apps"
-                                    color: Theme.onSurfaceVariant
-                                    font.pixelSize: Theme.fontSizeSmall
-                                    elide: Text.ElideRight
-                                }
-                            }
-
-                            // line 2: app icons (dimmed = would be launched)
-                            Row {
-                                width: parent.width
-                                spacing: Theme.spacingXS
-
-                                Repeater {
-                                    model: templateCard.modelData.apps || []
-
-                                    delegate: Local.AppChip {
-                                        required property var modelData
-
-                                        chipSize: 24
-                                        appId: root.appIdOf(modelData)
-                                        cmd: root.appCmdOf(modelData)
-                                        label: root.appName(modelData)
-                                        dimmed: root.appMissing(templateCard.modelData.name, modelData)
-                                        ringed: root.appMissing(templateCard.modelData.name, modelData)
-                                        ringColor: Theme.withAlpha(Theme.primary, 0.55)
-                                    }
-                                }
-                            }
-
-                            // line 3: actions
-                            Row {
-                                width: parent.width
-                                spacing: Theme.spacingXS
-
-                                DButton {
-                                    text: templateCard.missing.length === 0 ? "All open" : "Launch (" + templateCard.missing.length + ")"
-                                    iconName: "rocket_launch"
-                                    variant: templateCard.missing.length === 0 ? "tonal" : "filled"
-                                    onClicked: root.send("launch", templateCard.modelData.name)
-                                }
-
-                                DActionButton {
-                                    buttonSize: Theme.iconButtonSize
-                                    iconName: "restart_alt"
-                                    iconSize: Theme.iconSizeSmall
-                                    iconColor: Theme.surfaceText
-                                    backgroundColor: Theme.surfaceContainerHighest
-                                    Accessible.name: "Relaunch every app"
-                                    onClicked: root.send("launchAll", templateCard.modelData.name)
-                                }
-
-                                DButton {
-                                    text: templateCard.editing ? "Close" : "Edit"
-                                    iconName: "edit"
-                                    variant: "tonal"
-                                    onClicked: {
-                                        if (templateCard.editing)
-                                            root.cancelEdit();
-                                        else
-                                            root.startEdit(templateCard.modelData);
-                                    }
-                                }
-
-                                DActionButton {
-                                    readonly property bool armed: root.pendingDelete === templateCard.modelData.name
-                                    buttonSize: Theme.iconButtonSize
-                                    iconName: armed ? "delete_forever" : "delete"
-                                    iconSize: Theme.iconSizeSmall
-                                    iconColor: Theme.error
-                                    backgroundColor: armed ? Theme.errorContainer : Theme.surfaceContainerHighest
-                                    Accessible.name: armed ? "Click again to delete" : "Delete template"
-                                    onClicked: root.requestDelete(templateCard.modelData.name)
-                                }
-                            }
-
-                            // line 4: edit panel
                             Column {
-                                width: parent.width
+                                id: templateColumn
+
+                                x: Theme.spacingM
+                                y: Theme.spacingM
+                                width: parent.width - Theme.spacingM * 2
                                 spacing: Theme.spacingS
-                                visible: templateCard.editing && root.draft !== null
 
+                                // line 1: identity
                                 Row {
                                     width: parent.width
-                                    spacing: Theme.spacingS
+                                    spacing: Theme.spacingXS
 
-                                    DTextField {
-                                        width: 64
-                                        height: 40
-                                        text: root.draft ? root.draft.emoji : ""
-                                        placeholderText: "emoji"
-                                        backgroundColor: Theme.surfaceContainerHighest
-                                        textColor: Theme.surfaceText
-                                        onTextEdited: if (root.draft) root.draft.emoji = text
+                                    StyledText {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        text: (templateCard.modelData.emoji ? templateCard.modelData.emoji + "  " : "") + templateCard.modelData.name
+                                        color: Theme.surfaceText
+                                        font.pixelSize: Theme.fontSizeMedium
+                                        font.weight: Font.Bold
                                     }
 
-                                    DTextField {
-                                        width: Math.max(120, (parent.width - 64 - Theme.spacingS * 2) * 0.5)
-                                        height: 40
-                                        text: root.draft ? root.draft.name : ""
-                                        placeholderText: "Template name"
-                                        backgroundColor: Theme.surfaceContainerHighest
-                                        textColor: Theme.surfaceText
-                                        onTextEdited: if (root.draft) root.draft.name = text
-                                    }
-
-                                    DTextField {
-                                        width: Math.max(120, (parent.width - 64 - Theme.spacingS * 2) * 0.5 - 4)
-                                        height: 40
-                                        text: root.draft ? root.draft.workspace : ""
-                                        placeholderText: "niri workspace"
-                                        backgroundColor: Theme.surfaceContainerHighest
-                                        textColor: Theme.surfaceText
-                                        onTextEdited: if (root.draft) root.draft.workspace = text
+                                    StyledText {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        width: Math.max(0, parent.width - 160)
+                                        text: (templateCard.modelData.workspace ? "→ " + templateCard.modelData.workspace + " · " : "")
+                                              + (templateCard.modelData.apps || []).length + " apps"
+                                        color: Theme.onSurfaceVariant
+                                        font.pixelSize: Theme.fontSizeSmall
+                                        elide: Text.ElideRight
                                     }
                                 }
 
-                                Repeater {
-                                    model: root.draft ? root.draft.apps : []
+                                // line 2: app icons (dimmed = would be launched)
+                                Row {
+                                    width: parent.width
+                                    spacing: Theme.spacingXS
 
-                                    delegate: Row {
-                                        required property var modelData
-                                        required property int index
+                                    Repeater {
+                                        model: templateCard.modelData.apps || []
 
-                                        width: templateColumn.width
-                                        height: 34
-                                        spacing: Theme.spacingXS
+                                        delegate: Local.AppChip {
+                                            required property var modelData
 
-                                        DTextField {
-                                            width: Math.max(100, parent.width * 0.32)
-                                            height: 32
-                                            text: modelData.name || ""
-                                            backgroundColor: Theme.surfaceContainerHighest
-                                            textColor: Theme.surfaceText
-                                            onTextEdited: {
-                                                if (root.draft)
-                                                    root.draft.apps[index].name = text;
-                                            }
-                                        }
-
-                                        DTextField {
-                                            width: Math.max(120, parent.width * 0.44)
-                                            height: 32
-                                            text: modelData.cmd || ""
-                                            backgroundColor: Theme.surfaceContainerHighest
-                                            textColor: Theme.surfaceText
-                                            onTextEdited: {
-                                                if (root.draft)
-                                                    root.draft.apps[index].cmd = text;
-                                            }
-                                        }
-
-                                        DActionButton {
-                                            buttonSize: Theme.iconButtonSize
-                                            iconName: modelData.alwaysLaunch ? "bolt" : "bolt_off"
-                                            iconSize: Theme.iconSizeSmall
-                                            iconColor: modelData.alwaysLaunch ? Theme.primary : Theme.onSurfaceVariant
-                                            backgroundColor: Theme.surfaceContainerHighest
-                                            Accessible.name: "Always rerun this app"
-                                            onClicked: root.toggleAlwaysLaunch(index)
-                                        }
-
-                                        DActionButton {
-                                            buttonSize: Theme.iconButtonSize
-                                            iconName: "close"
-                                            iconSize: Theme.iconSizeSmall
-                                            iconColor: Theme.error
-                                            backgroundColor: Theme.surfaceContainerHighest
-                                            Accessible.name: "Remove app"
-                                            onClicked: root.removeDraftApp(index)
+                                            chipSize: 24
+                                            appId: root.appIdOf(modelData)
+                                            cmd: root.appCmdOf(modelData)
+                                            label: root.appName(modelData)
+                                            dimmed: root.appMissing(templateCard.modelData.name, modelData)
+                                            ringed: root.appMissing(templateCard.modelData.name, modelData)
+                                            ringColor: Theme.withAlpha(Theme.primary, 0.55)
                                         }
                                     }
                                 }
 
+                                // line 3: actions
                                 Row {
                                     width: parent.width
-                                    spacing: Theme.spacingS
+                                    spacing: Theme.spacingXS
 
-                                    DTextField {
-                                        width: Math.max(120, parent.width - addAppButton.width - Theme.spacingS)
-                                        height: 36
-                                        text: root.newAppText
-                                        placeholderText: "Add app command"
+                                    DButton {
+                                        text: templateCard.missing.length === 0 ? "All open" : "Launch (" + templateCard.missing.length + ")"
+                                        iconName: "rocket_launch"
+                                        variant: templateCard.missing.length === 0 ? "tonal" : "filled"
+                                        onClicked: root.send("launch", templateCard.modelData.name)
+                                    }
+
+                                    DActionButton {
+                                        buttonSize: Theme.iconButtonSize
+                                        iconName: "restart_alt"
+                                        iconSize: Theme.iconSizeSmall
+                                        iconColor: Theme.surfaceText
                                         backgroundColor: Theme.surfaceContainerHighest
-                                        textColor: Theme.surfaceText
-                                        onTextEdited: root.newAppText = text
+                                        Accessible.name: "Relaunch every app"
+                                        onClicked: root.send("launchAll", templateCard.modelData.name)
                                     }
 
                                     DButton {
-                                        id: addAppButton
-                                        height: 36
-                                        text: "Add"
-                                        iconName: "add"
+                                        text: templateCard.editing ? "Done" : "Edit"
+                                        iconName: "edit"
                                         variant: "tonal"
-                                        onClicked: root.addDraftApp()
+                                        onClicked: {
+                                            if (templateCard.editing)
+                                                root.cancelEdit();
+                                            else
+                                                root.startEdit(templateCard.modelData);
+                                        }
+                                    }
+
+                                    DActionButton {
+                                        readonly property bool armed: root.pendingDelete === templateCard.modelData.name
+
+                                        buttonSize: Theme.iconButtonSize
+                                        iconName: armed ? "delete_forever" : "delete"
+                                        iconSize: Theme.iconSizeSmall
+                                        iconColor: Theme.error
+                                        backgroundColor: armed ? Theme.errorContainer : Theme.surfaceContainerHighest
+                                        Accessible.name: armed ? "Click again to delete" : "Delete template"
+                                        onClicked: root.requestDelete(templateCard.modelData.name)
                                     }
                                 }
 
-                                Row {
+                                // line 4: edit panel
+                                Column {
+                                    width: parent.width
                                     spacing: Theme.spacingS
+                                    visible: templateCard.editing && root.draft !== null
 
-                                    DButton {
-                                        text: "Save template"
-                                        iconName: "save"
-                                        onClicked: root.saveEdit()
+                                    Row {
+                                        width: parent.width
+                                        spacing: Theme.spacingS
+
+                                        DTextField {
+                                            width: 64
+                                            height: 40
+                                            text: root.draft ? root.draft.emoji : ""
+                                            placeholderText: "emoji"
+                                            backgroundColor: Theme.surfaceContainerHighest
+                                            textColor: Theme.surfaceText
+                                            onTextEdited: if (root.draft) root.draft.emoji = text
+                                        }
+
+                                        DTextField {
+                                            width: Math.max(120, (parent.width - 64 - Theme.spacingS * 2) * 0.5)
+                                            height: 40
+                                            text: root.draft ? root.draft.name : ""
+                                            placeholderText: "Template name"
+                                            backgroundColor: Theme.surfaceContainerHighest
+                                            textColor: Theme.surfaceText
+                                            onTextEdited: if (root.draft) root.draft.name = text
+                                        }
+
+                                        DTextField {
+                                            width: Math.max(120, (parent.width - 64 - Theme.spacingS * 2) * 0.5 - 4)
+                                            height: 40
+                                            text: root.draft ? root.draft.workspace : ""
+                                            placeholderText: "niri workspace"
+                                            backgroundColor: Theme.surfaceContainerHighest
+                                            textColor: Theme.surfaceText
+                                            onTextEdited: if (root.draft) root.draft.workspace = text
+                                        }
                                     }
 
-                                    DButton {
-                                        text: "Cancel"
-                                        iconName: "undo"
-                                        variant: "text"
-                                        onClicked: root.cancelEdit()
+                                    Repeater {
+                                        model: root.draft ? root.draft.apps : []
+
+                                        delegate: Row {
+                                            required property var modelData
+                                            required property int index
+
+                                            width: templateColumn.width
+                                            height: 34
+                                            spacing: Theme.spacingXS
+
+                                            DTextField {
+                                                width: Math.max(100, parent.width * 0.32)
+                                                height: 32
+                                                text: modelData.name || ""
+                                                backgroundColor: Theme.surfaceContainerHighest
+                                                textColor: Theme.surfaceText
+                                                onTextEdited: {
+                                                    if (root.draft)
+                                                        root.draft.apps[index].name = text;
+                                                }
+                                            }
+
+                                            DTextField {
+                                                width: Math.max(120, parent.width * 0.44)
+                                                height: 32
+                                                text: modelData.cmd || ""
+                                                backgroundColor: Theme.surfaceContainerHighest
+                                                textColor: Theme.surfaceText
+                                                onTextEdited: {
+                                                    if (root.draft)
+                                                        root.draft.apps[index].cmd = text;
+                                                }
+                                            }
+
+                                            DActionButton {
+                                                buttonSize: Theme.iconButtonSize
+                                                iconName: modelData.alwaysLaunch ? "bolt" : "bolt_off"
+                                                iconSize: Theme.iconSizeSmall
+                                                iconColor: modelData.alwaysLaunch ? Theme.primary : Theme.onSurfaceVariant
+                                                backgroundColor: Theme.surfaceContainerHighest
+                                                Accessible.name: "Always rerun this app"
+                                                onClicked: root.toggleAlwaysLaunch(index)
+                                            }
+
+                                            DActionButton {
+                                                buttonSize: Theme.iconButtonSize
+                                                iconName: "close"
+                                                iconSize: Theme.iconSizeSmall
+                                                iconColor: Theme.error
+                                                backgroundColor: Theme.surfaceContainerHighest
+                                                Accessible.name: "Remove app"
+                                                onClicked: root.removeDraftApp(index)
+                                            }
+                                        }
+                                    }
+
+                                    Row {
+                                        width: parent.width
+                                        spacing: Theme.spacingS
+
+                                        DTextField {
+                                            width: Math.max(120, parent.width - addAppButton.width - Theme.spacingS)
+                                            height: 36
+                                            text: root.newAppText
+                                            placeholderText: "Add app command"
+                                            backgroundColor: Theme.surfaceContainerHighest
+                                            textColor: Theme.surfaceText
+                                            onTextEdited: root.newAppText = text
+                                        }
+
+                                        DButton {
+                                            id: addAppButton
+
+                                            height: 36
+                                            text: "Add"
+                                            iconName: "add"
+                                            variant: "tonal"
+                                            onClicked: root.addDraftApp()
+                                        }
+                                    }
+
+                                    Row {
+                                        spacing: Theme.spacingS
+
+                                        DButton {
+                                            text: "Save template"
+                                            iconName: "save"
+                                            onClicked: root.saveEdit()
+                                        }
+
+                                        DButton {
+                                            text: "Cancel"
+                                            iconName: "undo"
+                                            variant: "text"
+                                            onClicked: root.cancelEdit()
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-
-            // ---- live workspaces
-            Column {
-                width: parent.width
-                spacing: Theme.spacingS
-                visible: root.pane === 1
-
-                StyledText {
-                    text: "Live workspaces"
-                    color: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeLarge
-                    font.weight: Font.Bold
-                }
-
-                // hero: the focused workspace, previewed live
-                StyledRect {
-                    width: parent.width
-                    height: heroColumn.implicitHeight + Theme.spacingM * 2
-                    radius: Theme.cornerRadius
-                    color: Theme.surfaceContainerHigh
-                    visible: root.heroWorkspace !== null
-
-                    Column {
-                        id: heroColumn
-
-                        x: Theme.spacingM
-                        y: Theme.spacingM
-                        width: parent.width - Theme.spacingM * 2
-                        spacing: Theme.spacingS
-
-                        Row {
-                            width: parent.width
-                            spacing: Theme.spacingS
-
-                            StyledText {
-                                anchors.verticalCenter: parent.verticalCenter
-                                text: root.heroWorkspace && root.heroWorkspace.emoji ? root.heroWorkspace.emoji : "◦"
-                                font.pixelSize: Theme.fontSizeXXLarge
-                            }
-
-                            Column {
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: parent.width - 60
-                                spacing: 1
-
-                                StyledText {
-                                    text: root.heroWorkspace
-                                          ? (root.heroWorkspace.name || ("Workspace " + root.heroWorkspace.idx))
-                                          : ""
-                                    color: Theme.surfaceText
-                                    font.pixelSize: Theme.fontSizeLarge
-                                    font.weight: Font.Bold
-                                    elide: Text.ElideRight
-                                    width: parent.width
-                                }
-
-                                StyledText {
-                                    width: parent.width
-                                    text: root.heroWorkspace
-                                          ? root.heroWorkspace.output + " · #" + root.heroWorkspace.idx
-                                            + " · " + root.heroWorkspace.windowCount + " windows"
-                                            + (root.thumbnailsEnabled ? " · live" : "")
-                                          : ""
-                                    color: Theme.onSurfaceVariant
-                                    font.pixelSize: Theme.fontSizeSmall
-                                    elide: Text.ElideRight
-                                }
-                            }
-                        }
-
-                        Local.WorkspacePreview {
-                            width: parent.width
-                            workspace: root.heroWorkspace
-                            live: root.live
-                            wantThumbnails: root.thumbnailsEnabled
-                            activeWindowId: root.heroFocusedWindowId
-                        }
-
-                        Row {
-                            width: parent.width
-                            spacing: Theme.spacingXS
-
-                            Repeater {
-                                model: root.groupedApps(root.heroWorkspace ? root.heroWorkspace.apps : [])
-
-                                delegate: Local.AppChip {
-                                    required property var modelData
-
-                                    chipSize: 22
-                                    appId: modelData.appId
-                                    label: modelData.name
-                                    count: modelData.count
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Repeater {
-                    model: root.liveList
-
-                    delegate: StyledRect {
-                        id: liveCard
-                        required property var modelData
-
-                        readonly property bool editing: root.liveDraftId === String(modelData.id)
-                        readonly property bool closing: root.closeArmId === String(modelData.id)
-                        readonly property bool named: (modelData.name || "") !== ""
-
-                        width: content.width
-                        height: liveColumn.implicitHeight + Theme.spacingM * 2
-                        radius: Theme.cornerRadius
-                        color: modelData.focused ? Theme.primaryContainer : Theme.surfaceContainerHigh
-
-                        Column {
-                            id: liveColumn
-                            x: Theme.spacingM
-                            y: Theme.spacingM
-                            width: parent.width - Theme.spacingM * 2
-                            spacing: Theme.spacingXS
-
-                            Row {
-                                width: parent.width
-                                spacing: Theme.spacingXS
-
-                                StyledText {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    text: (liveCard.modelData.emoji ? liveCard.modelData.emoji + "  " : "")
-                                          + (liveCard.modelData.name || ("Workspace " + liveCard.modelData.idx))
-                                    color: Theme.surfaceText
-                                    font.pixelSize: Theme.fontSizeMedium
-                                    font.weight: Font.Bold
-                                }
-
-                                StyledText {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: Math.max(0, parent.width - 150)
-                                    text: liveCard.modelData.output + " · #" + liveCard.modelData.idx
-                                          + " · " + liveCard.modelData.windowCount + " windows"
-                                    color: Theme.onSurfaceVariant
-                                    font.pixelSize: Theme.fontSizeSmall
-                                    elide: Text.ElideRight
-                                }
-                            }
-
-                            Row {
-                                width: parent.width
-                                spacing: Theme.spacingXS
-
-                                Repeater {
-                                    model: root.groupedApps(liveCard.modelData.apps)
-
-                                    delegate: Local.AppChip {
-                                        required property var modelData
-
-                                        chipSize: 22
-                                        appId: modelData.appId
-                                        label: modelData.name
-                                        count: modelData.count
-                                    }
-                                }
-
-                                StyledText {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    visible: liveCard.modelData.windowCount === 0
-                                    text: "no windows"
-                                    color: Theme.withAlpha(Theme.onSurfaceVariant, 0.7)
-                                    font.pixelSize: Theme.fontSizeSmall
-                                    font.italic: true
-                                }
-                            }
-
-                            Row {
-                                width: parent.width
-                                spacing: Theme.spacingXS
-
-                                DButton {
-                                    text: "Focus"
-                                    iconName: "open_in_full"
-                                    variant: "tonal"
-                                    enabled: !liveCard.modelData.focused
-                                    onClicked: root.send("focusId", String(liveCard.modelData.id))
-                                }
-
-                                DButton {
-                                    text: "Save…"
-                                    iconName: "bookmark_add"
-                                    enabled: liveCard.modelData.windowCount > 0
-                                    onClicked: root.captureLive(liveCard.modelData)
-                                }
-
-                                DButton {
-                                    text: liveCard.editing ? "Done" : "Rename"
-                                    iconName: "edit"
-                                    variant: "tonal"
-                                    onClicked: {
-                                        if (liveCard.editing)
-                                            root.liveDraftId = "";
-                                        else
-                                            root.startLiveEdit(liveCard.modelData);
-                                    }
-                                }
-
-                                DButton {
-                                    text: "Close"
-                                    iconName: "delete"
-                                    variant: liveCard.closing ? "filled" : "tonal"
-                                    enabled: liveCard.named || liveCard.modelData.windowCount > 0
-                                    Accessible.name: "Close this workspace"
-                                    onClicked: root.armClose(liveCard.modelData.id)
-                                }
-                            }
-
-                            // close confirm strip
-                            Row {
-                                width: parent.width
-                                spacing: Theme.spacingS
-                                visible: liveCard.closing
-
-                                StyledText {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: Math.max(120, parent.width * 0.42)
-                                    text: "Close " + (liveCard.modelData.name || ("workspace #" + liveCard.modelData.idx)) + "?"
-                                    color: Theme.surfaceText
-                                    font.pixelSize: Theme.fontSizeSmall
-                                    wrapMode: Text.Wrap
-                                }
-
-                                DButton {
-                                    height: 36
-                                    text: liveCard.modelData.windowCount > 0
-                                          ? "Close + " + liveCard.modelData.windowCount + " windows"
-                                          : "Remove workspace"
-                                    iconName: "close"
-                                    variant: "filled"
-                                    onClicked: root.closeWorkspace(liveCard.modelData, liveCard.modelData.windowCount > 0)
-                                }
-
-                                DButton {
-                                    height: 36
-                                    text: "Unname only"
-                                    iconName: "label_off"
-                                    variant: "tonal"
-                                    visible: liveCard.named && liveCard.modelData.windowCount > 0
-                                    onClicked: root.closeWorkspace(liveCard.modelData, false)
-                                }
-
-                                DButton {
-                                    height: 36
-                                    text: "Cancel"
-                                    variant: "text"
-                                    onClicked: root.closeArmId = ""
-                                }
-                            }
-
-                            Row {
-                                width: parent.width
-                                spacing: Theme.spacingS
-                                visible: liveCard.editing
-
-                                DTextField {
-                                    width: 64
-                                    height: 36
-                                    text: root.liveDraftEmoji
-                                    placeholderText: "emoji"
-                                    backgroundColor: Theme.surfaceContainerHighest
-                                    textColor: Theme.surfaceText
-                                    onTextEdited: root.liveDraftEmoji = text
-                                }
-
-                                DTextField {
-                                    width: Math.max(120, parent.width - 64 - 90 - Theme.spacingS * 2)
-                                    height: 36
-                                    text: root.liveDraftName
-                                    placeholderText: "Workspace name"
-                                    backgroundColor: Theme.surfaceContainerHighest
-                                    textColor: Theme.surfaceText
-                                    onTextEdited: root.liveDraftName = text
-                                }
-
-                                DButton {
-                                    height: 36
-                                    text: "Save"
-                                    iconName: "save"
-                                    onClicked: root.saveLiveEdit()
-                                }
-                            }
-                        }
-                    }
-                }
-
-                StyledText {
-                    width: parent.width
-                    visible: root.liveList.length === 0
-                    text: "No workspaces reported yet."
-                    color: Theme.onSurfaceVariant
-                    font.pixelSize: Theme.fontSizeSmall
-                }
-            }
 
                 Item {
                     width: 1
