@@ -151,6 +151,11 @@ about 60 ms. Two consequences worth knowing:
 Turn it off and the tiles fall back to icons, with no clipboard involvement at
 all.
 
+**Compact rows** (setting, off by default): each workspace collapses to a single
+line — emoji, name, output/index/window count, app chips and a chevron — so four
+or five workspaces fit where two previews did. Click a row to open its preview
+and actions.
+
 **Live actions in detail**
 
 - **Focus** — switch to that workspace.
