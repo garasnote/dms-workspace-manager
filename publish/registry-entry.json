@@ -1,0 +1,14 @@
+{
+    "id": "workspaceManager",
+    "name": "Niri Workspace Manager",
+    "capabilities": ["daemon", "dash-tab", "launcher"],
+    "category": "utilities",
+    "repo": "https://github.com/garasnote/dms-workspace-manager",
+    "author": "garasnote",
+    "description": "Create, name and switch niri workspaces, launch app templates that only open what is missing, snapshot the current session into a template, and label workspaces with an emoji in the bar indicator.",
+    "dependencies": ["niri"],
+    "compositors": ["niri"],
+    "distro": ["any"],
+    "screenshot": "https://github.com/garasnote/dms-workspace-manager/raw/main/screenshot.png",
+    "requires_dms": ">=2.1.0"
+}
