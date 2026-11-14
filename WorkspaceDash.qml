@@ -38,9 +38,11 @@ DashTabComponent {
     property string liveDraftEmoji: ""
     property string pendingDelete: ""
     property string closeArmId: ""
+    property string expandedId: ""
 
     readonly property string statusText: statusObj ? (statusObj.message || "") : ""
     readonly property bool showEmpty: !root.pluginData || root.pluginData.showEmptyWorkspaces === true
+    readonly property bool compactRows: !!root.pluginData && root.pluginData.compactLiveRows === true
 
     // Empty, unnamed workspaces are niri's filler (there is always one at the
     // bottom of every monitor); they would drown out the real ones.
@@ -206,6 +208,17 @@ DashTabComponent {
         const list = apps || [];
         const focused = list.find(a => a.focused);
         return focused ? focused.id : -1;
+    }
+
+    function rowExpanded(workspace) {
+        if (!root.compactRows)
+            return true;
+        return root.expandedId === String(workspace.id);
+    }
+
+    function toggleRow(workspace) {
+        const id = String(workspace.id);
+        root.expandedId = (root.expandedId === id) ? "" : id;
     }
 
     function workspaceLabel(workspace) {
@@ -475,10 +488,15 @@ DashTabComponent {
                                 width: parent.width - Theme.spacingM * 2
                                 spacing: Theme.spacingS
 
-                                // identity
+                                // identity (in compact mode, clicking it toggles the preview)
                                 Row {
                                     width: parent.width
                                     spacing: Theme.spacingS
+
+                                    TapHandler {
+                                        enabled: root.compactRows
+                                        onTapped: root.toggleRow(liveCard.modelData)
+                                    }
 
                                     StyledText {
                                         anchors.verticalCenter: parent.verticalCenter
@@ -496,18 +514,60 @@ DashTabComponent {
 
                                     StyledText {
                                         anchors.verticalCenter: parent.verticalCenter
-                                        width: Math.max(0, parent.width - 230)
+                                        width: Math.max(0, parent.width - 270)
                                         text: liveCard.modelData.output + " · #" + liveCard.modelData.idx
                                               + " · " + liveCard.modelData.windowCount + " windows"
                                         color: Theme.onSurfaceVariant
                                         font.pixelSize: Theme.fontSizeSmall
                                         elide: Text.ElideRight
                                     }
+
+                                    DActionButton {
+                                        visible: root.compactRows
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        buttonSize: Theme.iconButtonSize
+                                        iconSize: Theme.iconSizeSmall
+                                        iconName: root.rowExpanded(liveCard.modelData) ? "expand_less" : "expand_more"
+                                        iconColor: Theme.surfaceText
+                                        backgroundColor: "transparent"
+                                        Accessible.name: root.rowExpanded(liveCard.modelData) ? "Hide preview" : "Show preview"
+                                        onClicked: root.toggleRow(liveCard.modelData)
+                                    }
+                                }
+
+                                // compact mode: chips stay visible, the preview does not
+                                Row {
+                                    width: parent.width
+                                    spacing: Theme.spacingXS
+                                    visible: root.compactRows && !root.rowExpanded(liveCard.modelData)
+
+                                    Repeater {
+                                        model: root.groupedApps(liveCard.modelData.apps)
+
+                                        delegate: Local.AppChip {
+                                            required property var modelData
+
+                                            chipSize: 20
+                                            appId: modelData.appId
+                                            label: modelData.name
+                                            count: modelData.count
+                                        }
+                                    }
+
+                                    StyledText {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        visible: liveCard.modelData.windowCount === 0
+                                        text: "no windows"
+                                        color: Theme.withAlpha(Theme.onSurfaceVariant, 0.7)
+                                        font.pixelSize: Theme.fontSizeSmall
+                                        font.italic: true
+                                    }
                                 }
 
                                 // the mini-map: every workspace gets one, empty
                                 // workspaces show a placeholder frame
                                 Local.WorkspacePreview {
+                                    visible: root.rowExpanded(liveCard.modelData)
                                     width: parent.width
                                     previewHeight: 88
                                     workspace: liveCard.modelData
@@ -519,6 +579,7 @@ DashTabComponent {
                                 Row {
                                     width: parent.width
                                     spacing: Theme.spacingXS
+                                    visible: root.rowExpanded(liveCard.modelData)
 
                                     DButton {
                                         text: "Focus"

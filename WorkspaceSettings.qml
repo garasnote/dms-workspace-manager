@@ -22,6 +22,13 @@ PluginSettings {
     }
 
     ToggleSetting {
+        settingKey: "compactLiveRows"
+        label: "Compact rows"
+        description: "Show each workspace as a single line (apps as icon chips) and reveal its preview when you click it. Off means the full preview is always open."
+        defaultValue: false
+    }
+
+    ToggleSetting {
         settingKey: "rehomeWindows"
         label: "Fix up windows after a launch"
         description: "After launching a template, windows that mapped on the wrong workspace are moved onto it, and an app that refused to open a new window (a password manager raising the one it already had) has that window adopted instead."
