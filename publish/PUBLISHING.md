@@ -12,10 +12,12 @@ public git repo for the plugin.
 - A public repo with the plugin files at the root (`LICENSE`, `README.md`,
   `plugin.json`, the `*.qml` files, `templates.json`).
 - `README.md` — done.
-- `LICENSE` — done (MIT).
-- `screenshot.png` in the repo root (optional field, but every listed plugin has
-  one; the registry shows it as a card). Take it with the dash open on a neutral
-  workspace, then crop it to the popout:
+- `LICENSE` — done (MIT-0: no attribution required). The registry does not
+  validate or even look at the license, so any license works; DMS itself ships
+  MIT, which is why MIT was the starting point.
+- `screenshot.png` in the repo root. **Required**: `validate_links.py` rejects
+  an entry without a reachable `screenshot` URL. Take it with the dash open on a
+  neutral workspace, then crop it to the popout:
 
   ```bash
   grim -o eDP-1 /tmp/shot.png
@@ -60,6 +62,16 @@ Field rules (from the registry docs):
 | `distro` | `["any"]` |
 | `screenshot` | direct image URL |
 | `requires_dms` | `>=2.1.0` (developed and tested on 2.1.2) |
+
+Notes from reading the registry's own validators:
+
+- `.github/generate.py --validate` requires exactly: `id`, `name`,
+  `capabilities`, `category`, `repo`, `author`, `description`, `dependencies`,
+  `compositors`, `distro`. `id` must match `^[a-z][a-zA-Z0-9]*$`.
+- `.github/validate_links.py` additionally requires a **resolvable**
+  `screenshot` URL and a resolvable `repo` URL, so both must exist before the
+  PR is opened.
+- License is not a registry field at all; it lives in the plugin repo only.
 
 ## 3. Validate, then open the PR
 

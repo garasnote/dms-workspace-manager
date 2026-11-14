@@ -214,3 +214,9 @@ inner program re-launched.
 - MangoHUD is a wrapper (`mangohud %command%`), not a launcher; `focusgame`
   (background-app suspension) is not installed, so both live in the Gaming
   template's `notes`.
+
+## License
+
+MIT-0 (MIT No Attribution): do whatever you want with it, no credit required.
+There is no warranty, which is the point of keeping a license at all — it means
+a bug that eats your `templates.json` is not your liability.
