@@ -24,6 +24,23 @@ public git repo for the plugin.
   python3 -c "from PIL import Image; Image.open('/tmp/shot.png').crop((470,40,1160,880)).save('screenshot.png')"
   ```
 
+## 0b. Let CI gate the PR
+
+`.github/workflows/ci.yml` runs on every push once the repo exists: `qmllint`
+against a `dux-shell` checkout, manifest/registry-entry consistency, the settings
+contract, template structure, shellcheck and a hygiene pass. Run it locally first
+with the same script CI uses:
+
+```bash
+DUX_SHELL_DIR=~/src/dux-shell ./scripts/ci.sh
+```
+
+Do not open the registry PR on a red build — the registry validators will not catch
+a QML syntax error, a drifted `author`, or a setting without a default, and those
+are exactly what breaks installs. Pin the shell version CI lints against by setting
+the repo variable `DUX_SHELL_REF` (default `main`); a tag close to `requires_dms` is
+the honest choice.
+
 ## 1. Create the public plugin repo
 
 From this directory:

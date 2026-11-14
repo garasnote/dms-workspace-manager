@@ -96,6 +96,45 @@ an existing window, never start a second copy) or `"alwaysLaunch": true` (always
 start, and never chase windows around). Settings → *Fix up windows after a
 launch* turns the reconcile pass off entirely.
 
+## CI
+
+Two workflows, both inert until this repo has a remote:
+
+| workflow | trigger | does |
+|---|---|---|
+| `.github/workflows/ci.yml` | every push, PRs | `./scripts/ci.sh` |
+| `.github/workflows/release.yml` | tag `v*.*.*` | checks, packs the loadable files, attaches zip + SHA-256 to the release |
+
+`scripts/ci.sh` is the same thing run locally, so the pipeline cannot rot into
+YAML-only theatre:
+
+```bash
+DUX_SHELL_DIR=~/src/dux-shell ./scripts/ci.sh
+```
+
+What it checks:
+
+- **QML parses** — `qmllint` against a real `dux-shell` checkout, because
+  `import qs.*` has to resolve to something. It exits non-zero with *no*
+  diagnostic for a syntax error, which is why the script reports the filename.
+- **Manifests agree** — `plugin.json` fields present and semver, components point
+  at files that exist, `publish/registry-entry.json` id/name/author/requires_dms
+  match `plugin.json`, repo/screenshot URLs are well-shaped.
+- **Settings contract** — every `settingKey` in `WorkspaceSettings.qml` carries a
+  `defaultValue`; a setting without one silently reads `undefined` in the daemon.
+- **Templates** — `templates.json` version 1, every template has a name and apps,
+  every app has a `cmd`.
+- **Shell scripts** — `shellcheck -S warning` over `bench/` and `scripts/`.
+- **Hygiene** — no `console.log`, no `[wsm]` debug tags left behind, no tabs.
+  (`console.warn`/`console.error` stay: the daemon uses them to report real
+  failures such as an unparseable `templates.json`.)
+
+What CI cannot check, deliberately: niri behaviour, the clipboard handoff, the
+dash rendering, template launches. Those need a compositor and a running shell, so
+they stay manual — that is what `bench/` and the scenarios in this README are for.
+The registry's own validators (`validate_links.py`) check live URLs and therefore
+belong in the publishing runbook, not here.
+
 ## Architecture record (graphify)
 
 `graphify-out/` is a committed knowledge graph of this plugin — 217 nodes, 348
