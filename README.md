@@ -1,5 +1,7 @@
 # Niri Workspace Manager
 
+[![ci](https://github.com/garasnote/dms-workspace-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/garasnote/dms-workspace-manager/actions/workflows/ci.yml)
+
 A DMS (Dux Modular Shell) plugin for managing niri workspaces and launching
 "app templates" (sets of apps) on demand.
 
