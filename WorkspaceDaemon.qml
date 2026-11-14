@@ -474,7 +474,10 @@ PluginComponent {
     // Windows on one workspace, enriched with their process cmdline (cached by
     // pid, since /proc reads are a fork per window).
     function collectWindows(workspaceId, done) {
-        const wins = (NiriService.windows || []).filter(w => String(w.workspace_id) === String(workspaceId));
+        const all = !(workspaceId !== undefined && workspaceId !== null && String(workspaceId) !== "");
+        const wins = all
+            ? (NiriService.windows || []).slice()
+            : (NiriService.windows || []).filter(w => String(w.workspace_id) === String(workspaceId));
         if (wins.length === 0) {
             done([]);
             return;
@@ -524,7 +527,14 @@ PluginComponent {
 
     // --------------------------------------------------------------- diff logic
 
-    // What a template expects vs what is actually open on its workspace.
+    // What a template expects vs what is actually open, anywhere.
+    //
+    //  present   — a matching window already sits on the target workspace
+    //  moveable  — a matching window exists on another workspace: single-instance
+    //              apps (browser, password manager, chat) cannot be launched a
+    //              second time, they just raise the old window, so the window is
+    //              moved instead of spawning a duplicate that lands nowhere
+    //  missing   — nothing matches, so the app has to be started
     function computeDiff(t, done) {
         const apps = templateApps(t);
         const wsName = (t.workspace || "").trim();
@@ -535,15 +545,17 @@ PluginComponent {
                 workspace: wsName,
                 exists: false,
                 present: [],
+                moveable: [],
                 missing: apps,
                 forceMissing: apps.filter(a => a.alwaysLaunch)
             });
             return;
         }
 
-        collectWindows(ws.id, (wins) => {
+        collectWindows(null, (wins) => {
             const used = [];
             const present = [];
+            const moveable = [];
             const missing = [];
 
             for (const app of apps) {
@@ -552,13 +564,30 @@ PluginComponent {
                     continue;
                 }
                 const keys = keysForApp(app);
-                const hit = wins.find(w => used.indexOf(w.id) < 0 && appMatchesWindow(keys, keysForWindow(w)));
-                if (hit) {
-                    used.push(hit.id);
+
+                const onTarget = wins.find(w => used.indexOf(w.id) < 0
+                    && String(w.workspace_id) === String(ws.id)
+                    && appMatchesWindow(keys, keysForWindow(w)));
+                if (onTarget) {
+                    used.push(onTarget.id);
                     present.push(app);
-                } else {
-                    missing.push(app);
+                    continue;
                 }
+
+                const elsewhere = wins.find(w => used.indexOf(w.id) < 0
+                    && String(w.workspace_id) !== String(ws.id)
+                    && appMatchesWindow(keys, keysForWindow(w)));
+                if (elsewhere) {
+                    used.push(elsewhere.id);
+                    moveable.push({
+                        app: app,
+                        windowId: elsewhere.id,
+                        fromWorkspace: elsewhere.workspace_id
+                    });
+                    continue;
+                }
+
+                missing.push(app);
             }
 
             done({
@@ -566,6 +595,7 @@ PluginComponent {
                 workspaceId: ws.id,
                 exists: true,
                 present: present,
+                moveable: moveable,
                 missing: missing,
                 forceMissing: missing.filter(a => a.alwaysLaunch)
             });
@@ -602,6 +632,7 @@ PluginComponent {
             computeDiff(t, (diff) => {
                 out[t.name] = {
                     missing: (diff.missing || []).map(a => a.name),
+                    move: (diff.moveable || []).map(m => m.app.name),
                     present: (diff.present || []).map(a => a.name),
                     exists: diff.exists,
                     workspace: diff.workspace
@@ -870,20 +901,53 @@ PluginComponent {
         const emoji = t.emoji || "";
 
         computeDiff(t, (diff) => {
-            const apps = force ? all : diff.missing;
+            // Gathering (default) moves a template app that is already running
+            // elsewhere onto its workspace instead of spawning a duplicate that
+            // single-instance apps ignore.
+            const gather = (pluginData && pluginData.gatherWindows) !== false;
+            const moveable = diff.moveable || [];
+            const apps = force
+                ? all
+                : (gather ? diff.missing : diff.missing.concat(moveable.map(m => m.app)));
+            const moves = (force || !gather) ? [] : moveable;
             if (pluginService)
                 pluginService.setGlobalVar(pluginId, "lastDiff", {
                     template: name,
                     missing: apps.map(a => a.name),
+                    move: moves.map(m => m.app.name),
                     present: (diff.present || []).map(a => a.name)
                 });
+
+            const moveWindows = (next) => {
+                if (!wsName || moves.length === 0) {
+                    next();
+                    return;
+                }
+                for (const item of moves) {
+                    if (!niriAction("MoveWindowToWorkspace", {
+                        window_id: item.windowId,
+                        reference: {
+                            Name: wsName
+                        },
+                        focus: false
+                    }))
+                        niri(["action", "move-window-to-workspace", "--window-id", String(item.windowId), "--focus", "false", wsName], () => {});
+                }
+                next();
+            };
 
             const spawnNow = () => {
                 const before = (NiriService.windows || []).map(w => w.id);
                 spawnApps(apps, () => {
-                    const summary = apps.length === 0
-                        ? `"${name}" is already complete`
-                        : `Opened ${apps.length} app${apps.length === 1 ? "" : "s"} for "${name}"`;
+                    let summary;
+                    if (apps.length === 0 && moves.length === 0)
+                        summary = `"${name}" is already complete`;
+                    else if (apps.length === 0)
+                        summary = `Gathered ${moves.length} window${moves.length === 1 ? "" : "s"} onto "${name}"`;
+                    else if (moves.length === 0)
+                        summary = `Opened ${apps.length} app${apps.length === 1 ? "" : "s"} for "${name}"`;
+                    else
+                        summary = `Opened ${apps.length} and moved ${moves.length} window${moves.length === 1 ? "" : "s"} for "${name}"`;
                     publishStatus(summary);
                     publishLive();
                     // window rules aside, niri places a window on whatever
@@ -909,7 +973,7 @@ PluginComponent {
                 focusByName(wsName, () => {
                     waitFor(() => workspaceFocused(wsName), 1500, (focused) => {
                         if (focused) {
-                            spawnNow();
+                            moveWindows(spawnNow);
                             return;
                         }
                         publishStatus(`Could not focus "${wsName}" — nothing was launched`);

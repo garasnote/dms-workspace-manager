@@ -15,16 +15,16 @@ PluginSettings {
     }
 
     ToggleSetting {
-        settingKey: "showEmptyWorkspaces"
-        label: "Show empty workspaces"
-        description: "Empty unnamed workspaces are niri's filler; they are hidden so the list stays readable. Named ones always show."
-        defaultValue: false
+        settingKey: "gatherWindows"
+        label: "Gather running apps onto the workspace"
+        description: "Launching a template moves its windows here when the app is already running elsewhere. Single-instance apps (browser, password manager, chat) cannot be started twice — they just raise the old window, which is why it used to appear in the wrong workspace. Turn off to spawn a fresh copy instead."
+        defaultValue: true
     }
 
     ToggleSetting {
-        settingKey: "liveThumbnails"
-        label: "Live window previews (heavy)"
-        description: "Real screencopies of each window, focused workspace only, while the panel is open. Each one is a live capture held in memory, so it costs GPU/VRAM continuously — leave it off unless you want the effect. Where capture is unavailable (niri with DMS 2.1.x) the mini-map keeps app icons either way."
+        settingKey: "showEmptyWorkspaces"
+        label: "Show empty workspaces"
+        description: "Empty unnamed workspaces are niri's filler; they are hidden so the list stays readable. Named ones always show."
         defaultValue: false
     }
 

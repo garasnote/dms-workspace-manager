@@ -67,10 +67,31 @@ overwrites that template.
 - **Templates is the secondary tab**: the capture/confirm card lives there,
   along with each template's icon strip (full colour = open, dimmed + ring =
   would be launched), Launch/Relaunch, Edit and Delete.
-- Real **screencopy thumbnails** are attempted inside each tile where the
-  compositor allows window capture (Hyprland, or DMS builds with ext-toplevel
-  capture). On niri + DMS 2.1.x capture is unavailable, so tiles keep the icon
-  and title; Settings → *Live window previews* turns the attempt off entirely.
+- Tiles show the app icon and the window title; pixel-accurate screencopies are
+  not implemented, because capturing toplevels needs a compositor/DMS capability
+  that niri with DMS 2.x does not expose (`WindowCaptureService` /
+  ext-toplevel capture). The mini-map is a live *layout* preview, not a video.
+
+## Launching a template puts its apps on its workspace
+
+`Launch` diffs the template against **every** window, not just the target
+workspace:
+
+| Situation | What happens |
+|---|---|
+| app already on the template's workspace | left alone ("present") |
+| app running on another workspace | its window is **moved** here ("Gather") |
+| app not running at all | started, on the verified-focused workspace |
+| app marked `alwaysLaunch` | always started, even if one is open |
+
+Gathering is the important part: browsers, password managers and chat clients
+are single-instance, so launching them again just raises the old window —
+which is why a template used to "open" inside whichever workspace already had
+those windows. Settings → *Gather running apps onto the workspace* switches it
+off if you would rather spawn duplicates.
+
+After a launch, anything that mapped late and landed elsewhere is swept onto the
+target workspace (Settings → *Move late-opening windows…*).
 
 **Live actions in detail**
 

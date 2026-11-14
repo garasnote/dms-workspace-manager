@@ -40,7 +40,6 @@ DashTabComponent {
     property string closeArmId: ""
 
     readonly property string statusText: statusObj ? (statusObj.message || "") : ""
-    readonly property bool thumbnailsEnabled: !root.pluginData || root.pluginData.liveThumbnails !== false
     readonly property bool showEmpty: !root.pluginData || root.pluginData.showEmptyWorkspaces === true
 
     // Empty, unnamed workspaces are niri's filler (there is always one at the
@@ -150,6 +149,11 @@ DashTabComponent {
     function missingFor(name) {
         const d = diffMap ? diffMap[name] : null;
         return d && d.missing ? d.missing : [];
+    }
+
+    function moveableFor(name) {
+        const d = diffMap ? diffMap[name] : null;
+        return d && d.move ? d.move : [];
     }
 
     function appName(app) {
@@ -498,7 +502,6 @@ DashTabComponent {
                                     previewHeight: 88
                                     workspace: liveCard.modelData
                                     live: root.live
-                                    wantThumbnails: root.thumbnailsEnabled && liveCard.modelData.focused
                                     activeWindowId: root.focusedWindowId(liveCard.modelData.apps)
                                 }
 
@@ -797,6 +800,8 @@ DashTabComponent {
 
                             readonly property bool editing: root.editingName === modelData.name
                             readonly property var missing: root.missingFor(modelData.name)
+                            readonly property var moveable: root.moveableFor(modelData.name)
+                            readonly property int pending: missing.length + moveable.length
 
                             width: content.width
                             height: templateColumn.implicitHeight + Theme.spacingM * 2
@@ -863,9 +868,15 @@ DashTabComponent {
                                     spacing: Theme.spacingXS
 
                                     DButton {
-                                        text: templateCard.missing.length === 0 ? "All open" : "Launch (" + templateCard.missing.length + ")"
-                                        iconName: "rocket_launch"
-                                        variant: templateCard.missing.length === 0 ? "tonal" : "filled"
+                                        // "Gather" when nothing needs starting but windows
+                                        // are sitting on another workspace
+                                        text: templateCard.pending === 0
+                                              ? "All open"
+                                              : (templateCard.missing.length === 0
+                                                    ? "Gather (" + templateCard.moveable.length + ")"
+                                                    : "Launch (" + templateCard.pending + ")")
+                                        iconName: templateCard.missing.length === 0 && templateCard.pending > 0 ? "move_down" : "rocket_launch"
+                                        variant: templateCard.pending === 0 ? "tonal" : "filled"
                                         onClicked: root.send("launch", templateCard.modelData.name)
                                     }
 

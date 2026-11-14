@@ -3,7 +3,7 @@
     "name": "Niri Workspace Manager",
     "description": "Create, name and switch niri workspaces; launch app templates and snapshot the current session for later.",
     "version": "1.0.0",
-    "author": "jposo",
+    "author": "garasnote",
     "license": "MIT",
     "type": "composite",
     "capabilities": [

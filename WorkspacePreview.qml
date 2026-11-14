@@ -9,17 +9,16 @@ import "." as Local
 
 // Live mini-map of one workspace.
 //
-// Columns and cells are drawn to scale from niri's own layout data
-// (`pos_in_scrolling_layout`, `tile_size`), so a scrollable-tiling workspace
-// reads correctly: what is on screen is bright and framed, what is scrolled off
-// to either side is dimmed. Each cell shows a real screencopy thumbnail of the
-// window when the compositor supports it, and the app icon otherwise.
+// Columns and cells are drawn from niri's own layout data
+// (`pos_in_scrolling_layout`, `tile_size`): a scrollable-tiling workspace reads
+// like its real shape. Every tile shows the app icon and the window title, the
+// focused window is ringed, and the on-screen subset is framed when niri
+// reports it.
 Item {
     id: root
 
     property var workspace: null
     property bool live: false
-    property bool wantThumbnails: true
     property real previewHeight: 112
     property real columnGap: 2
     property real cellGap: 1
@@ -40,12 +39,6 @@ Item {
             return true;
         return win && win.inView === true;
     }
-    // Capture sources come straight off the toplevel (the way DMS's own
-    // overview does it), so no version-specific service is needed. A compositor
-    // that cannot capture simply leaves `hasContent` false and the app icon
-    // stays visible underneath.
-    readonly property bool thumbnails: wantThumbnails && live
-    readonly property var toplevels: CompositorService.sortedToplevels || []
 
     // ---------------------------------------------------------------- geometry
 
@@ -179,19 +172,6 @@ Item {
         return Qt.rect(minX, minY, maxX - minX, maxY - minY);
     }
 
-    function captureFor(windowId) {
-        if (!thumbnails || windowId === undefined || windowId === null)
-            return null;
-        const toplevel = toplevels.find(t => String(t.niriWindowId) === String(windowId));
-        if (!toplevel)
-            return null;
-        if (toplevel.wayland)
-            return toplevel.wayland;
-        if (toplevel.sourceToplevel)
-            return toplevel.sourceToplevel.wayland || toplevel.sourceToplevel.waylandToplevel || null;
-        return toplevel.waylandToplevel || null;
-    }
-
     // -------------------------------------------------------------------- view
 
     Rectangle {
@@ -253,7 +233,7 @@ Item {
                 opacity: modelData.onScreen ? 1 : 0.6
                 clip: true
 
-                // icon is the always-available layer...
+                // app icon
                 Local.AppChip {
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: cell.showTitle ? -Math.round(parent.height * 0.08) : 0
@@ -261,20 +241,12 @@ Item {
                     appId: modelData.win ? modelData.win.appId : ""
                     label: modelData.win ? modelData.win.name : ""
                     dimmed: !modelData.onScreen
-                    opacity: thumbnail.hasContent ? 0 : 1
-
-                    Behavior on opacity {
-                        NumberAnimation {
-                            duration: Theme.expressiveDurations.expressiveEffects
-                            easing.type: Easing.OutCubic
-                        }
-                    }
                 }
 
                 // window title strip along the bottom of the tile; long titles
                 // scroll instead of forcing the tile wider
                 Local.MarqueeText {
-                    visible: cell.showTitle && !thumbnail.hasContent
+                    visible: cell.showTitle
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
@@ -287,27 +259,7 @@ Item {
                     animate: root.live
                 }
 
-                // ...and a real screencopy of the window on top of it
-                ScreencopyView {
-                    id: thumbnail
-
-                    anchors.fill: parent
-                    captureSource: root.thumbnails && modelData.onScreen
-                        ? root.captureFor(modelData.win ? modelData.win.id : -1)
-                        : null
-                    live: root.live
-                    paintCursor: false
-                    opacity: hasContent ? 1 : 0
-
-                    Behavior on opacity {
-                        NumberAnimation {
-                            duration: Theme.expressiveDurations.expressiveEffects
-                            easing.type: Easing.OutCubic
-                        }
-                    }
-                }
             }
         }
     }
-
 }
