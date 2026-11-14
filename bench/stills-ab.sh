@@ -38,6 +38,16 @@ TAB=$(mktemp)
 
 log() { printf '%s\n' "$*" >&2; }
 
+set_flag() { # key true|false
+  python3 - "$SETTINGS" "$1" "$2" <<'PY2'
+import json, sys
+path, key, value = sys.argv[1], sys.argv[2], sys.argv[3] == "true"
+data = json.load(open(path))
+data.setdefault("workspaceManager", {})[key] = value
+json.dump(data, open(path, "w"), indent=2)
+PY2
+}
+
 set_setting() { # true|false
   python3 - "$SETTINGS" "$1" <<'PY'
 import json, sys
@@ -163,6 +173,7 @@ echo "arm,sample,rss_closed_kb,rss_open_peak_kb,rss_after_close_kb,dms_cpu_open_
 
 restore() {
   set_setting true
+  set_flag compactLiveRows true
   dms ipc call dash close >/dev/null 2>&1
   rm -f "$TAB" "$TAB.up"
   rm -rf "$STILLS_DIR"
@@ -178,8 +189,9 @@ for arm in "${ARMS[@]}"; do
       restart_shell || continue
       for i in $(seq 1 "$SAMPLES"); do sample_once "$arm" "$i" | tee -a "$OUT_CSV"; done
       ;;
-    warm)
+    roomy|compact)
       set_setting true
+      set_flag compactLiveRows "$([[ "$arm" == compact ]] && echo true || echo false)"
       rm -rf "$STILLS_DIR"
       restart_shell || continue
       dms ipc call dash open plugin_workspaceManager >/dev/null 2>&1
@@ -212,7 +224,7 @@ if not rows:
     print("no samples")
     raise SystemExit
 
-order = {"off": 0, "warm": 1, "cold": 2}
+order = {"off": 0, "warm": 1, "cold": 2, "roomy": 3, "compact": 4}
 arms = sorted({r["arm"] for r in rows}, key=lambda a: order.get(a, 9))
 
 def med(arm, key, scale=1.0):

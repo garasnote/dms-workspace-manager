@@ -109,6 +109,12 @@ launch* turns the reconcile pass off entirely.
 | clipboard not yours | 0 ms | 0 ms | 240 ms |
 | background CPU, panel shut | 0 | 0 | 0 |
 
+Compact rows vs full previews: identical shell CPU, niri ~15% lower while the panel
+is open (fewer tiles to paint), memory within noise — collapsing rows is a layout
+feature, not a performance one. A five-minute open panel captures nothing after the
+first batch; the cache produces exactly one fresh batch once the 10-minute TTL
+expires.
+
 Read `bench/RESULTS.md` for the method and the caveats — chiefly that the cold
 arm's 389 ms panel-open latency is the dash tab's QML first-load, not captures
 (the stills-off arm shows the same 430 ms on its first open after a restart).

@@ -90,6 +90,62 @@ windows every time. So the feature's steady-state footprint is a plateau, and th
 "+10 MB" from the A/B table is the cost *while the panel is open*, not memory lost
 per open.
 
+## Round 2a — compact rows vs full previews
+
+Same harness, two more arms, both with stills on and a warm cache:
+
+- `roomy` — every workspace shows its full preview (8 tiles painted)
+- `compact` — each workspace is one collapsed line, one preview only
+
+| metric | roomy | compact |
+|---|---:|---:|
+| peak RSS, panel open (MB) | 62.3 | 65.5 |
+| dms CPU while open (s) | 0.030 | 0.030 |
+| niri CPU while open (s) | 2.39 | **2.02** |
+| panel surface up (ms) | 48 | 51 |
+
+The honest reading: **collapsing rows is not a performance feature.** Shell CPU is
+identical, memory is inside the noise (the compact arm even reads 3 MB higher,
+which flipped sign between samples), and the only consistent delta is niri doing
+~15% less work while the panel is open, because there are fewer tiles to paint.
+The expensive part of this feature is *capturing* stills, not drawing them. Compact
+mode earns its place by fitting four or five workspaces where two previews did —
+not by saving resources.
+
+## Round 2b — hold sweep and cache behaviour
+
+Question: does an open panel keep costing anything, and does the cache really
+avoid re-capturing?
+
+Panel left open for **5 minutes** with the cache warm, sampling every 30 s:
+
+| elapsed | stills on disk | new captures |
+|---:|---:|---:|
+| 8 s (initial batch) | 8 | 8 |
+| 30 s – 300 s | 8 | **0** |
+
+Zero captures in five minutes of an open panel. The pull only runs when the panel
+opens (`refreshLive`), never on a timer, so an open panel costs paint time and
+nothing else.
+
+Cache expiry, with the TTL temporarily lowered to 60 s for the experiment (shipped
+value is 10 minutes):
+
+| action | captures |
+|---|---|
+| reopen immediately | **0** |
+| close, wait 75 s (past TTL), reopen | **8** |
+| reopen immediately again | **0** |
+
+So the cache is honoured, and expiry produces exactly one fresh batch — not a
+steady drip.
+
+Note on methodology: the first attempt at this sweep measured zero stills for five
+minutes and proved nothing, because the A/B harness deletes the still files while
+the daemon's cache map still holds fresh timestamps, so no capture was ever
+requested. `bench/stills-hold.sh` now clears both and refuses to run unless a
+baseline batch appeared.
+
 ## Limitations, stated plainly
 
 - One machine, one window count (8), one monitor. Costs scale linearly with the

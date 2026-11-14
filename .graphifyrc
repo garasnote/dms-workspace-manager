@@ -1,0 +1,5 @@
+# QML is not in graphify's extension map; its function bodies are JavaScript, so
+# parse it with the JS extractor. Declarative object syntax becomes a parse error
+# at worst, which costs nodes, not correctness of the JS-level call graph.
+language.qml=javascript
+query_depth=3
