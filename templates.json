@@ -18,7 +18,7 @@
         },
         {
           "name": "Hermes agent",
-          "cmd": "ghostty -e hermes-agent",
+          "cmd": "ghostty -e herdr",
           "appId": "com.mitchellh.ghostty"
         }
       ]

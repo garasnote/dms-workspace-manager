@@ -51,6 +51,26 @@ dms ipc call plugins enable workspaceManager
 Nothing is written until you press Save. Recapturing with an existing name
 overwrites that template.
 
+**The dash, visually**
+
+- Every template row carries an **icon strip** of its apps: full colour when
+  the app is already open on the target workspace, dimmed with a ring when
+  `Launch` would start it. You can read a template's state at a glance.
+- Live rows carry the workspace's windows as **grouped icon chips** (four
+  Ghostty terminals collapse into one chip with a `4` badge).
+- The Live pane opens with a **hero card** for the focused workspace: big emoji,
+  name, output/index/window count, then a **live mini-map** of the workspace —
+  columns and tiles drawn to scale from niri's own layout data, each tile with
+  the app icon and window title. It redraws on every niri event.
+- The pane switcher and refresh button are pinned; only the list scrolls.
+
+**Live pixel thumbnails** (where supported): each mini-map tile tries a real
+screencopy of the window. That needs a compositor/DMS combination that can
+capture toplevels — Hyprland, or DMS builds with `WindowCaptureService` and
+ext-toplevel capture. On niri with DMS 2.1.x capture is unavailable, so tiles
+keep the icon + title instead; nothing breaks, and the toggle in Settings turns
+the attempt off entirely.
+
 **Live pane**
 
 - Every workspace with its emoji, output, index, window count and app list.

@@ -6,6 +6,7 @@ import qs.DCommon.Widgets
 import qs.Services
 import qs.Modules.Plugins
 import qs.Modules.DDash
+import "." as Local
 
 // Workspace Manager
 //
@@ -39,8 +40,21 @@ DashTabComponent {
     property string closeArmId: ""
 
     readonly property string statusText: statusObj ? (statusObj.message || "") : ""
+    readonly property bool thumbnailsEnabled: !root.pluginData || root.pluginData.liveThumbnails !== false
+    readonly property var heroWorkspace: {
+        const list = root.liveList || [];
+        return list.find(w => w.focused) || list[0] || null;
+    }
+    readonly property int heroFocusedWindowId: {
+        const hero = root.heroWorkspace;
+        if (!hero || !hero.apps)
+            return -1;
+        const focused = hero.apps.find(a => a.focused);
+        return focused ? focused.id : -1;
+    }
 
     implicitHeight: DashMetrics.tabDefaultHeight
+    focusTarget: flick
 
     // ------------------------------------------------------------- state sync
 
@@ -69,9 +83,28 @@ DashTabComponent {
     }
 
     onLiveChanged: {
-        if (live)
-            refresh();
+        if (!live)
+            return;
+        refresh();
+        flick.contentY = 0;
+        settleTimer.restart();
     }
+
+    // The dash reveals the focused item when it opens; that can leave the list
+    // scrolled past the hero, so snap back once layout has settled.
+    Timer {
+        id: settleTimer
+        interval: 200
+        onTriggered: root.flickTop()
+    }
+
+    function flickTop() {
+        if (flick && flick.contentY !== 0)
+            flick.contentY = 0;
+    }
+
+    // Switching panes starts at the top, so the hero is the first thing seen.
+    onPaneChanged: flick.contentY = 0
 
     function refresh() {
         send("refreshLive");
@@ -102,6 +135,44 @@ DashTabComponent {
     function missingFor(name) {
         const d = diffMap ? diffMap[name] : null;
         return d && d.missing ? d.missing : [];
+    }
+
+    function appName(app) {
+        return typeof app === "string" ? app : (app.name || app.cmd || "");
+    }
+
+    function appIdOf(app) {
+        return typeof app === "string" ? "" : (app.appId || "");
+    }
+
+    function appCmdOf(app) {
+        return typeof app === "string" ? app : (app.cmd || app.name || "");
+    }
+
+    function appMissing(templateName, app) {
+        return missingFor(templateName).indexOf(appName(app)) >= 0;
+    }
+
+    // Windows grouped by app, so a workspace with four Ghostty terminals shows
+    // one chip with a "4" badge.
+    function groupedApps(apps) {
+        const out = [];
+        const index = {};
+        const list = apps || [];
+        for (const app of list) {
+            const key = app.appId || app.name || "";
+            if (index[key] !== undefined) {
+                out[index[key]].count++;
+                continue;
+            }
+            index[key] = out.length;
+            out.push({
+                appId: app.appId || "",
+                name: app.name || "",
+                count: 1
+            });
+        }
+        return out;
     }
 
     function startEdit(t) {
@@ -242,28 +313,15 @@ DashTabComponent {
 
     // -------------------------------------------------------------------- view
 
-    Flickable {
-        id: flick
+    Column {
         anchors.fill: parent
-        clip: true
-        contentWidth: width
-        contentHeight: content.implicitHeight
-        boundsBehavior: Flickable.StopAtBounds
-        flickableDirection: Flickable.VerticalFlick
+        spacing: Theme.spacingS
 
-        ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
-        }
-
-        Column {
-            id: content
-            width: flick.width
-            spacing: Theme.spacingM
-
-            // ---- header
-            Row {
-                width: parent.width
-                spacing: Theme.spacingXS
+        // ---- header (pinned: stays put while the list scrolls)
+        Row {
+            id: headerRow
+            width: parent.width
+            spacing: Theme.spacingXS
 
                 DButton {
                     text: "Templates"
@@ -279,27 +337,48 @@ DashTabComponent {
                     onClicked: root.pane = 1
                 }
 
-                DActionButton {
-                    buttonSize: Theme.iconButtonSize
-                    iconName: "refresh"
-                    iconSize: Theme.iconSizeSmall
-                    iconColor: Theme.surfaceText
-                    backgroundColor: Theme.surfaceContainerHighest
-                    Accessible.name: "Refresh workspace state"
-                    onClicked: root.refresh()
-                }
+            DActionButton {
+                buttonSize: Theme.iconButtonSize
+                iconName: "refresh"
+                iconSize: Theme.iconSizeSmall
+                iconColor: Theme.surfaceText
+                backgroundColor: Theme.surfaceContainerHighest
+                Accessible.name: "Refresh workspace state"
+                onClicked: root.refresh()
+            }
+        }
+
+        StyledText {
+            width: parent.width
+            visible: root.statusText !== ""
+            text: root.statusText
+            color: Theme.onSurfaceVariant
+            font.pixelSize: Theme.fontSizeSmall
+            wrapMode: Text.Wrap
+            maximumLineCount: 2
+            elide: Text.ElideRight
+        }
+
+        Flickable {
+            id: flick
+            focus: true
+            activeFocusOnTab: true
+            width: parent.width
+            height: Math.max(1, parent.height - y)
+            clip: true
+            contentWidth: width
+            contentHeight: content.implicitHeight
+            boundsBehavior: Flickable.StopAtBounds
+            flickableDirection: Flickable.VerticalFlick
+
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
             }
 
-            StyledText {
-                width: parent.width
-                visible: root.statusText !== ""
-                text: root.statusText
-                color: Theme.onSurfaceVariant
-                font.pixelSize: Theme.fontSizeSmall
-                wrapMode: Text.Wrap
-                maximumLineCount: 2
-                elide: Text.ElideRight
-            }
+            Column {
+                id: content
+                width: flick.width
+                spacing: Theme.spacingM
 
             // ---- record / confirm card
             StyledRect {
@@ -462,7 +541,6 @@ DashTabComponent {
 
                         readonly property bool editing: root.editingName === modelData.name
                         readonly property var missing: root.missingFor(modelData.name)
-
                         width: content.width
                         height: templateColumn.implicitHeight + Theme.spacingM * 2
                         radius: Theme.cornerRadius
@@ -499,7 +577,29 @@ DashTabComponent {
                                 }
                             }
 
-                            // line 2: actions
+                            // line 2: app icons (dimmed = would be launched)
+                            Row {
+                                width: parent.width
+                                spacing: Theme.spacingXS
+
+                                Repeater {
+                                    model: templateCard.modelData.apps || []
+
+                                    delegate: Local.AppChip {
+                                        required property var modelData
+
+                                        chipSize: 24
+                                        appId: root.appIdOf(modelData)
+                                        cmd: root.appCmdOf(modelData)
+                                        label: root.appName(modelData)
+                                        dimmed: root.appMissing(templateCard.modelData.name, modelData)
+                                        ringed: root.appMissing(templateCard.modelData.name, modelData)
+                                        ringColor: Theme.withAlpha(Theme.primary, 0.55)
+                                    }
+                                }
+                            }
+
+                            // line 3: actions
                             Row {
                                 width: parent.width
                                 spacing: Theme.spacingXS
@@ -545,7 +645,7 @@ DashTabComponent {
                                 }
                             }
 
-                            // line 3: edit panel
+                            // line 4: edit panel
                             Column {
                                 width: parent.width
                                 spacing: Theme.spacingS
@@ -702,6 +802,90 @@ DashTabComponent {
                     font.weight: Font.Bold
                 }
 
+                // hero: the focused workspace, previewed live
+                StyledRect {
+                    width: parent.width
+                    height: heroColumn.implicitHeight + Theme.spacingM * 2
+                    radius: Theme.cornerRadius
+                    color: Theme.surfaceContainerHigh
+                    visible: root.heroWorkspace !== null
+
+                    Column {
+                        id: heroColumn
+
+                        x: Theme.spacingM
+                        y: Theme.spacingM
+                        width: parent.width - Theme.spacingM * 2
+                        spacing: Theme.spacingS
+
+                        Row {
+                            width: parent.width
+                            spacing: Theme.spacingS
+
+                            StyledText {
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: root.heroWorkspace && root.heroWorkspace.emoji ? root.heroWorkspace.emoji : "◦"
+                                font.pixelSize: Theme.fontSizeXXLarge
+                            }
+
+                            Column {
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: parent.width - 60
+                                spacing: 1
+
+                                StyledText {
+                                    text: root.heroWorkspace
+                                          ? (root.heroWorkspace.name || ("Workspace " + root.heroWorkspace.idx))
+                                          : ""
+                                    color: Theme.surfaceText
+                                    font.pixelSize: Theme.fontSizeLarge
+                                    font.weight: Font.Bold
+                                    elide: Text.ElideRight
+                                    width: parent.width
+                                }
+
+                                StyledText {
+                                    width: parent.width
+                                    text: root.heroWorkspace
+                                          ? root.heroWorkspace.output + " · #" + root.heroWorkspace.idx
+                                            + " · " + root.heroWorkspace.windowCount + " windows"
+                                            + (root.thumbnailsEnabled ? " · live" : "")
+                                          : ""
+                                    color: Theme.onSurfaceVariant
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    elide: Text.ElideRight
+                                }
+                            }
+                        }
+
+                        Local.WorkspacePreview {
+                            width: parent.width
+                            workspace: root.heroWorkspace
+                            live: root.live
+                            wantThumbnails: root.thumbnailsEnabled
+                            activeWindowId: root.heroFocusedWindowId
+                        }
+
+                        Row {
+                            width: parent.width
+                            spacing: Theme.spacingXS
+
+                            Repeater {
+                                model: root.groupedApps(root.heroWorkspace ? root.heroWorkspace.apps : [])
+
+                                delegate: Local.AppChip {
+                                    required property var modelData
+
+                                    chipSize: 22
+                                    appId: modelData.appId
+                                    label: modelData.name
+                                    count: modelData.count
+                                }
+                            }
+                        }
+                    }
+                }
+
                 Repeater {
                     model: root.liveList
 
@@ -749,12 +933,31 @@ DashTabComponent {
                                 }
                             }
 
-                            StyledText {
+                            Row {
                                 width: parent.width
-                                text: (liveCard.modelData.apps || []).map(a => a.name).join("  ·  ")
-                                color: Theme.onSurfaceVariant
-                                font.pixelSize: Theme.fontSizeSmall
-                                elide: Text.ElideRight
+                                spacing: Theme.spacingXS
+
+                                Repeater {
+                                    model: root.groupedApps(liveCard.modelData.apps)
+
+                                    delegate: Local.AppChip {
+                                        required property var modelData
+
+                                        chipSize: 22
+                                        appId: modelData.appId
+                                        label: modelData.name
+                                        count: modelData.count
+                                    }
+                                }
+
+                                StyledText {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    visible: liveCard.modelData.windowCount === 0
+                                    text: "no windows"
+                                    color: Theme.withAlpha(Theme.onSurfaceVariant, 0.7)
+                                    font.pixelSize: Theme.fontSizeSmall
+                                    font.italic: true
+                                }
                             }
 
                             Row {
@@ -885,9 +1088,10 @@ DashTabComponent {
                 }
             }
 
-            Item {
-                width: 1
-                height: Theme.spacingS
+                Item {
+                    width: 1
+                    height: Theme.spacingS
+                }
             }
         }
     }

@@ -772,13 +772,29 @@ PluginComponent {
                 output: ws.output || "",
                 focused: !!ws.is_focused,
                 windowCount: wins.length,
-                apps: wins.map(w => ({
-                    id: w.id,
-                    name: windowLabel(w),
-                    appId: w.app_id || "",
-                    title: w.title || "",
-                    pid: w.pid || 0
-                }))
+                apps: wins.map(w => {
+                    const layout = w.layout || null;
+                    const pos = (layout && layout.pos_in_scrolling_layout) ? layout.pos_in_scrolling_layout : null;
+                    const tile = (layout && layout.tile_size) ? layout.tile_size : null;
+                    return {
+                        id: w.id,
+                        name: windowLabel(w),
+                        appId: w.app_id || "",
+                        title: w.title || "",
+                        pid: w.pid || 0,
+                        floating: !!w.is_floating,
+                        focused: !!w.is_focused,
+                        col: pos ? pos[0] : -1,
+                        row: pos ? pos[1] : -1,
+                        tileW: tile ? tile[0] : 0,
+                        tileH: tile ? tile[1] : 0,
+                        // niri fills this only while the tile sits in the
+                        // monitor's current view. It is null when the field is
+                        // not reported (older niri), so the mini-map treats null
+                        // as "unknown", not "off screen".
+                        inView: (layout && layout.tile_pos_in_workspace_view) ? true : null
+                    };
+                })
             });
         }
         out.sort((a, b) => {

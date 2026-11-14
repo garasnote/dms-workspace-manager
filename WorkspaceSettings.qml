@@ -14,6 +14,13 @@ PluginSettings {
         defaultValue: true
     }
 
+    ToggleSetting {
+        settingKey: "liveThumbnails"
+        label: "Live window previews"
+        description: "Real screencopies inside the workspace mini-map where the compositor allows window capture (Hyprland, or DMS builds with ext-toplevel capture). On niri + DMS 2.1.x the mini-map falls back to app icons."
+        defaultValue: true
+    }
+
     StyledText {
         width: parent.width
         text: "Templates are stored in templates.json inside this plugin's folder. Edit that file, then press Reload. Use 'Record' in the Workspaces dash tab to snapshot the focused workspace into a template."
