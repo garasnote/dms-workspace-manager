@@ -33,13 +33,22 @@ Item {
         spacing: root.gap
         y: Math.max(0, Math.round((root.height - height) / 2))
 
-        NumberAnimation on x {
-            from: 0
-            to: -(measure.implicitWidth + root.gap)
-            duration: Math.max(3000, (measure.implicitWidth + root.gap) * 28)
+        // Holds the title at rest first, so opening the panel shows it from the
+        // beginning instead of mid-scroll.
+        SequentialAnimation on x {
             loops: Animation.Infinite
             running: root.animate && root.overflowing
-            easing.type: Easing.Linear
+
+            PauseAnimation {
+                duration: 1600
+            }
+
+            NumberAnimation {
+                from: 0
+                to: -(measure.implicitWidth + root.gap)
+                duration: Math.max(3000, (measure.implicitWidth + root.gap) * 28)
+                easing.type: Easing.Linear
+            }
         }
 
         StyledText {

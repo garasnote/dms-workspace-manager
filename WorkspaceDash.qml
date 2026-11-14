@@ -95,16 +95,29 @@ DashTabComponent {
         if (!live)
             return;
         refresh();
-        flick.contentY = 0;
         settleTimer.restart();
     }
 
-    // The dash reveals the focused item when it opens; that can leave the list
-    // scrolled past the first workspace, so snap back once layout has settled.
+    // The dash reveals the focused item when it opens, which leaves the list
+    // scrolled into the middle of a card (and hides the Workspaces heading).
+    // Snap back to the top twice, because the reveal can come after the first
+    // pass; the second pass yields if you already started scrolling.
     Timer {
         id: settleTimer
-        interval: 200
-        onTriggered: root.flickTop()
+        interval: 400
+        onTriggered: {
+            root.flickTop();
+            lateSettleTimer.restart();
+        }
+    }
+
+    Timer {
+        id: lateSettleTimer
+        interval: 600
+        onTriggered: {
+            if (!flick.moving)
+                root.flickTop();
+        }
     }
 
     onPaneChanged: {
@@ -414,6 +427,8 @@ DashTabComponent {
 
                 // =================================================== live pane
                 Column {
+                    id: liveRows
+
                     width: parent.width
                     spacing: Theme.spacingS
                     visible: root.pane === 0
