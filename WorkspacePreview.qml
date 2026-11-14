@@ -109,11 +109,14 @@ Item {
     // Scrollable tiling makes workspaces far wider than they are tall, so the
     // preview scales each axis to fill the box: relative column widths stay
     // true, and the mini-map uses the whole frame instead of a tiny strip.
-    readonly property real scaleX: {
-        if (!hasWindows)
-            return 1;
+    // Columns get equal, fixed widths: proportional widths made one narrow
+    // column (or a wide one) dominate the strip and read as a bug. Heights keep
+    // their relative sizes so stacked windows still look stacked.
+    readonly property real columnWidthFixed: {
+        if (columns.length === 0)
+            return 0;
         const gaps = columnGap * Math.max(0, columns.length - 1);
-        return Math.max(0.00001, (availW - gaps) / totalWidth);
+        return Math.max(1, (availW - gaps) / columns.length);
     }
 
     readonly property real scaleY: {
@@ -134,7 +137,7 @@ Item {
         const out = [];
         let x = 0;
         for (const column of columns) {
-            const columnW = column.width * scaleX;
+            const columnW = columnWidthFixed;
             let y = 0;
             for (const cell of column.cells) {
                 const cellH = Math.max(1, cell.tileH || 1) * scaleY;
@@ -268,21 +271,20 @@ Item {
                     }
                 }
 
-                // window title strip along the bottom of the tile
-                StyledText {
+                // window title strip along the bottom of the tile; long titles
+                // scroll instead of forcing the tile wider
+                Local.MarqueeText {
                     visible: cell.showTitle && !thumbnail.hasContent
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
-                    anchors.leftMargin: 3
-                    anchors.rightMargin: 3
+                    anchors.leftMargin: 4
+                    anchors.rightMargin: 4
                     anchors.bottomMargin: 2
                     text: cell.title
-                    color: Theme.withAlpha(Theme.onSurfaceVariant, 0.9)
-                    font.pixelSize: Math.max(7, Math.min(10, Math.round(parent.height * 0.13)))
-                    elide: Text.ElideRight
-                    horizontalAlignment: Text.AlignHCenter
-                    maximumLineCount: 1
+                    color: Theme.withAlpha(Theme.onSurfaceVariant, 0.95)
+                    pixelSize: Math.max(7, Math.min(10, Math.round(parent.height * 0.14)))
+                    animate: root.live
                 }
 
                 // ...and a real screencopy of the window on top of it

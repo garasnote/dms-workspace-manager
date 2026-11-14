@@ -118,7 +118,10 @@ DashTabComponent {
             flick.contentY = 0;
     }
 
+    // Re-reading templates.json on open means hand edits show up without a
+    // reload button; state updates themselves are event-driven.
     function refresh() {
+        send("reload");
         send("refreshLive");
     }
 
@@ -369,15 +372,6 @@ DashTabComponent {
                 onClicked: root.pane = 1
             }
 
-            DActionButton {
-                buttonSize: Theme.iconButtonSize
-                iconName: "refresh"
-                iconSize: Theme.iconSizeSmall
-                iconColor: Theme.surfaceText
-                backgroundColor: Theme.surfaceContainerHighest
-                Accessible.name: "Refresh workspace state"
-                onClicked: root.refresh()
-            }
         }
 
         StyledText {
@@ -504,7 +498,7 @@ DashTabComponent {
                                     previewHeight: 88
                                     workspace: liveCard.modelData
                                     live: root.live
-                                    wantThumbnails: root.thumbnailsEnabled
+                                    wantThumbnails: root.thumbnailsEnabled && liveCard.modelData.focused
                                     activeWindowId: root.focusedWindowId(liveCard.modelData.apps)
                                 }
 

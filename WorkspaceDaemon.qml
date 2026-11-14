@@ -248,8 +248,61 @@ PluginComponent {
 
     // ------------------------------------------------------------- niri writes
 
+    // A bounded poll over live niri state. Socket sends return as soon as the
+    // bytes are written, so "did niri actually do it" has to be observed.
+    property var _waiters: []
+
+    Timer {
+        id: waitTimer
+        interval: 60
+        repeat: true
+        running: root._waiters.length > 0
+        onTriggered: root.pumpWaiters()
+    }
+
+    function waitFor(predicate, timeoutMs, done) {
+        _waiters = _waiters.concat([{ predicate: predicate, deadline: Date.now() + timeoutMs, done: done }]);
+        waitTimer.restart();
+    }
+
+    function pumpWaiters() {
+        const now = Date.now();
+        const keep = [];
+        for (const waiter of _waiters) {
+            let ok = false;
+            try {
+                ok = waiter.predicate() === true;
+            } catch (e) {
+                ok = false;
+            }
+            if (ok) {
+                waiter.done(true);
+                continue;
+            }
+            if (now >= waiter.deadline) {
+                waiter.done(false);
+                continue;
+            }
+            keep.push(waiter);
+        }
+        _waiters = keep;
+    }
+
+    function workspaceNamed(name) {
+        return (NiriService.allWorkspaces || []).find(ws => ws.name === name) || null;
+    }
+
+    function workspaceFocused(name) {
+        const ws = workspaceNamed(name);
+        return !!ws && ws.is_focused === true;
+    }
+
+
+    property int _niriSeq: 0
+
     function niri(args, done) {
-        Proc.runCommand("wsm.niri", ["niri", "msg"].concat(args), (stdout, exitCode) => {
+        _niriSeq++;
+        Proc.runCommand("wsm.niri." + _niriSeq, ["niri", "msg"].concat(args), (stdout, exitCode) => {
             if (done)
                 done(stdout, exitCode);
         });
@@ -297,6 +350,25 @@ PluginComponent {
         const ok = NiriService.switchToWorkspace(id);
         if (done)
             done(ok, ok ? "" : "switch-to-workspace failed (is NiriService connected?)");
+    }
+
+    // Names a workspace by index instead of "whatever is focused", which is what
+    // the CLI form does; the two are not the same thing under a race.
+    function setNameByIndex(idx, name, done) {
+        if (niriAction("SetWorkspaceName", {
+            name: name,
+            workspace: {
+                Index: idx
+            }
+        })) {
+            if (done)
+                done(true);
+            return;
+        }
+        niri(["action", "set-workspace-name", "--workspace", String(idx), name], (out, code) => {
+            if (done)
+                done(code === 0);
+        });
     }
 
     function spawnShell(cmd, done) {
@@ -540,29 +612,118 @@ PluginComponent {
         step();
     }
 
+    // A window is mapped when the app is ready, not when it is spawned, so a slow
+    // app (a browser takes seconds) lands wherever the focus is by then. After a
+    // launch, any window that appeared during the run and matches one of the
+    // spawned apps is moved onto the target workspace.
+    property var _pendingRehome: null
+
+    Timer {
+        id: rehomeTimer
+        interval: 4000
+        repeat: false
+        onTriggered: {
+            const job = root._pendingRehome;
+            root._pendingRehome = null;
+            if (job)
+                root.pumpRehome(job.apps, job.wsName, job.before, job.done);
+        }
+    }
+
+    function scheduleRehome(apps, wsName, before, done) {
+        _pendingRehome = {
+            apps: apps,
+            wsName: wsName,
+            before: before,
+            done: done
+        };
+        rehomeTimer.restart();
+    }
+
+    function pumpRehome(apps, wsName, before, done) {
+        const ws = workspaceNamed(wsName);
+        if (!ws) {
+            if (done)
+                done(0);
+            return;
+        }
+        const names = apps.map(a => a.name);
+        const strays = (NiriService.windows || []).filter(w => {
+            if (before.indexOf(w.id) >= 0)
+                return false;
+            if (String(w.workspace_id) === String(ws.id))
+                return false;
+            return names.indexOf(windowLabel(w)) >= 0;
+        });
+
+        for (const win of strays) {
+            if (!niriAction("MoveWindowToWorkspace", {
+                window_id: win.id,
+                reference: {
+                    Name: wsName
+                },
+                focus: false
+            }))
+                niri(["action", "move-window-to-workspace", "--window-id", String(win.id), "--focus", "false", wsName], () => {});
+        }
+
+        if (strays.length > 0) {
+            publishStatus(`Moved ${strays.length} window(s) that opened on the wrong workspace`);
+            publishLive();
+        }
+        if (done)
+            done(strays.length);
+    }
+
     // ----------------------------------------------------------------- actions
 
+    // Create (focus + name) a workspace on the focused output.
+    //
+    // Three things used to make this land in the wrong place:
+    //  - a socket send reports success when the request is written, not applied;
+    //  - naming went through a separate `niri msg` process, so its order against
+    //    the socket focus was undefined;
+    //  - the CLI form names whatever is focused at that moment.
+    // So: name by explicit index, then wait until niri really reports the name,
+    // and only then let the caller spawn anything.
     function createWorkspace(name, emoji, done) {
-        const idx = lastWorkspaceIdx();
-        focusByIndex(idx, (ok, err) => {
-            if (!ok) {
-                if (done)
-                    done(false, err);
-                return;
-            }
-            const trimmed = (name || "").trim();
-            if (!trimmed) {
-                if (done)
-                    done(true, "");
-                return;
-            }
-            niri(["action", "set-workspace-name", trimmed], (out2, code2) => {
-                if (code2 === 0)
-                    applyWorkspaceIcon(trimmed, emoji);
-                if (done)
-                    done(code2 === 0, code2 === 0 ? "" : (out2 || "set-workspace-name failed"));
+        const trimmed = (name || "").trim();
+
+        const attempt = (triesLeft) => {
+            const idx = lastWorkspaceIdx();
+            focusByIndex(idx, (ok, err) => {
+                if (!ok) {
+                    if (done)
+                        done(false, err || "could not focus the new workspace");
+                    return;
+                }
+                if (!trimmed) {
+                    if (done)
+                        done(true, "");
+                    return;
+                }
+                setNameByIndex(idx, trimmed, () => {
+                    waitFor(() => workspaceNamed(trimmed) !== null, 1500, (named) => {
+                        if (!named) {
+                            // A stale index is the usual cause; retry once with a
+                            // freshly computed one before giving up.
+                            if (triesLeft > 1) {
+                                attempt(triesLeft - 1);
+                                return;
+                            }
+                            if (done)
+                                done(false, `niri did not accept the name "${trimmed}" (is it used by another workspace?)`);
+                            return;
+                        }
+                        applyWorkspaceIcon(trimmed, emoji);
+                        if (done)
+                            done(true, "");
+                    });
+                });
             });
-        });
+        };
+
+        attempt(2);
     }
 
     function renameFocused(name, emoji, done) {
@@ -718,12 +879,17 @@ PluginComponent {
                 });
 
             const spawnNow = () => {
+                const before = (NiriService.windows || []).map(w => w.id);
                 spawnApps(apps, () => {
                     const summary = apps.length === 0
                         ? `"${name}" is already complete`
                         : `Opened ${apps.length} app${apps.length === 1 ? "" : "s"} for "${name}"`;
                     publishStatus(summary);
                     publishLive();
+                    // window rules aside, niri places a window on whatever
+                    // workspace is focused when it maps, so sweep strays back.
+                    if (wsName && apps.length > 0 && (pluginData && pluginData.rehomeWindows) !== false)
+                        scheduleRehome(apps, wsName, before, null);
                     if (done)
                         done(true, summary);
                 });
@@ -737,21 +903,35 @@ PluginComponent {
             if (emoji)
                 applyWorkspaceIcon(wsName, emoji);
 
-            if (diff.exists && diff.workspaceId !== undefined) {
-                focusByName(wsName, (ok) => {
-                    if (ok)
-                        spawnNow();
-                    else if (done)
-                        done(false, "could not focus workspace");
+            // Spawning is only safe once niri reports the workspace focused,
+            // otherwise the windows land on whatever happened to be focused.
+            const focusVerified = () => {
+                focusByName(wsName, () => {
+                    waitFor(() => workspaceFocused(wsName), 1500, (focused) => {
+                        if (focused) {
+                            spawnNow();
+                            return;
+                        }
+                        publishStatus(`Could not focus "${wsName}" — nothing was launched`);
+                        if (done)
+                            done(false, `could not focus "${wsName}"; no apps were launched`);
+                    });
                 });
+            };
+
+            if (diff.exists && diff.workspaceId !== undefined) {
+                focusVerified();
                 return;
             }
 
             createWorkspace(wsName, emoji, (ok, err) => {
-                if (ok)
-                    spawnNow();
-                else if (done)
-                    done(false, err || "could not create workspace");
+                if (!ok) {
+                    publishStatus(err || "Could not create the workspace");
+                    if (done)
+                        done(false, err || "could not create workspace");
+                    return;
+                }
+                focusVerified();
             });
         });
     }
