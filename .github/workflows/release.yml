@@ -32,7 +32,7 @@ jobs:
         with:
           repository: duxlabs-dev/dux-shell
           path: .dux-shell
-          ref: ${{ vars.DUX_SHELL_REF || 'main' }}
+          ref: ${{ vars.DUX_SHELL_REF || 'v2.1.2' }}
 
       - name: Install qmllint and shellcheck
         run: |

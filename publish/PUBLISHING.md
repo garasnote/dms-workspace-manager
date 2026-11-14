@@ -37,9 +37,8 @@ DUX_SHELL_DIR=~/src/dux-shell ./scripts/ci.sh
 
 Do not open the registry PR on a red build — the registry validators will not catch
 a QML syntax error, a drifted `author`, or a setting without a default, and those
-are exactly what breaks installs. Pin the shell version CI lints against by setting
-the repo variable `DUX_SHELL_REF` (default `main`); a tag close to `requires_dms` is
-the honest choice.
+are exactly what breaks installs. CI lints against a pinned shell tag (`vars.DUX_SHELL_REF`, default `v2.1.2`, matching
+`requires_dms`), not a moving branch.
 
 ## 1. Create the public plugin repo
 
