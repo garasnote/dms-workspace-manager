@@ -96,6 +96,18 @@ an existing window, never start a second copy) or `"alwaysLaunch": true` (always
 start, and never chase windows around). Settings → *Fix up windows after a
 launch* turns the reconcile pass off entirely.
 
+## Clicking a tile focuses that window
+
+Every window in a mini-map is a target: hover it and a ring appears, click it and
+niri focuses that window — switching workspace if it lives on another one — while
+the panel dismisses itself. Same path as everything else:
+
+```bash
+dms ipc call workspaceManager focusWindow 54
+```
+
+Empty tiles (a workspace with no windows, or a column gap) ignore clicks.
+
 ## Window stills
 
 The mini-map tiles can show real pictures of each window instead of only the app

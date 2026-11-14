@@ -17,6 +17,9 @@ import "." as Local
 Item {
     id: root
 
+    // a tile was clicked: focus that window
+    signal windowActivated(int windowId)
+
     property var workspace: null
     property bool live: false
     property real previewHeight: 112
@@ -296,6 +299,27 @@ Item {
                     color: Theme.withAlpha(Theme.onSurfaceVariant, 0.95)
                     pixelSize: Math.max(7, Math.min(10, Math.round(parent.height * 0.14)))
                     animate: root.live
+                }
+
+                // click a tile to focus that window (niri brings its workspace
+                // along), with a hover ring so the tiles read as targets
+                MouseArea {
+                    id: clickArea
+
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    enabled: modelData.win !== undefined && modelData.win !== null
+                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    onClicked: root.windowActivated(Number(cell.modelData.win.id))
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    radius: cell.radius
+                    color: "transparent"
+                    visible: clickArea.containsMouse
+                    border.width: Math.max(1, Theme.outlineWidth + 1)
+                    border.color: Theme.withAlpha(Theme.primary, 0.9)
                 }
 
             }

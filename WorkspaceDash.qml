@@ -132,6 +132,16 @@ DashTabComponent {
 
     // Re-reading templates.json on open means hand edits show up without a
     // reload button; state updates themselves are event-driven.
+    // Focus one window from the mini-map and dismiss the panel, the way a dock
+    // click would.
+    function focusWindow(windowId) {
+        if (!windowId)
+            return;
+        send("focusWindow", windowId);
+        if (root.dashHost)
+            root.dashHost.dashVisible = false;
+    }
+
     function refresh() {
         send("reload");
         send("refreshLive");
@@ -513,6 +523,7 @@ DashTabComponent {
                                     workspace: liveCard.modelData
                                     live: root.live
                                     activeWindowId: root.focusedWindowId(liveCard.modelData.apps)
+                                    onWindowActivated: windowId => root.focusWindow(windowId)
                                 }
 
                                 // actions, directly under the preview

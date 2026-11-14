@@ -332,6 +332,20 @@ PluginComponent {
     // so "focus workspace" and the spawns that follow are processed in order by
     // niri. The `niri msg` fallback opens a fresh connection per call, so there
     // the caller awaits each step instead.
+    // Focus one window by id. niri switches to the window's workspace itself,
+    // so this works for a tile of any workspace in the panel.
+    function focusWindowById(windowId) {
+        const id = Number(windowId);
+        if (!id)
+            return false;
+        if (niriAction("FocusWindow", {
+            id: id
+        }))
+            return true;
+        niri(["action", "focus-window", "--id", String(id)], () => {});
+        return true;
+    }
+
     function niriAction(action, fields) {
         if (typeof NiriService === "undefined" || !NiriService.send)
             return false;
@@ -1498,6 +1512,14 @@ PluginComponent {
         function reload(): string {
             root.loadTemplates();
             return "QUEUED";
+        }
+
+        function focusWindow(windowId: string): string {
+            if (!windowId)
+                return "ERROR: windowId is required";
+            if (!root.focusWindowById(windowId))
+                return "ERROR: could not focus window " + windowId;
+            return "OK: focused window " + windowId;
         }
 
         function focusId(id: string): string {
