@@ -96,6 +96,32 @@ an existing window, never start a second copy) or `"alwaysLaunch": true` (always
 start, and never chase windows around). Settings → *Fix up windows after a
 launch* turns the reconcile pass off entirely.
 
+## Window stills
+
+The mini-map tiles can show real pictures of each window instead of only the app
+icon (Settings → *Window stills*, on by default).
+
+They are *pulls*, not a stream. Nothing is captured while the panel is closed;
+opening it asks for stills of any window without one newer than 10 minutes, one
+window at a time (~60 ms each), and the tile fills in as they arrive. Files live
+in `/tmp/wsm-stills`, decoded at tile size, and are pruned after 15 minutes.
+
+niri's `screenshot-window --id` is the only way to get one window's pixels, and
+it always also copies the screenshot to the clipboard — there is no flag to stop
+it, and the coordinates needed to crop `grim` output are not published for tiled
+windows (upstream niri issue #2381, closed as expected: keeping per-tile view
+positions correct would mean updating every window to the right on each resize).
+So each capture saves the clipboard first and restores it straight after, within
+about 60 ms. Two consequences worth knowing:
+
+- niri posts its usual "Screenshot captured" notification while a batch runs. It
+  replaces itself, so you see one toast, not one per window.
+- Only one mime type is restored, so a rich HTML/subset copy degrades to plain
+  text. Text and images survive intact.
+
+Turn it off and the tiles fall back to icons, with no clipboard involvement at
+all.
+
 **Live actions in detail**
 
 - **Focus** — switch to that workspace.

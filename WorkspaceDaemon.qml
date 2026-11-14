@@ -27,6 +27,26 @@ PluginComponent {
     property string templatesPath: ""
     property var _cmdlineCache: ({})
 
+    // ------------------------------------------------------------- window stills
+    //
+    // niri's screenshot verb is the only way to get one window's pixels, and it
+    // always also copies them to the clipboard (no flag turns that off). So each
+    // pull: save the clipboard, screenshot one window, read the PNG back off the
+    // clipboard, restore. Measured ~60 ms and ~120 KB per window; nothing here
+    // runs unless the panel is open and the setting is on.
+    property string stillsDir: "/tmp/wsm-stills"
+    property var stills: ({})           // windowId -> { path, ts }
+    property var _stillQueue: []
+    property bool _stillBusy: false
+    property int _stillSeq: 0
+
+    // One publish per burst of captures, so the cards are not rebuilt per window.
+    Timer {
+        id: stillPublishTimer
+        interval: 250
+        onTriggered: root.publishLive()
+    }
+
     // Refresh cooldown so a burst of niri window events is one publish.
     Timer {
         id: liveRefreshTimer
@@ -1036,6 +1056,107 @@ PluginComponent {
 
     // ------------------------------------------------------------- live/preview
 
+    // ---------------------------------------------------------------- stills
+
+    function stillUri(windowId) {
+        const s = stills[windowId];
+        if (!s)
+            return "";
+        // No query string: Qt treats "?t=..." on a file:// URL as part of the
+        // file name. Each capture gets its own file instead, which also makes
+        // the URL unique so nothing serves a cached image.
+        return "file://" + s.path;
+    }
+
+    // Screenshot every window that needs a still, one at a time, newest first
+    // for the focused workspace.
+    function pullStills(force) {
+        if (pluginData && pluginData.stills === false)
+            return;
+
+        const wins = (NiriService.windows || []).slice();
+        const now = Date.now();
+        const ttl = 10 * 60 * 1000;
+
+        // forget stills for windows that closed
+        const known = {};
+        for (const w of wins)
+            known[w.id] = true;
+        const kept = {};
+        for (const key in stills) {
+            if (known[key])
+                kept[key] = stills[key];
+        }
+        stills = kept;
+
+        const focusedWs = (NiriService.allWorkspaces || []).filter(ws => ws.is_focused).map(ws => String(ws.id));
+        const queue = wins
+            .filter(w => force || !stills[w.id] || (now - stills[w.id].ts) > ttl)
+            .sort((a, b) => {
+                const af = focusedWs.indexOf(String(a.workspace_id)) >= 0 ? 0 : 1;
+                const bf = focusedWs.indexOf(String(b.workspace_id)) >= 0 ? 0 : 1;
+                return af - bf;
+            })
+            .map(w => w.id)
+            .slice(0, 16);
+
+        // drop files for windows that are long gone
+        Proc.runCommand("wsm.stillprune." + (++_stillSeq), ["sh", "-c",
+            "mkdir -p '" + stillsDir + "' && find '" + stillsDir + "' -name '*.png' -mmin +15 -delete 2>/dev/null; true"], () => {});
+
+        if (queue.length === 0)
+            return;
+        _stillQueue = queue;
+        pumpStills();
+    }
+
+    function stillScript(windowId, ts) {
+        const dir = stillsDir;
+        const id = String(windowId);
+        const target = id + "-" + ts + ".png";
+        return [
+            "dir='" + dir + "'; mkdir -p \"$dir\"",
+            "save=\"$dir/.clip-" + id + "\"",
+            "type=$(wl-paste --list-types 2>/dev/null | head -1)",
+            "if [ -n \"$type\" ]; then wl-paste --type \"$type\" > \"$save\" 2>/dev/null || rm -f \"$save\"; fi",
+            "niri msg action screenshot-window --id " + id + " --write-to-disk false >/dev/null 2>&1",
+            "i=0",
+            "while [ $i -lt 30 ]; do wl-paste --list-types 2>/dev/null | grep -qx 'image/png' && break; sleep 0.02; i=$((i+1)); done",
+            "wl-paste --type image/png > \"$dir/" + target + "\" 2>/dev/null",
+            "if [ ! -s \"$dir/" + target + "\" ]; then",
+            "  rm -f \"$dir/" + target + "\"",
+            "elif [ -n \"$type\" ] && [ -s \"$save\" ]; then",
+            "  cur=$(wl-paste --type image/png 2>/dev/null | wc -c)",
+            "  if [ \"$cur\" = \"$(wc -c < \"$dir/" + target + "\")\" ]; then wl-copy --type \"$type\" < \"$save\"; fi",
+            "else",
+            "  wl-copy --clear 2>/dev/null",
+            "fi",
+            "rm -f \"$save\""
+        ].join("\n");
+    }
+
+    function pumpStills() {
+        if (_stillBusy)
+            return;
+        if (_stillQueue.length === 0)
+            return;
+        const windowId = _stillQueue.shift();
+        const ts = Date.now();
+        _stillBusy = true;
+        Proc.runCommand("wsm.still." + windowId + "." + (++_stillSeq),
+            ["sh", "-c", stillScript(windowId, ts)], (out, code) => {
+                _stillBusy = false;
+                if (code === 0) {
+                    stills[windowId] = {
+                        path: stillsDir + "/" + windowId + "-" + ts + ".png",
+                        ts: ts
+                    };
+                    stillPublishTimer.restart();
+                }
+                pumpStills();
+            });
+    }
+
     function publishLive() {
         if (!pluginService)
             return;
@@ -1066,6 +1187,7 @@ PluginComponent {
                         row: pos ? pos[1] : -1,
                         tileW: tile ? tile[0] : 0,
                         tileH: tile ? tile[1] : 0,
+                        still: stillUri(w.id),
                         // niri fills this only while the tile sits in the
                         // monitor's current view. It is null when the field is
                         // not reported (older niri), so the mini-map treats null
@@ -1335,6 +1457,12 @@ PluginComponent {
 
         function refreshLive(): string {
             root.publishLive();
+            root.pullStills(false);
+            return "OK";
+        }
+
+        function pullStills(): string {
+            root.pullStills(true);
             return "OK";
         }
 

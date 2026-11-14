@@ -15,6 +15,13 @@ PluginSettings {
     }
 
     ToggleSetting {
+        settingKey: "stills"
+        label: "Window stills"
+        description: "Real pictures of each window in the mini-map, captured when the panel opens and cached for 10 minutes. niri can only hand over a window's pixels through a screenshot, which always also lands on the clipboard, so each capture borrows it for ~60 ms and puts it back. Rich-format copies degrade to plain text; nothing is captured while the panel is closed."
+        defaultValue: true
+    }
+
+    ToggleSetting {
         settingKey: "showEmptyWorkspaces"
         label: "Show empty workspaces"
         description: "Empty unnamed workspaces are niri's filler; they are hidden so the list stays readable. Named ones always show."

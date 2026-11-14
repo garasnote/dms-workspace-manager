@@ -233,14 +233,53 @@ Item {
                 opacity: modelData.onScreen ? 1 : 0.6
                 clip: true
 
-                // app icon
+                // a still of the window, when one has been captured; the icon
+                // below shows through if not. sourceSize keeps the decode cost
+                // proportional to the tile, not to the 954x1148 original.
+                Image {
+                    id: thumb
+
+                    anchors.fill: parent
+                    anchors.margins: 1
+                    visible: source !== "" && status === Image.Ready
+                    source: modelData.win ? (modelData.win.still || "") : ""
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                    cache: false
+                    smooth: true
+                    sourceSize.width: Math.max(32, Math.min(420, Math.round(width * 2)))
+                    sourceSize.height: Math.max(32, Math.min(420, Math.round(height * 2)))
+                    opacity: modelData.onScreen ? 1 : 0.55
+                }
+
+                // app icon (fallback, and the label while a still loads)
                 Local.AppChip {
+                    visible: thumb.status !== Image.Ready
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: cell.showTitle ? -Math.round(parent.height * 0.08) : 0
                     chipSize: Math.max(14, Math.min(parent.width, parent.height) * 0.56)
                     appId: modelData.win ? modelData.win.appId : ""
                     label: modelData.win ? modelData.win.name : ""
                     dimmed: !modelData.onScreen
+                }
+
+                // scrim so the title stays readable over whatever the still shows
+                Rectangle {
+                    visible: cell.showTitle
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    height: Math.min(parent.height * 0.45, 26)
+                    gradient: Gradient {
+                        GradientStop {
+                            position: 0
+                            color: "transparent"
+                        }
+                        GradientStop {
+                            position: 1
+                            color: Theme.withAlpha(Theme.surfaceContainerLowest || "#000000", 0.75)
+                        }
+                    }
                 }
 
                 // window title strip along the bottom of the tile; long titles
