@@ -30,65 +30,47 @@ difference is just having pictures on screen.
 
 | metric | off | warm | cold |
 |---|---:|---:|---:|
-| peak RSS, panel open (MB) | 57.1 | 62.7 | 67.3 |
-| RSS, panel closed (MB) | 57.1 | 62.6 | 67.3 |
-| dms CPU while open (s) | 0.030 | 0.030 | 0.200 |
-| niri CPU while open (s) | 2.40 | 2.42 | 3.25 |
-| dms CPU idle, panel shut (s per s) | 0.0000 | 0.0000 | 0.0000 |
-| clipboard not yours (ms) | 0 | 0 | 240 |
+| peak RSS, panel open (MB) | 51.8 | 66.6 | 72.6 |
+| RSS just before the open (MB) | 51.7 | 66.6 | 55.1 |
+| **RSS added by the open** | **+0.1** | **+0.0** | **+17.5** |
+| RSS after the panel closes (MB) | 51.8 | 66.6 | 71.6 |
+| dms CPU while open (s) | 0.020 | 0.020 | 0.160 |
+| niri CPU while open (s) | 1.42 | 1.42 | 2.60 |
+| dms CPU idle, panel shut (s per s) | 0.0025 | 0.0025 | 0.0025 |
+| clipboard not yours (ms) | 0 | 0 | 176 |
 | captures per open | 0 | 0 | 8 |
-| stills on disk (MB) | 0 | 2.0 | 2.4 |
-| panel surface up (ms) | 56 | 51 | 389 |
+| stills on disk (MB) | 0 | 3.0 | 2.8 |
+| panel surface up (ms) | 44 | 46 | 376 |
+
+The `warm` arm's baseline sits ~15 MB above `off` because its warm-up open already
+allocated the images before the first sample. That is why the *delta within the
+process* is the column that matters, not the absolute peak.
 
 ## What it means
 
-**Idle cost is exactly zero.** The whole feature is pull-based: no timer, no
-stream, no watcher. With the panel shut, dms burns 0.0000 s of CPU per second in
-every arm, and niri has no idea the feature exists.
+**Idle cost is the shell's own baseline: 0.25% of one core with the panel shut,
+identical in all three arms.** An earlier version of this report claimed "exactly
+0.0000" — that was a bug in this harness: the idle counters were read but never
+passed to the `awk` that writes the row, so the column was hardcoded zero.
+Shellcheck in CI caught it (SC2034, unused assignment) on the first real run. The
+corrected number still shows no cost attributable to the feature, which is the
+point, but it is not zero and should not have been claimed as zero.
 
-**A cold open costs about 0.17 s of shell CPU and 0.85 s of compositor CPU**, for
-8 windows: 21 ms of dms CPU and ~30 ms of clipboard occupancy per window, plus
-0.85 s of extra niri work spread across the 8 s the panel is open (niri is
-already using ~30% of a core there, because the wallpaper animates — that is the
-baseline, not the plugin). In wall-clock terms the capture batch finishes ~200 ms
-after it starts, which is why tiles visibly fill in.
+**A cold open costs +0.14 s of shell CPU and +1.2 s of compositor CPU** for 8
+windows, plus ~176 ms of clipboard occupancy: 18 ms of dms CPU and ~22 ms of
+clipboard per window. The capture batch finishes ~200 ms after it starts, which is
+why tiles visibly fill in.
 
-**Memory is the most expensive part: +10.2 MB peak with pictures, +5.6 MB of it
-just from having images on screen** (warm), the remaining ~4.6 MB from holding the
-extra decoded batch. That figure is measured on the first open after a restart, so
-it includes one-off allocations. A repeat-open loop (below) shows it is a plateau,
-not a leak.
-Capping the decode at 320 px (from 420) cut 6.3 MB off the warm arm and 0.8 MB off
-the disk footprint; that change came out of this benchmark.
+**Memory is the real cost: a cold batch adds 17.5 MB, and ~16.5 MB of it stays
+after the panel closes.** A warm open adds nothing measurable (the images are
+already resident). The repeat-open loop below shows this is a one-time plateau, not
+a per-open leak — but "one-time" still means "until the shell restarts", so a user
+who cares about RSS should treat the stills setting as ~17 MB rather than free.
 
-**The clipboard is out of your hands for 240 ms per cold open**, 30 ms at a time,
-one window per capture. Never longer, and never at all in the `warm` and `off` arms.
-
-**Panel-open latency is not affected by the feature.** 51 ms warm vs 56 ms off is
-noise. The 389 ms in the `cold` column is the dash tab's own QML first-load, and
-the `off` arm proves it: that arm only restarts once, and its numbers are 430 ms
-for the first open and 43–56 ms afterwards. The cold arm restarts per sample, so
-every one of its opens pays that load. Captures themselves start 350 ms after the
-panel is asked for, i.e. behind the first frame, precisely so they cannot compete
-with it.
-
-## Repeat-open check (is the retained RSS a leak?)
-
-Ten consecutive open/close cycles with a cleared cache, sampling RSS of the shell
-while the panel was shut:
-
-| | RSS, panel closed |
-|---|---:|
-| before | 56.5 MB |
-| after open 1 | 56.5 MB |
-| after open 2 | 54.5 MB |
-| after open 3–10 | 54.5–54.7 MB (flat) |
-
-No creep: the second open actually drops 2 MB below where it started, as Qt
-releases caches, and ten cycles stay inside a 200 kB band while re-capturing eight
-windows every time. So the feature's steady-state footprint is a plateau, and the
-"+10 MB" from the A/B table is the cost *while the panel is open*, not memory lost
-per open.
+**Panel-open latency is not affected by the feature**: 44 ms vs 46 ms off vs warm is
+noise, and the 376 ms in the `cold` column is the dash tab's QML first-load (the
+`off` arm shows 366 ms on its first open after a restart, then 41–55 ms). Captures
+start 350 ms after the panel is asked for, behind the first frame.
 
 ## Round 2a — compact rows vs full previews
 

@@ -149,7 +149,8 @@ sample_once() { # arm idx -> csv row on stdout
   bytes=${bytes:-0}
   busy_ms=$(awk -v b="$busy" -v p="$busy_polls" -v d="$OPEN_SECS" 'BEGIN{ if (p>0) printf "%d", (b/p)*d*1000; else print 0 }')
 
-  awk -v arm="$arm" -v idx="$idx" -v t="$TICKS" -v idle="$IDLE_SECS" \
+  awk -v arm="$arm" -v idx="$idx" -v t="$TICKS" -v idle_secs="$IDLE_SECS" \
+      -v idle0="$idle0" -v idle1="$idle1" \
       -v rss_closed="$rss_closed" -v rss_peak="$rss_peak" -v rss_after="$rss_after" \
       -v cpu0="$cpu0" -v cpu1="$cpu1" -v niri0="$niri0" -v niri1="$niri1" \
       -v busy_ms="$busy_ms" -v first_ms="${first_ms:-}" -v n="$after_n" -v b="$bytes" \
@@ -157,7 +158,7 @@ sample_once() { # arm idx -> csv row on stdout
       'BEGIN{
          printf "%s,%d,%d,%d,%d,%.3f,%.3f,%.4f,%d,%s,%d,%d,%d\n",
            arm, idx, rss_closed, rss_peak, rss_after,
-           (cpu1-cpu0)/t, (niri1-niri0)/t, (idle1-idle0)/t/idle,
+           (cpu1-cpu0)/t, (niri1-niri0)/t, (idle1-idle0)/t/idle_secs,
            busy_ms, (first_ms=="" ? "NA" : first_ms), n, b, cap
        }'
 }
@@ -189,9 +190,11 @@ for arm in "${ARMS[@]}"; do
       restart_shell || continue
       for i in $(seq 1 "$SAMPLES"); do sample_once "$arm" "$i" | tee -a "$OUT_CSV"; done
       ;;
-    roomy|compact)
+    warm|roomy|compact)
       set_setting true
-      set_flag compactLiveRows "$([[ "$arm" == compact ]] && echo true || echo false)"
+      if [[ "$arm" != warm ]]; then
+        set_flag compactLiveRows "$([[ "$arm" == compact ]] && echo true || echo false)"
+      fi
       rm -rf "$STILLS_DIR"
       restart_shell || continue
       dms ipc call dash open plugin_workspaceManager >/dev/null 2>&1

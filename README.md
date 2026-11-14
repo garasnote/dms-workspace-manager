@@ -169,17 +169,21 @@ summary of where this plugin's complexity actually lives.
 
 | | stills off | stills on, cache warm | stills on, cold open |
 |---|---:|---:|---:|
-| peak shell RSS while open | 57.1 MB | 62.7 MB | 67.3 MB |
-| dms CPU per open | 0.03 s | 0.03 s | 0.20 s |
-| niri CPU per open (8 s window) | 2.40 s | 2.42 s | 3.25 s |
-| clipboard not yours | 0 ms | 0 ms | 240 ms |
-| background CPU, panel shut | 0 | 0 | 0 |
+| peak shell RSS while open | 51.8 MB | 66.6 MB | 72.6 MB |
+| RSS added by the open | +0.1 MB | +0.0 MB | +17.5 MB |
+| dms CPU per open | 0.02 s | 0.02 s | 0.16 s |
+| niri CPU per 8 s open | 1.42 s | 1.42 s | 2.60 s |
+| clipboard not yours | 0 ms | 0 ms | 176 ms |
+| background CPU, panel shut | 0.25% core | 0.25% core | 0.25% core |
 
 Compact rows vs full previews: identical shell CPU, niri ~15% lower while the panel
 is open (fewer tiles to paint), memory within noise — collapsing rows is a layout
 feature, not a performance one. A five-minute open panel captures nothing after the
 first batch; the cache produces exactly one fresh batch once the 10-minute TTL
 expires.
+
+Background CPU is the shell's own baseline, identical with the feature on or off —
+an earlier draft claimed "exactly 0" because of a harness bug that shellcheck caught.
 
 Read `bench/RESULTS.md` for the method and the caveats — chiefly that the cold
 arm's 389 ms panel-open latency is the dash tab's QML first-load, not captures
