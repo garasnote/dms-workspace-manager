@@ -18,13 +18,23 @@ jobs:
           fetch-depth: 0
 
       - name: Tag and manifest versions must agree
+        id: version
         run: |
+          set -euo pipefail
           version=$(python3 -c "import json;print(json.load(open('plugin.json'))['version'])")
-          tag="${GITHUB_REF_NAME#v}"
-          echo "plugin.json: $version, tag: $tag"
-          if [ "$version" != "$tag" ]; then
-            echo "::error::plugin.json version ($version) does not match tag ($tag)"
-            exit 1
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            tag="${GITHUB_REF_NAME#v}"
+            echo "plugin.json: $version, tag: $tag"
+            if [ "$version" != "$tag" ]; then
+              echo "::error::plugin.json version ($version) does not match tag ($tag)"
+              exit 1
+            fi
+            echo "label=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            # workflow_dispatch: no tag to compare against, use the manifest's
+            # version for the artifact name
+            echo "manual run: packaging v$version"
+            echo "label=v$version" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Clone dux-shell (for qs.* imports)
@@ -49,7 +59,7 @@ jobs:
         id: pack
         run: |
           set -euo pipefail
-          name="niri-workspace-manager-${GITHUB_REF_NAME}"
+          name="niri-workspace-manager-${{ steps.version.outputs.label }}"
           mkdir -p "dist/$name"
           # exactly what DMS needs to load the plugin: no bench, no graph, no CI
           cp plugin.json templates.json README.md LICENSE ./*.qml "dist/$name/"
@@ -62,7 +72,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" \
-            --title "$GITHUB_REF_NAME" \
+          gh release create "${{ steps.version.outputs.label }}" \
+            --title "${{ steps.version.outputs.label }}" \
             --notes "Installable plugin archive (plugin.json, templates.json, *.qml, README, LICENSE) plus a SHA-256. DMS installs from the repo directly, so this archive is for manual or pinned installs." \
             "${{ steps.pack.outputs.zip }}" "${{ steps.pack.outputs.sha }}"
