@@ -39,6 +39,7 @@ PluginComponent {
     property var _stillQueue: []
     property bool _stillBusy: false
     property int _stillSeq: 0
+    property int _stillActive: 0
 
     // One publish per burst of captures, so the cards are not rebuilt per window.
     Timer {
@@ -1105,7 +1106,9 @@ PluginComponent {
 
         const focusedWs = (NiriService.allWorkspaces || []).filter(ws => ws.is_focused).map(ws => String(ws.id));
         const queue = wins
-            .filter(w => force || !stills[w.id] || (now - stills[w.id].ts) > ttl)
+            .filter(w => (force || !stills[w.id] || (now - stills[w.id].ts) > ttl)
+                && _stillQueue.indexOf(w.id) < 0
+                && w.id !== _stillActive)
             .sort((a, b) => {
                 const af = focusedWs.indexOf(String(a.workspace_id)) >= 0 ? 0 : 1;
                 const bf = focusedWs.indexOf(String(b.workspace_id)) >= 0 ? 0 : 1;
@@ -1128,24 +1131,27 @@ PluginComponent {
         const dir = stillsDir;
         const id = String(windowId);
         const target = id + "-" + ts + ".png";
+        // The clipboard is the handoff, so it must be emptied before the capture:
+        // otherwise the poll below can read a previous screenshot (or an image the
+        // user copied) and the tile ends up showing another window's content.
         return [
             "dir='" + dir + "'; mkdir -p \"$dir\"",
+            "out=\"$dir/" + target + "\"",
             "save=\"$dir/.clip-" + id + "\"",
             "type=$(wl-paste --list-types 2>/dev/null | head -1)",
-            "if [ -n \"$type\" ]; then wl-paste --type \"$type\" > \"$save\" 2>/dev/null || rm -f \"$save\"; fi",
+            "if [ -n \"$type\" ]; then wl-paste --type \"$type\" > \"$save\" 2>/dev/null || { rm -f \"$save\"; type=''; }; fi",
+            "wl-copy --clear 2>/dev/null",
             "niri msg action screenshot-window --id " + id + " --write-to-disk false >/dev/null 2>&1",
             "i=0",
-            "while [ $i -lt 30 ]; do wl-paste --list-types 2>/dev/null | grep -qx 'image/png' && break; sleep 0.02; i=$((i+1)); done",
-            "wl-paste --type image/png > \"$dir/" + target + "\" 2>/dev/null",
-            "if [ ! -s \"$dir/" + target + "\" ]; then",
-            "  rm -f \"$dir/" + target + "\"",
-            "elif [ -n \"$type\" ] && [ -s \"$save\" ]; then",
-            "  cur=$(wl-paste --type image/png 2>/dev/null | wc -c)",
-            "  if [ \"$cur\" = \"$(wc -c < \"$dir/" + target + "\")\" ]; then wl-copy --type \"$type\" < \"$save\"; fi",
-            "else",
-            "  wl-copy --clear 2>/dev/null",
+            "while [ $i -lt 40 ]; do wl-paste --list-types 2>/dev/null | grep -qx 'image/png' && break; sleep 0.02; i=$((i+1)); done",
+            "wl-paste --type image/png > \"$out\" 2>/dev/null",
+            "[ -s \"$out\" ] || rm -f \"$out\"",
+            // put the clipboard back, but only if it still holds our capture
+            "if wl-paste --list-types 2>/dev/null | grep -qx 'image/png'; then",
+            "  if [ -n \"$type\" ] && [ -s \"$save\" ]; then wl-copy --type \"$type\" < \"$save\"; else wl-copy --clear 2>/dev/null; fi",
             "fi",
-            "rm -f \"$save\""
+            "rm -f \"$save\"",
+            "[ -s \"$out\" ]"
         ].join("\n");
     }
 
@@ -1157,9 +1163,11 @@ PluginComponent {
         const windowId = _stillQueue.shift();
         const ts = Date.now();
         _stillBusy = true;
+        _stillActive = windowId;
         Proc.runCommand("wsm.still." + windowId + "." + (++_stillSeq),
             ["sh", "-c", stillScript(windowId, ts)], (out, code) => {
                 _stillBusy = false;
+                _stillActive = 0;
                 if (code === 0) {
                     stills[windowId] = {
                         path: stillsDir + "/" + windowId + "-" + ts + ".png",
