@@ -96,6 +96,33 @@ an existing window, never start a second copy) or `"alwaysLaunch": true` (always
 start, and never chase windows around). Settings → *Fix up windows after a
 launch* turns the reconcile pass off entirely.
 
+## Architecture record (graphify)
+
+`graphify-out/` is a committed knowledge graph of this plugin — 217 nodes, 348
+edges, 20 communities, built from the QML, the bench scripts and the docs:
+
+| file | what it is |
+|---|---|
+| `graphify-out/graph.json` | the graph (GraphRAG-ready), nodes carry file + line numbers |
+| `graphify-out/graph.html` | interactive view — open it in a browser |
+| `graphify-out/GRAPH_REPORT.md` | communities, hubs, god nodes, freshness (built from commit) |
+
+QML is not in graphify's extension map, so `.graphifyrc` maps `.qml` to the
+JavaScript extractor. The declarative half of QML shows up as a parse warning and
+costs nodes; every `function` and its call edges is extracted (97% EXTRACTED, 3%
+INFERRED, all with line numbers).
+
+```bash
+graphify update .          # rebuild after code changes, no API key needed
+graphify explain "launchTemplate()"
+graphify query "how does a launch gather windows onto its workspace"
+graphify god-nodes --top 10
+```
+
+Most connected nodes: `launchTemplate()` (15), `publishLive()` (11), `niri()` (11),
+`computeDiff()` (10), `niriAction()` (9), `pumpRehome()` (9) — which is a fair
+summary of where this plugin's complexity actually lives.
+
 ## Performance
 
 `bench/` holds an A/B harness and a report. Measured cost of the stills feature,

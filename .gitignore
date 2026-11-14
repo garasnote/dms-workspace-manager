@@ -1,4 +1,4 @@
-# ignore editor temp / backups
-*.swp
-*~
-*.bak
+# graphify working state (rebuildable); the graph itself is committed as a record
+graphify-out/cache/
+graphify-out/.graphify_detect.json
+graphify-out/.graphify_python
