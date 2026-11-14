@@ -15,13 +15,6 @@ PluginSettings {
     }
 
     ToggleSetting {
-        settingKey: "gatherWindows"
-        label: "Gather running apps onto the workspace"
-        description: "Launching a template moves its windows here when the app is already running elsewhere. Single-instance apps (browser, password manager, chat) cannot be started twice — they just raise the old window, which is why it used to appear in the wrong workspace. Turn off to spawn a fresh copy instead."
-        defaultValue: true
-    }
-
-    ToggleSetting {
         settingKey: "showEmptyWorkspaces"
         label: "Show empty workspaces"
         description: "Empty unnamed workspaces are niri's filler; they are hidden so the list stays readable. Named ones always show."
@@ -30,8 +23,8 @@ PluginSettings {
 
     ToggleSetting {
         settingKey: "rehomeWindows"
-        label: "Move late-opening windows to the target workspace"
-        description: "niri places a window on whatever workspace is focused when the app finally maps it. After a template launch, sweep any of its windows that landed elsewhere back to the template's workspace."
+        label: "Fix up windows after a launch"
+        description: "After launching a template, windows that mapped on the wrong workspace are moved onto it, and an app that refused to open a new window (a password manager raising the one it already had) has that window adopted instead."
         defaultValue: true
     }
 

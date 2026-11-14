@@ -74,24 +74,27 @@ overwrites that template.
 
 ## Launching a template puts its apps on its workspace
 
-`Launch` diffs the template against **every** window, not just the target
-workspace:
+`Launch` diffs the template against every window, then starts whatever is not on
+the target workspace yet. What an app does when it is started a second time is
+not knowable in advance, so nothing is assumed:
 
-| Situation | What happens |
-|---|---|
-| app already on the template's workspace | left alone ("present") |
-| app running on another workspace | its window is **moved** here ("Gather") |
-| app not running at all | started, on the verified-focused workspace |
-| app marked `alwaysLaunch` | always started, even if one is open |
+- **Zen** opens a new window, but it inherits the workspace of the browser it
+  already belongs to, not the focused one.
+- **KeePassXC** opens nothing and raises the window it already had.
+- **Ghostty** always forks a new process and maps on the focused workspace.
+- Chat clients, Steam, and most Electron apps may do any of the three.
 
-Gathering is the important part: browsers, password managers and chat clients
-are single-instance, so launching them again just raises the old window —
-which is why a template used to "open" inside whichever workspace already had
-those windows. Settings → *Gather running apps onto the workspace* switches it
-off if you would rather spawn duplicates.
+So the launch is *spawn, then reconcile*: focus the workspace, start the apps,
+then ~4 s later look at what actually appeared. A window created by this launch
+that mapped on another workspace is moved onto the target, and an app that
+produced no window at all while one of its windows exists elsewhere has that
+window adopted instead. Either way the template's workspace ends up holding its
+apps.
 
-After a launch, anything that mapped late and landed elsewhere is swept onto the
-target workspace (Settings → *Move late-opening windows…*).
+A template app can opt out of that guesswork with `"gather": true` (always move
+an existing window, never start a second copy) or `"alwaysLaunch": true` (always
+start, and never chase windows around). Settings → *Fix up windows after a
+launch* turns the reconcile pass off entirely.
 
 **Live actions in detail**
 

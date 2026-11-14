@@ -671,6 +671,31 @@ PluginComponent {
         rehomeTimer.restart();
     }
 
+    function moveWindowTo(windowId, wsName) {
+        if (!wsName)
+            return false;
+        if (niriAction("MoveWindowToWorkspace", {
+            window_id: windowId,
+            reference: {
+                Name: wsName
+            },
+            focus: false
+        }))
+            return true;
+        niri(["action", "move-window-to-workspace", "--window-id", String(windowId), "--focus", "false", wsName], () => {});
+        return true;
+    }
+
+    // Reconcile a launch against reality, without assuming anything about how
+    // an app behaves when it is started a second time. Some open a new window
+    // on the focused workspace (Zen, Ghostty), some just raise the window they
+    // already have and exit (KeePassXC), some do either depending on flags and
+    // profile. So: look at what actually appeared, then fix up.
+    //
+    //  1. a window the launch created but that mapped on another workspace is
+    //     moved onto the target;
+    //  2. an app that produced no new window at all, while a matching window
+    //     exists elsewhere, has that window adopted (moved) instead.
     function pumpRehome(apps, wsName, before, done) {
         const ws = workspaceNamed(wsName);
         if (!ws) {
@@ -678,32 +703,49 @@ PluginComponent {
                 done(0);
             return;
         }
-        const names = apps.map(a => a.name);
-        const strays = (NiriService.windows || []).filter(w => {
-            if (before.indexOf(w.id) >= 0)
-                return false;
-            if (String(w.workspace_id) === String(ws.id))
-                return false;
-            return names.indexOf(windowLabel(w)) >= 0;
+        const wsId = String(ws.id);
+
+        collectWindows(null, (wins) => {
+            const fresh = wins.filter(w => before.indexOf(w.id) < 0);
+            let moved = 0;
+
+            // 1. strays: created by this launch, mapped elsewhere
+            for (const w of fresh) {
+                if (String(w.workspace_id) === wsId)
+                    continue;
+                if (!apps.some(a => appMatchesWindow(keysForApp(a), keysForWindow(w))))
+                    continue;
+                moveWindowTo(w.id, wsName);
+                moved++;
+            }
+
+            // 2. apps that ignored the launch: adopt the window they already had
+            const adopted = [];
+            for (const app of apps) {
+                const keys = keysForApp(app);
+                if (fresh.some(w => appMatchesWindow(keys, keysForWindow(w))))
+                    continue;
+                if (wins.some(w => String(w.workspace_id) === wsId && appMatchesWindow(keys, keysForWindow(w))))
+                    continue;
+                const candidate = wins.find(w => String(w.workspace_id) !== wsId
+                    && before.indexOf(w.id) >= 0
+                    && appMatchesWindow(keys, keysForWindow(w)));
+                if (!candidate)
+                    continue;
+                moveWindowTo(candidate.id, wsName);
+                adopted.push(app.name);
+                moved++;
+            }
+
+            if (moved > 0) {
+                publishStatus(adopted.length > 0
+                    ? `Moved ${moved} window${moved === 1 ? "" : "s"} onto "${wsName}" (${adopted.join(", ")} would not open a new one)`
+                    : `Moved ${moved} window${moved === 1 ? "" : "s"} that opened on the wrong workspace`);
+                publishLive();
+            }
+            if (done)
+                done(moved);
         });
-
-        for (const win of strays) {
-            if (!niriAction("MoveWindowToWorkspace", {
-                window_id: win.id,
-                reference: {
-                    Name: wsName
-                },
-                focus: false
-            }))
-                niri(["action", "move-window-to-workspace", "--window-id", String(win.id), "--focus", "false", wsName], () => {});
-        }
-
-        if (strays.length > 0) {
-            publishStatus(`Moved ${strays.length} window(s) that opened on the wrong workspace`);
-            publishLive();
-        }
-        if (done)
-            done(strays.length);
     }
 
     // ----------------------------------------------------------------- actions
@@ -901,15 +943,16 @@ PluginComponent {
         const emoji = t.emoji || "";
 
         computeDiff(t, (diff) => {
-            // Gathering (default) moves a template app that is already running
-            // elsewhere onto its workspace instead of spawning a duplicate that
-            // single-instance apps ignore.
-            const gather = (pluginData && pluginData.gatherWindows) !== false;
+            // Always try to start what is not on the workspace yet. An app in the
+            // template can opt into `gather: true` when starting it again is
+            // pointless (a chat client that just raises its window); otherwise
+            // the window it refuses to duplicate is adopted after the launch.
             const moveable = diff.moveable || [];
+            const gatherOnly = force ? [] : moveable.filter(m => m.app.gather === true);
             const apps = force
                 ? all
-                : (gather ? diff.missing : diff.missing.concat(moveable.map(m => m.app)));
-            const moves = (force || !gather) ? [] : moveable;
+                : diff.missing.concat(moveable.filter(m => m.app.gather !== true).map(m => m.app));
+            const moves = gatherOnly;
             if (pluginService)
                 pluginService.setGlobalVar(pluginId, "lastDiff", {
                     template: name,
@@ -919,19 +962,9 @@ PluginComponent {
                 });
 
             const moveWindows = (next) => {
-                if (!wsName || moves.length === 0) {
-                    next();
-                    return;
-                }
-                for (const item of moves) {
-                    if (!niriAction("MoveWindowToWorkspace", {
-                        window_id: item.windowId,
-                        reference: {
-                            Name: wsName
-                        },
-                        focus: false
-                    }))
-                        niri(["action", "move-window-to-workspace", "--window-id", String(item.windowId), "--focus", "false", wsName], () => {});
+                if (wsName) {
+                    for (const item of moves)
+                        moveWindowTo(item.windowId, wsName);
                 }
                 next();
             };
@@ -943,7 +976,7 @@ PluginComponent {
                     if (apps.length === 0 && moves.length === 0)
                         summary = `"${name}" is already complete`;
                     else if (apps.length === 0)
-                        summary = `Gathered ${moves.length} window${moves.length === 1 ? "" : "s"} onto "${name}"`;
+                        summary = `Moved ${moves.length} window${moves.length === 1 ? "" : "s"} onto "${name}"`;
                     else if (moves.length === 0)
                         summary = `Opened ${apps.length} app${apps.length === 1 ? "" : "s"} for "${name}"`;
                     else
@@ -952,7 +985,8 @@ PluginComponent {
                     publishLive();
                     // window rules aside, niri places a window on whatever
                     // workspace is focused when it maps, so sweep strays back.
-                    if (wsName && apps.length > 0 && (pluginData && pluginData.rehomeWindows) !== false)
+                    if (wsName && (apps.length > 0 || moves.length > 0)
+                        && (pluginData && pluginData.rehomeWindows) !== false)
                         scheduleRehome(apps, wsName, before, null);
                     if (done)
                         done(true, summary);

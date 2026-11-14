@@ -164,11 +164,6 @@ DashTabComponent {
         return d && d.missing ? d.missing : [];
     }
 
-    function moveableFor(name) {
-        const d = diffMap ? diffMap[name] : null;
-        return d && d.move ? d.move : [];
-    }
-
     function appName(app) {
         return typeof app === "string" ? app : (app.name || app.cmd || "");
     }
@@ -815,8 +810,7 @@ DashTabComponent {
 
                             readonly property bool editing: root.editingName === modelData.name
                             readonly property var missing: root.missingFor(modelData.name)
-                            readonly property var moveable: root.moveableFor(modelData.name)
-                            readonly property int pending: missing.length + moveable.length
+                            readonly property int pending: missing.length
 
                             width: content.width
                             height: templateColumn.implicitHeight + Theme.spacingM * 2
@@ -883,14 +877,8 @@ DashTabComponent {
                                     spacing: Theme.spacingXS
 
                                     DButton {
-                                        // "Gather" when nothing needs starting but windows
-                                        // are sitting on another workspace
-                                        text: templateCard.pending === 0
-                                              ? "All open"
-                                              : (templateCard.missing.length === 0
-                                                    ? "Gather (" + templateCard.moveable.length + ")"
-                                                    : "Launch (" + templateCard.pending + ")")
-                                        iconName: templateCard.missing.length === 0 && templateCard.pending > 0 ? "move_down" : "rocket_launch"
+                                        text: templateCard.pending === 0 ? "All open" : "Launch (" + templateCard.pending + ")"
+                                        iconName: "rocket_launch"
                                         variant: templateCard.pending === 0 ? "tonal" : "filled"
                                         onClicked: root.send("launch", templateCard.modelData.name)
                                     }
