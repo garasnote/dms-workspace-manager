@@ -127,6 +127,11 @@ many workspaces.
 would start, plus **Launch**, **Launch all** (start everything, ignore what is
 running), edit and delete.
 
+Saving has one flow with two entry points: **Save…** on a workspace card, or
+**Save the current workspace…** at the top of the Templates pane. Both open the
+same review — name, emoji, the window list to prune — and nothing is written until
+you press **Save template**.
+
 **Close** closes the workspace's windows and removes its name. niri has no
 "delete workspace" verb, and a named workspace lives on while empty — that is the
 closest equivalent.

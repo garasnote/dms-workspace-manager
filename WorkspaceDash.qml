@@ -357,6 +357,14 @@ DashTabComponent {
         liveDraftId = "";
     }
 
+    // Shortcut for "ask me about the workspace I am looking at".
+    function captureFocused() {
+        const focused = (root.liveList || []).filter(w => w.focused);
+        if (focused.length === 0)
+            return;
+        root.captureLive(focused[0]);
+    }
+
     function captureLive(w) {
         send("previewWorkspace", String(w.id), w.name || ("Workspace " + w.idx), w.emoji || "");
         pane = 1;
@@ -752,11 +760,30 @@ DashTabComponent {
                                 font.weight: Font.Bold
                             }
 
+                            // One way to save, reachable from two places: Save… on a
+                            // workspace card, or this shortcut for the focused one.
+                            // There is deliberately no second form with its own name
+                            // field — that is what made the old UI feel like two
+                            // different features.
+                            Row {
+                                width: parent.width
+                                spacing: Theme.spacingS
+                                visible: root.preview === null
+
+                                DButton {
+                                    text: "Save the current workspace…"
+                                    iconName: "bookmark_add"
+                                    variant: "filled"
+                                    onClicked: root.captureFocused()
+                                }
+                            }
+
                             DTextField {
                                 id: recordNameField
 
                                 width: parent.width
                                 height: 40
+                                visible: root.preview !== null
                                 text: root.recordName
                                 placeholderText: "Template name (e.g. JobApp)"
                                 backgroundColor: Theme.surfaceContainerHighest
@@ -764,38 +791,20 @@ DashTabComponent {
                                 onTextEdited: root.recordName = text
                             }
 
-                            Row {
+                            Local.EmojiPalette {
                                 width: parent.width
-                                spacing: Theme.spacingS
+                                visible: root.preview !== null
+                                current: root.recordEmoji
+                                onPicked: emoji => root.recordEmoji = emoji
+                            }
 
-                                DTextField {
-                                    id: recordEmojiField
-
-                                    width: 64
-                                    height: 40
-                                    text: root.recordEmoji
-                                    placeholderText: "🧳"
-                                    backgroundColor: Theme.surfaceContainerHighest
-                                    textColor: Theme.surfaceText
-                                    onTextEdited: root.recordEmoji = text
-                                }
-
-                                DButton {
-                                    height: 40
-                                    text: root.preview ? "Recapture" : "Capture"
-                                    iconName: "photo_camera"
-                                    variant: "tonal"
-                                    onClicked: root.send("previewRecord", root.recordName, root.recordEmoji)
-                                }
-
-                                StyledText {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    width: Math.max(0, parent.width - 64 - 150 - Theme.spacingS * 2)
-                                    text: root.preview ? (root.preview.workspace + " · " + root.previewApps.length + " app(s)") : ""
-                                    color: Theme.onSurfaceVariant
-                                    font.pixelSize: Theme.fontSizeSmall
-                                    elide: Text.ElideRight
-                                }
+                            StyledText {
+                                width: parent.width
+                                visible: root.preview !== null
+                                text: root.preview ? (root.preview.workspace + " · " + root.previewApps.length + " app(s) — prune the list, then save") : ""
+                                color: Theme.onSurfaceVariant
+                                font.pixelSize: Theme.fontSizeSmall
+                                wrapMode: Text.Wrap
                             }
 
                             Repeater {
@@ -1035,6 +1044,15 @@ DashTabComponent {
                                             backgroundColor: Theme.surfaceContainerHighest
                                             textColor: Theme.surfaceText
                                             onTextEdited: if (root.draft) root.draft.workspace = text
+                                        }
+                                    }
+
+                                    Local.EmojiPalette {
+                                        width: parent.width
+                                        current: root.draft ? root.draft.emoji : ""
+                                        onPicked: emoji => {
+                                            if (root.draft)
+                                                root.draft.emoji = emoji;
                                         }
                                     }
 

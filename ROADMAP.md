@@ -37,9 +37,13 @@ If your workspaces look wrong, that is what this stage is for.
       `.bak`, then rename.
 - [x] **Serialised launches** — a second `activate` during a launch reports
       `already launching` instead of racing over the clipboard and spawn queue.
-- [x] **Emoji for workspaces** — a 36-emoji palette under the rename field, plus
-      the free-text field for anything else. Deliberately not a searchable
-      thousand-emoji picker: naming a workspace is a two-second decision.
+- [x] **Emoji for workspaces** — a 36-emoji palette in every place an emoji is
+      chosen (rename, session capture, template editor), plus the free-text field
+      for anything else. Deliberately not a searchable thousand-emoji picker:
+      naming a workspace is a two-second decision.
+- [x] **One save flow** — the Templates pane used to carry its own name/emoji/Capture
+      form beside the per-card Save…, so "save this workspace" existed twice with
+      different capabilities. Now both entry points open the same review.
 
 Remaining beta items: multi-monitor, undo for Close, restart story, stills
 defaults, logic tests, compatibility matrix, registry listing.
