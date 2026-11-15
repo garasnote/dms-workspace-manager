@@ -126,7 +126,22 @@ print(f"  ok: {len(keys)} settings keys, {len((templates or {}).get('templates',
 sys.exit(1 if problems else 0)
 PY
 
-# ------------------------------------------------------------------ 3. shell
+# ------------------------------------------------------- 3. graph community labels
+# graphify's fallback names each community after its busiest node ("steps",
+# "ref_showemptyworkspaces"). scripts/graph-labels.py applies curated names; this
+# catches the case where someone ran `graphify update .` and forgot to re-apply.
+step "graph community labels"
+if [[ -f graphify-out/graph.json ]]; then
+  if python3 scripts/graph-labels.py --check; then
+    :
+  else
+    bad "graph labels are stale or renumbered — run: python3 scripts/graph-labels.py"
+  fi
+else
+  printf '  skipped: no graphify-out/graph.json\n'
+fi
+
+# ------------------------------------------------------------------ 4. shell
 step "shellcheck"
 if command -v shellcheck >/dev/null 2>&1; then
   if shellcheck -S warning bench/*.sh scripts/*.sh; then
@@ -138,7 +153,7 @@ else
   printf '  skipped: shellcheck not installed (CI installs it)\n'
 fi
 
-# --------------------------------------------------- 4. leftovers and hygiene
+# --------------------------------------------------- 5. leftovers and hygiene
 step "hygiene"
 # console.warn/error are how the daemon reports real failures (unparseable
 # templates.json, a failed spawn) and stay; console.log and the "[wsm]" debug tag

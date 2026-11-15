@@ -1,97 +1,97 @@
 {
-    "version": 1,
-    "templates": [
+  "version": 1,
+  "templates": [
+    {
+      "name": "Dev Work",
+      "emoji": "💻",
+      "workspace": "Dev Work",
+      "notes": "Zed + GitComet + a terminal running the Hermes agent (hermes-agent needs a TTY, so it is wrapped in ghostty -e).",
+      "apps": [
         {
-            "name": "Dev Work",
-            "emoji": "💻",
-            "workspace": "Dev Work",
-            "notes": "Zed + GitComet + a terminal running the Hermes agent (hermes-agent needs a TTY, so it is wrapped in ghostty -e).",
-            "apps": [
-                {
-                    "name": "gitcomet",
-                    "cmd": "gitcomet",
-                    "appId": "gitcomet"
-                },
-                {
-                    "name": "zeditor",
-                    "cmd": "zeditor"
-                },
-                {
-                    "name": "Hermes agent",
-                    "cmd": "ghostty -e herdr",
-                    "appId": "com.mitchellh.ghostty"
-                }
-            ]
+          "name": "gitcomet",
+          "cmd": "gitcomet",
+          "appId": "gitcomet"
         },
         {
-            "name": "JobApp",
-            "emoji": "🧳",
-            "workspace": "JobApp",
-            "notes": "Job applications: Zen, KeePassXC, and herdr running inside a terminal.",
-            "apps": [
-                {
-                    "name": "Zen Browser",
-                    "cmd": "/opt/zen-browser-bin/zen-bin",
-                    "appId": "zen"
-                },
-                {
-                    "name": "KeePassXC",
-                    "cmd": "keepassxc",
-                    "appId": "org.keepassxc.KeePassXC"
-                },
-                {
-                    "name": "herdr",
-                    "cmd": "ghostty -e herdr",
-                    "appId": "com.mitchellh.ghostty"
-                }
-            ]
+          "name": "zeditor",
+          "cmd": "zeditor"
         },
         {
-            "name": "Gaming",
-            "emoji": "🎮",
-            "workspace": "Gaming",
-            "notes": "Launch games through MangoHUD (mangohud %command%). Start focusgame to suspend background apps (install separately).",
-            "apps": [
-                "lutris",
-                "prismlauncher",
-                "vesktop"
-            ]
-        },
-        {
-            "name": "Chill",
-            "emoji": "🧊",
-            "workspace": "Chill",
-            "notes": "Low-key browsing: Zen, Vesktop, Sonora.",
-            "apps": [
-                {
-                    "name": "Zen Browser",
-                    "cmd": "/opt/zen-browser-bin/zen-bin",
-                    "appId": "zen"
-                },
-                {
-                    "name": "Vesktop",
-                    "cmd": "vesktop",
-                    "appId": "vesktop"
-                },
-                {
-                    "name": "Sonora",
-                    "cmd": "sonora",
-                    "appId": "sonora"
-                }
-            ]
-        },
-        {
-            "name": "Monitor",
-            "emoji": "💻",
-            "workspace": "Monitor",
-            "notes": "",
-            "apps": [
-                {
-                    "name": "com.mitchellh.ghostty",
-                    "cmd": "/usr/bin/ghostty -e sh -c systemd-run --user --scope 'btop'",
-                    "appId": "com.mitchellh.ghostty"
-                }
-            ]
+          "name": "Hermes agent",
+          "cmd": "ghostty -e herdr",
+          "appId": "com.mitchellh.ghostty"
         }
-    ]
+      ]
+    },
+    {
+      "name": "JobApp",
+      "emoji": "🧳",
+      "workspace": "JobApp",
+      "notes": "Job applications: Zen, KeePassXC, and herdr running inside a terminal.",
+      "apps": [
+        {
+          "name": "Zen Browser",
+          "cmd": "/opt/zen-browser-bin/zen-bin",
+          "appId": "zen"
+        },
+        {
+          "name": "KeePassXC",
+          "cmd": "keepassxc",
+          "appId": "org.keepassxc.KeePassXC"
+        },
+        {
+          "name": "herdr",
+          "cmd": "ghostty -e herdr",
+          "appId": "com.mitchellh.ghostty"
+        }
+      ]
+    },
+    {
+      "name": "Gaming",
+      "emoji": "🎮",
+      "workspace": "Gaming",
+      "notes": "Launch games through MangoHUD (mangohud %command%). Start focusgame to suspend background apps (install separately).",
+      "apps": [
+        "lutris",
+        "prismlauncher",
+        "vesktop"
+      ]
+    },
+    {
+      "name": "Chill",
+      "emoji": "🧊",
+      "workspace": "Chill",
+      "notes": "Low-key browsing: Zen, Vesktop, Sonora.",
+      "apps": [
+        {
+          "name": "Zen Browser",
+          "cmd": "/opt/zen-browser-bin/zen-bin",
+          "appId": "zen"
+        },
+        {
+          "name": "Vesktop",
+          "cmd": "vesktop",
+          "appId": "vesktop"
+        },
+        {
+          "name": "Sonora",
+          "cmd": "sonora",
+          "appId": "sonora"
+        }
+      ]
+    },
+    {
+      "name": "Monitor",
+      "emoji": "💻",
+      "workspace": "Monitor",
+      "notes": "",
+      "apps": [
+        {
+          "name": "btop",
+          "cmd": "/usr/bin/ghostty -e btop",
+          "appId": "com.mitchellh.ghostty"
+        }
+      ]
+    }
+  ]
 }

@@ -1,7 +1,9 @@
 # Graph Report - workspaceManager  (2026-11-15)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 20 files · ~19,547 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 4 file(s) not represented in the graph (top: (none) 3, .csv 1)
 
 ## Summary
 - 277 nodes · 415 edges · 22 communities (16 shown, 6 thin omitted)
@@ -9,29 +11,33 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4919dc90`
+- Built from commit: `57ac8342`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- WorkspaceDash.qml
-- publishLive
-- WorkspaceDaemon.qml
-- plugin.json
-- launchTemplate
-- stills-ab.sh
-- registry-entry.json
-- computeDiff
-- saveTemplateJson
-- Window stills — A/B performance report
-- steps
-- steps
-- stills-hold.sh
-- Niri Workspace Manager
-- AppChip.qml
-- launchTemplate
-- WorkspacePreview.qml
-- ci.sh
+- Dash UI: workspace cards and actions
+- Docs and publishing guide
+- Daemon core: workspace bookkeeping
+- Release workflow
+- Plugin manifest
+- CI workflow
+- Window stills: capture cost and record
+- A/B stills benchmark harness
+- Launch diff and window reconciliation
+- niri IPC transport and workspace verbs
+- Registry entry
+- Workspace creation and template launch
+- Template persistence and status
+- Live state publication
+- Duration sweep script
+- Local and CI checks script
+- App icon chip
+- Launcher entry
+- Mini-map layout math
+- Settings pane
+- Scrolling title label
+- Emoji palette
 
 ## God Nodes (most connected - your core abstractions)
 1. `launchTemplate()` - 16 edges
