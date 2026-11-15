@@ -22,12 +22,17 @@
 - Plugin manifest
 - Window stills: capture cost and record
 - A/B stills benchmark harness
+- Logic tests (Qt Quick Test)
 - Registry entry
+- Pure logic: matching and launch planning
 - niri IPC transport and workspace verbs
 - Workspace creation and template launch
 - Template persistence and status
 - Launch diff and window reconciliation
+- Graph labelling script
 - Live state publication
+- Rehome and workspace state helpers
+- Window collection and previews
 - Duration sweep script
 - Local and CI checks script
 - App icon chip

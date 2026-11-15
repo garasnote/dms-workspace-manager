@@ -50,6 +50,11 @@ LABELS: dict[int, str] = {
     19: "Scrolling title label",
     20: "Local and CI checks script",
     21: "Emoji palette",
+    22: "Logic tests (Qt Quick Test)",
+    23: "Pure logic: matching and launch planning",
+    24: "Graph labelling script",
+    25: "Rehome and workspace state helpers",
+    26: "Window collection and previews",
 }
 
 OUT = Path(__file__).resolve().parent.parent / "graphify-out"
