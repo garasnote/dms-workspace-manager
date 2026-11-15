@@ -144,6 +144,9 @@ if [[ -n "$RUNNER" && -d tests ]]; then
   else
     bad "logic tests failed"
     grep -E 'FAIL|Totals' /tmp/ci-tests.txt | head -20 | sed 's/^/    /'
+    if grep -q 'Type TestCase unavailable' /tmp/ci-tests.txt; then
+      printf '    hint: the QtTest QML module is missing. Debian/Ubuntu: qml6-module-qttest\n'
+    fi
   fi
 else
   printf '  skipped: qmltestrunner or tests/ not available\n'
