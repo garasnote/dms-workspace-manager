@@ -30,11 +30,17 @@ jobs:
               exit 1
             fi
             echo "label=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            # semver prerelease = a hyphen in the tag (v0.1.0-alpha.1)
+            case "$GITHUB_REF_NAME" in
+              *-*) echo "prerelease=--prerelease" >> "$GITHUB_OUTPUT" ;;
+              *)   echo "prerelease=" >> "$GITHUB_OUTPUT" ;;
+            esac
           else
             # workflow_dispatch: no tag to compare against, use the manifest's
             # version for the artifact name
             echo "manual run: packaging v$version"
             echo "label=v$version" >> "$GITHUB_OUTPUT"
+            echo "prerelease=" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Clone dux-shell (for qs.* imports)
@@ -73,6 +79,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${{ steps.version.outputs.label }}" \
+            ${{ steps.version.outputs.prerelease }} \
             --title "${{ steps.version.outputs.label }}" \
             --notes "Installable plugin archive (plugin.json, templates.json, *.qml, README, LICENSE) plus a SHA-256. DMS installs from the repo directly, so this archive is for manual or pinned installs." \
             "${{ steps.pack.outputs.zip }}" "${{ steps.pack.outputs.sha }}"

@@ -2,6 +2,10 @@
 
 [![ci](https://github.com/garasnote/dms-workspace-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/garasnote/dms-workspace-manager/actions/workflows/ci.yml)
 
+**Status: alpha (`0.1.x`).** Every feature below works and is used daily, but the
+template format and IPC verbs can still change, and multi-monitor setups are
+untested. See [ROADMAP.md](ROADMAP.md) for what beta and 1.0 require.
+
 A [Dux Modular Shell](https://github.com/duxlabs-dev/dux-shell) plugin for
 [niri](https://github.com/YaLTeR/niri): name your workspaces, give them an emoji,
 and switch between whole *environments* — "Dev Work", "Gaming", "JobApp" — instead
@@ -186,6 +190,12 @@ DMS through its plugin API.
 `bench/` holds the performance harness and its results, `scripts/ci.sh` the checks
 CI runs, and `graphify-out/` a knowledge graph of the codebase. None of it is
 needed to use the plugin.
+
+## Roadmap
+
+`ROADMAP.md` defines the alpha → beta → 1.0 scopes. The short version: features
+are essentially done, the trust surface is not — multi-monitor behaviour, honest
+failure reporting, crash-safe writes, undo, and tests.
 
 ## License
 

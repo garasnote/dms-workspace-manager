@@ -71,7 +71,9 @@ settings_src = open("WorkspaceSettings.qml").read() if os.path.exists("Workspace
 if plugin:
     for key in ("id", "name", "description", "version", "author", "license", "type"):
         need(isinstance(plugin.get(key), str) and plugin[key].strip(), f"plugin.json: missing/empty '{key}'")
-    need(re.fullmatch(r"\d+\.\d+\.\d+", plugin.get("version", "")), "plugin.json: version must be semver (x.y.z)")
+    # semver, prerelease allowed: 0.1.0-alpha.1
+    need(re.fullmatch(r"\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?", plugin.get("version", "")),
+         "plugin.json: version must be semver (x.y.z or x.y.z-tag.N)")
     # not "id == directory": CI checks out into the repo name, which differs from
     # the plugin id by design (dms-workspace-manager holds plugin id workspaceManager)
     need(re.fullmatch(r"[a-z][A-Za-z0-9]*", plugin.get("id", "")), "plugin.json: id must be camelCase alphanumeric")
