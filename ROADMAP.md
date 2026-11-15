@@ -45,8 +45,25 @@ If your workspaces look wrong, that is what this stage is for.
       form beside the per-card Save…, so "save this workspace" existed twice with
       different capabilities. Now both entry points open the same review.
 
-Remaining beta items: multi-monitor, undo for Close, restart story, stills
-defaults, logic tests, compatibility matrix, registry listing.
+- [x] **Undo for Close** — the closed workspace's name, emoji and windows are kept
+      for ten minutes; Undo recreates it and restarts what was there.
+- [x] **Restart story** — opt-in setting recreates the workspaces named by
+      templates when the shell starts, and re-applies their emoji (two attempts per
+      name, because a create can lose a race with a starting compositor).
+- [x] **Multi-monitor** — a template can name an `output`; creation focuses that
+      monitor first and waits until niri confirms it. Verified against a real
+      second output.
+- [x] **Stills are predictable** — cache TTL and per-batch cap are settings, not
+      constants.
+- [x] **Logic tests in CI** — pure logic moved to `Logic.js`, 16 Qt Quick Test
+      cases run offscreen (`tests/tst_logic.qml`).
+- [x] **Compatibility matrix** — CI lints against DMS `v2.1.0` (the manifest's
+      minimum) and `v2.1.2` (what development happens on).
+- [x] **Template portability** — export/import JSON, and a generated keybinding
+      block per template.
+
+Remaining beta items: registry listing (needs the pull request to the registry),
+and a compatibility statement in the README once that PR lands.
 
 ---
 

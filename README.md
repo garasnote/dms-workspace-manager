@@ -95,6 +95,7 @@ hand-editable — the dash re-reads it every time it opens.
 | `name` | template name, also the key for `activate` |
 | `emoji` | shown in the bar next to the workspace name |
 | `workspace` | workspace to create or focus before launching |
+| `output` | optional monitor name (`eDP-1`, `HDMI-A-1`): create and focus there |
 | `apps[].cmd` | what to run, through the shell — `ghostty -e tool` works for tools that need a TTY |
 | `apps[].appId` | optional, helps matching against open windows |
 | `apps[].alwaysLaunch` | always start it, even if a window is already open |
@@ -136,6 +137,22 @@ you press **Save template**.
 "delete workspace" verb, and a named workspace lives on while empty — that is the
 closest equivalent.
 
+## Undo, restore, share
+
+- **Undo close** — closing a workspace keeps its name, emoji and window list for
+  ten minutes; the dash offers **Undo close** and the daemon exposes
+  `undoClose`.
+- **Recreate workspaces at startup** — a setting. Workspace names live in the
+  compositor and vanish with it; with this on, every workspace named by a template
+  is recreated (empty) when the shell starts and its emoji is re-applied. Apps are
+  not started — that is what keybindings are for.
+- **Export / import** — `/tmp/workspace-manager-templates.json` via the buttons in
+  the Templates pane, or `exportTemplates <path>` / `importTemplates <path>`.
+  Import replaces templates with the same name and appends the rest, so sharing a
+  template file is a merge, not a wipe.
+- **Keybindings** — the **Keys** button copies a ready-to-paste kdl block for every
+  template to the clipboard; `hotkeys Mod+Ctrl` prints the same thing.
+
 ## Window pictures
 
 Tiles show a real picture of each window, captured when you open the dash and
@@ -155,6 +172,9 @@ the tiles fall back to app icons with no clipboard involvement at all.
 | Fix up windows after a launch | on | move misplaced windows, adopt windows from apps that will not start twice |
 | Window stills | on | real pictures in the mini-map, cached ten minutes |
 | Show empty workspaces | off | niri keeps empty filler workspaces; this shows them |
+| Recreate named workspaces at startup | off | re-create workspaces declared by templates after a restart |
+| Window stills cache | 10 min | how long a captured picture stays fresh |
+| Window stills per batch | 16 | cap on captures per panel open |
 | Compact rows | off | one line per workspace instead of the full preview |
 
 ## IPC
@@ -173,6 +193,10 @@ dms ipc call workspaceManager <command> [args]
 | `name <workspace> <name>` / `rename <from> <to>` | naming |
 | `focusId <workspace-id>` / `focusWindow <window-id>` | focus a workspace / a window |
 | `closeWorkspace <id> <close-windows>` | remove a workspace (see above) |
+| `undoClose` | bring back the last closed workspace and its apps |
+| `restoreWorkspaces` | re-create workspaces named by templates now |
+| `exportTemplates [path]` / `importTemplates <path>` | share template files |
+| `hotkeys [prefix]` | print kdl keybindings for every template |
 | `record <name>` / `previewRecord <name>` / `previewWorkspace <id>` | capture the current session |
 | `saveTemplate <json>` / `deleteTemplate <name>` | template CRUD |
 | `diff <name>` / `list` / `state` | inspect what a launch would do |

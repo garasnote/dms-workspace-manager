@@ -4,6 +4,7 @@ import Quickshell.Io
 import qs.Common
 import qs.Services
 import qs.Modules.Plugins
+import "Logic.js" as Logic
 
 // Niri Workspace Manager - daemon surface.
 //
@@ -41,6 +42,104 @@ PluginComponent {
     property int _stillSeq: 0
     property int _stillActive: 0
     property bool _launchActive: false
+    // Snapshot of the last closed workspace, so Close can be undone. Kept for
+    // CLOSE_UNDO_MS and cleared on a new close or when it is used.
+    property var _lastClosed: null
+    readonly property int closeUndoMs: 10 * 60 * 1000
+
+    // Workspace names live in the compositor, so they die with a niri restart —
+    // and the emoji map in DMS settings then points at workspaces that no longer
+    // exist. If the user opted in, recreate the named workspaces declared by
+    // templates once the compositor is reachable, and re-apply their emoji.
+    function restoreWorkspaces() {
+        if (!pluginData || pluginData.restoreWorkspaces !== true)
+            return;
+
+        const names = [];
+        for (const t of templates) {
+            const name = String(t.workspace || "").trim();
+            if (name && names.indexOf(name) < 0)
+                names.push(name);
+        }
+        if (names.length === 0)
+            return;
+
+        const failed = [];
+        let created = 0;
+        let relabelled = 0;
+        const pending = names.slice();
+
+        const next = () => {
+            const name = pending.shift();
+            if (name === undefined) {
+                const parts = [];
+                if (created > 0)
+                    parts.push(`restored ${created} workspace${created === 1 ? "" : "s"}`);
+                if (relabelled > 0)
+                    parts.push(`re-applied ${relabelled} label${relabelled === 1 ? "" : "s"}`);
+                if (failed.length > 0)
+                    parts.push(`could not create ${failed.join(", ")}`);
+                if (parts.length > 0) {
+                    publishStatus(parts.join(" · "));
+                    publishLive();
+                }
+                return;
+            }
+
+            const template = templates.find(x => String(x.workspace || "").trim() === name);
+            const emoji = emojiForWorkspace(name) || (template && template.emoji) || "";
+
+            if (findWorkspaceByName(name)) {
+                if (emoji) {
+                    applyWorkspaceIcon(name, emoji);
+                    relabelled++;
+                }
+                next();
+                return;
+            }
+
+            // A create can lose a race with the compositor while the session is
+            // still coming up, so give each name two goes before reporting it.
+            const attempt = (tries) => {
+                createWorkspace(name, emoji, (ok, err) => {
+                    if (ok) {
+                        created++;
+                        next();
+                        return;
+                    }
+                    if (tries > 1) {
+                        waitFor(() => findWorkspaceByName(name) !== null, 2500, (exists) => {
+                            if (exists) {
+                                created++;
+                                next();
+                                return;
+                            }
+                            retryTimer.interval = 2500;
+                            retryTimer.triggered = () => attempt(tries - 1);
+                            retryTimer.restart();
+                        });
+                        return;
+                    }
+                    failed.push(name);
+                    next();
+                }, template && template.output ? template.output : "");
+            };
+            attempt(2);
+        };
+        next();
+    }
+
+    // small indirection so the retry above stays readable
+    Timer {
+        id: retryTimer
+        interval: 2500
+        repeat: false
+        property var triggered: null
+        onTriggered: {
+            if (triggered)
+                triggered();
+        }
+    }
 
     // Let the panel paint before forking a shell per window; captures compete with
     // the first frame otherwise, even though the measured open latency is dominated
@@ -80,6 +179,13 @@ PluginComponent {
             ? pluginService.getPluginPath(pluginId) + "/templates.json" : "";
         loadTemplates();
         publishLive();
+        restoreTimer.restart();
+    }
+
+    Timer {
+        id: restoreTimer
+        interval: 4000
+        onTriggered: root.restoreWorkspaces()
     }
 
     // ---------------------------------------------------------------- templates
@@ -181,6 +287,7 @@ PluginComponent {
     function publishTemplates() {
         if (!pluginService)
             return;
+        pluginService.setGlobalVar(pluginId, "hotkeys", hotkeySnippets("Mod+Ctrl"));
         pluginService.setGlobalVar(pluginId, "templates", templates);
         pluginService.setGlobalVar(pluginId, "templatesVersion", Date.now());
     }
@@ -193,21 +300,6 @@ PluginComponent {
 
     function findTemplateByName(name) {
         return (templates || []).find(t => t.name === name) || null;
-    }
-
-    function normalizeApp(app) {
-        if (typeof app === "string")
-            return { name: app, cmd: app, appId: "", alwaysLaunch: false };
-        return {
-            name: (app && app.name) || (app && app.cmd) || "",
-            cmd: (app && (app.cmd || app.name)) || "",
-            appId: (app && app.appId) || "",
-            alwaysLaunch: !!(app && app.alwaysLaunch)
-        };
-    }
-
-    function templateApps(t) {
-        return (t.apps || []).map(normalizeApp).filter(a => a.cmd);
     }
 
     // DMS's bar workspace indicator reads SettingsData.getWorkspaceNameIcon(name)
@@ -273,6 +365,63 @@ PluginComponent {
         return list;
     }
 
+    // NiriService.outputs is a name -> info map, not an array.
+    function outputNames() {
+        const map = NiriService.outputs || {};
+        return Object.keys(map);
+    }
+
+    // The output currently showing a focused workspace.
+    function focusedOutputName() {
+        const ws = (NiriService.allWorkspaces || []).find(w => w.is_focused);
+        return (ws && ws.output) || "";
+    }
+
+    // Focus a specific output, so "create a workspace there" means there and not
+    // on whichever monitor happened to be focused.
+    // Focus an output and wait until niri actually reports it, because a socket
+    // send succeeds when the request is written, not when it is applied — and
+    // "create a workspace on the other monitor" reads that state immediately.
+    function focusOutput(output, done) {
+        const target = String(output || "").trim();
+        if (!target) {
+            if (done)
+                done(true, "");
+            return;
+        }
+        if (focusedOutputName() === target) {
+            if (done)
+                done(true, "");
+            return;
+        }
+        const known = outputNames();
+        if (known.indexOf(target) < 0) {
+            if (done)
+                done(false, `no output named "${target}" (have: ${known.join(", ")})`);
+            return;
+        }
+        // niri calls this FocusMonitor (CLI: "focus-monitor <output>")
+        if (!niriAction("FocusMonitor", { output: target }))
+            niri(["action", "focus-monitor", target], () => {});
+        waitFor(() => focusedOutputName() === target, 1500, (ok) => {
+            if (done)
+                done(ok, ok ? "" : `could not focus output "${target}"`);
+        });
+    }
+
+    // Highest workspace index on a given output, read straight from niri's state.
+    // NiriService.currentOutputWorkspaces lags behind an output focus change, so it
+    // must not be used to decide where a new workspace goes.
+    function lastWorkspaceIdxFor(output) {
+        const target = String(output || "").trim();
+        if (!target)
+            return lastWorkspaceIdx();
+        const list = (NiriService.allWorkspaces || []).filter(ws => String(ws.output) === target);
+        if (list.length === 0)
+            return 1;
+        return list.reduce((m, ws) => Math.max(m, ws.idx || 1), 1);
+    }
+
     function lastWorkspaceIdx() {
         const list = focusedOutputWorkspaces();
         if (list.length === 0)
@@ -310,8 +459,16 @@ PluginComponent {
 
     function pumpWaiters() {
         const now = Date.now();
+        // Detach the batch before dispatching: a callback may register a new
+        // waiter (focus the output, then create a workspace, then wait for the
+        // name), and appending to the old array would have been overwritten by the
+        // assignment at the end of this function — the nested waiter was simply
+        // lost, which is why a launch could hang with _launchActive stuck true.
+        const batch = _waiters;
+        _waiters = [];
+
         const keep = [];
-        for (const waiter of _waiters) {
+        for (const waiter of batch) {
             let ok = false;
             try {
                 ok = waiter.predicate() === true;
@@ -319,16 +476,26 @@ PluginComponent {
                 ok = false;
             }
             if (ok) {
-                waiter.done(true);
+                try {
+                    waiter.done(true);
+                } catch (e) {
+                    console.warn("[workspaceManager] waiter callback failed:", e);
+                }
                 continue;
             }
             if (now >= waiter.deadline) {
-                waiter.done(false);
+                try {
+                    waiter.done(false);
+                } catch (e) {
+                    console.warn("[workspaceManager] waiter callback failed:", e);
+                }
                 continue;
             }
             keep.push(waiter);
         }
-        _waiters = keep;
+
+        // survivors first, then anything the callbacks just registered
+        _waiters = keep.concat(_waiters);
     }
 
     function workspaceNamed(name) {
@@ -486,75 +653,16 @@ PluginComponent {
 
     // ------------------------------------------------------------- app matching
 
-    function basename(path) {
-        const s = String(path || "").trim();
-        const i = s.lastIndexOf("/");
-        return i >= 0 ? s.substring(i + 1) : s;
-    }
-
-    function lastSegment(id) {
-        const s = String(id || "").trim();
-        const i = s.lastIndexOf(".");
-        return i >= 0 ? s.substring(i + 1) : s;
-    }
-
-    function pushKey(keys, value) {
-        const k = String(value || "").toLowerCase().trim();
-        if (k && keys.indexOf(k) < 0)
-            keys.push(k);
-    }
-
-    // Keys a template app can be recognised by: its app id (and its last dotted
-    // segment) plus the basename of every token in the command, so wrappers
-    // like `mangohud game` still match a running `game` process.
-    function keysForApp(app) {
-        const a = normalizeApp(app);
-        const keys = [];
-        if (a.appId) {
-            pushKey(keys, a.appId);
-            pushKey(keys, lastSegment(a.appId));
-        }
-        const tokens = String(a.cmd || "").trim().split(/\s+/);
-        for (const tok of tokens)
-            pushKey(keys, basename(tok.replace(/^["']|["']$/g, "")));
-        return keys;
-    }
-
-    function keysForWindow(w) {
-        const keys = [];
-        if (w.app_id) {
-            pushKey(keys, w.app_id);
-            pushKey(keys, lastSegment(w.app_id));
-        }
-        if (w._cmdline) {
-            const tokens = String(w._cmdline).trim().split(/\s+/);
-            for (const tok of tokens.slice(0, 4))
-                pushKey(keys, basename(tok));
-        }
-        return keys;
-    }
-
-    // Prefix/substring matching with a length floor, so "zen" matches
-    // "/opt/zen-browser-bin/zen-bin" without matching single letters.
-    function keysMatch(a, b) {
-        if (!a || !b)
-            return false;
-        if (a === b)
-            return true;
-        if (a.length < 3 || b.length < 3)
-            return false;
-        return a.indexOf(b) >= 0 || b.indexOf(a) >= 0;
-    }
-
-    function appMatchesWindow(keys, wkeys) {
-        for (const k of keys) {
-            for (const wk of wkeys) {
-                if (keysMatch(k, wk))
-                    return true;
-            }
-        }
-        return false;
-    }
+    // The pure half lives in Logic.js so it can be tested without a compositor;
+    // these keep the call sites inside the daemon unchanged.
+    function basename(path) { return Logic.basename(path); }
+    function lastSegment(id) { return Logic.lastSegment(id); }
+    function normalizeApp(app) { return Logic.normalizeApp(app); }
+    function templateApps(t) { return Logic.templateApps(t); }
+    function keysForApp(app) { return Logic.keysForApp(app); }
+    function keysForWindow(w) { return Logic.keysForWindow(w); }
+    function keysMatch(a, b) { return Logic.keysMatch(a, b); }
+    function appMatchesWindow(keys, wkeys) { return Logic.appMatchesWindow(keys, wkeys); }
 
     // Windows on one workspace, enriched with their process cmdline (cached by
     // pid, since /proc reads are a fork per window).
@@ -638,51 +746,16 @@ PluginComponent {
         }
 
         collectWindows(null, (wins) => {
-            const used = [];
-            const present = [];
-            const moveable = [];
-            const missing = [];
-
-            for (const app of apps) {
-                if (app.alwaysLaunch) {
-                    missing.push(app);
-                    continue;
-                }
-                const keys = keysForApp(app);
-
-                const onTarget = wins.find(w => used.indexOf(w.id) < 0
-                    && String(w.workspace_id) === String(ws.id)
-                    && appMatchesWindow(keys, keysForWindow(w)));
-                if (onTarget) {
-                    used.push(onTarget.id);
-                    present.push(app);
-                    continue;
-                }
-
-                const elsewhere = wins.find(w => used.indexOf(w.id) < 0
-                    && String(w.workspace_id) !== String(ws.id)
-                    && appMatchesWindow(keys, keysForWindow(w)));
-                if (elsewhere) {
-                    used.push(elsewhere.id);
-                    moveable.push({
-                        app: app,
-                        windowId: elsewhere.id,
-                        fromWorkspace: elsewhere.workspace_id
-                    });
-                    continue;
-                }
-
-                missing.push(app);
-            }
-
+            // classification is pure and tested in tests/tst_logic.qml
+            const plan = Logic.planLaunch(apps, wins, ws.id);
             done({
                 workspace: ws.name || wsName,
                 workspaceId: ws.id,
                 exists: true,
-                present: present,
-                moveable: moveable,
-                missing: missing,
-                forceMissing: missing.filter(a => a.alwaysLaunch)
+                present: plan.present,
+                moveable: plan.moveable,
+                missing: plan.missing,
+                forceMissing: plan.missing.filter(a => a.alwaysLaunch)
             });
         });
     }
@@ -844,11 +917,18 @@ PluginComponent {
     //  - the CLI form names whatever is focused at that moment.
     // So: name by explicit index, then wait until niri really reports the name,
     // and only then let the caller spawn anything.
-    function createWorkspace(name, emoji, done) {
+    function createWorkspace(name, emoji, done, output) {
         const trimmed = (name || "").trim();
+        const targetOutput = String(output || "").trim();
 
         const attempt = (triesLeft) => {
-            const idx = lastWorkspaceIdx();
+            focusOutput(targetOutput, (outputOk, outputErr) => {
+            if (!outputOk) {
+                if (done)
+                    done(false, outputErr || `could not focus output "${targetOutput}"`);
+                return;
+            }
+            const idx = targetOutput ? lastWorkspaceIdxFor(targetOutput) : lastWorkspaceIdx();
             focusByIndex(idx, (ok, err) => {
                 if (!ok) {
                     if (done)
@@ -878,6 +958,7 @@ PluginComponent {
                             done(true, "");
                     });
                 });
+            });
             });
         };
 
@@ -943,44 +1024,61 @@ PluginComponent {
         }
 
         const wsName = ws.name || "";
-        const wins = (NiriService.windows || []).filter(w => String(w.workspace_id) === String(numericId));
 
-        if (closeWindows) {
-            for (const win of wins) {
-                if (!niriAction("CloseWindow", { id: win.id }))
-                    niri(["action", "close-window", "--id", String(win.id)], () => {});
+        // Windows are read with their cmdlines so Undo can actually restart them
+        // (`ghostty`, not `com.mitchellh.ghostty`).
+        collectWindows(numericId, (wins) => {
+            if (closeWindows) {
+                for (const win of wins) {
+                    if (!niriAction("CloseWindow", { id: win.id }))
+                        niri(["action", "close-window", "--id", String(win.id)], () => {});
+                }
             }
-        }
 
-        const label = wsName || `workspace #${ws.idx}`;
-        const finish = () => {
-            if (wsName)
-                forgetWorkspaceIcon(wsName);
-            const summary = closeWindows
-                ? `Closed ${label} and ${wins.length} window${wins.length === 1 ? "" : "s"}`
-                : `Removed the name ${label}${wins.length ? " (windows kept)" : ""}`;
-            publishStatus(summary);
-            publishLive();
-            if (done)
-                done(true, summary);
-        };
+            const label = wsName || `workspace #${ws.idx}`;
+            _lastClosed = {
+                name: wsName,
+                emoji: wsName ? emojiForWorkspace(wsName) : "",
+                idx: ws.idx,
+                output: ws.output || "",
+                windows: wins.map(w => ({
+                    appId: w.app_id || "",
+                    name: windowLabel(w),
+                    cmd: (w._cmdline || "").trim() || (w.app_id || "")
+                })),
+                closedWindows: !!closeWindows,
+                ts: Date.now()
+            };
 
-        if (!wsName) {
-            finish();
-            return;
-        }
+            const finish = () => {
+                if (wsName)
+                    forgetWorkspaceIcon(wsName);
+                const summary = closeWindows
+                    ? `Closed ${label} and ${wins.length} window${wins.length === 1 ? "" : "s"}`
+                    : `Removed the name ${label}${wins.length ? " (windows kept)" : ""}`;
+                publishStatus(summary);
+                publishLive();
+                if (done)
+                    done(true, summary);
+            };
 
-        if (niriAction("UnsetWorkspaceName", { reference: { Id: numericId } })) {
-            finish();
-            return;
-        }
-        niri(["action", "unset-workspace-name", "--workspace", String(numericId)], (out, code) => {
-            if (code === 0) {
+            if (!wsName) {
                 finish();
                 return;
             }
-            if (done)
-                done(false, out || "unset-workspace-name failed");
+
+            if (niriAction("UnsetWorkspaceName", { reference: { Id: numericId } })) {
+                finish();
+                return;
+            }
+            niri(["action", "unset-workspace-name", "--workspace", String(numericId)], (out, code) => {
+                if (code === 0) {
+                    finish();
+                    return;
+                }
+                if (done)
+                    done(false, out || "unset-workspace-name failed");
+            });
         });
     }
 
@@ -1040,6 +1138,7 @@ PluginComponent {
         const all = templateApps(t);
         const wsName = (t.workspace || "").trim();
         const emoji = t.emoji || "";
+        const wsOutput = (t.output || "").trim();
 
         computeDiff(t, (diff) => {
             // Always try to start what is not on the workspace yet. An app in the
@@ -1123,6 +1222,10 @@ PluginComponent {
             };
 
             if (diff.exists && diff.workspaceId !== undefined) {
+                if (wsOutput) {
+                    focusOutput(wsOutput, () => focusVerified());
+                    return;
+                }
                 focusVerified();
                 return;
             }
@@ -1134,7 +1237,7 @@ PluginComponent {
                     return;
                 }
                 focusVerified();
-            });
+            }, wsOutput);
         });
     }
 
@@ -1160,7 +1263,9 @@ PluginComponent {
 
         const wins = (NiriService.windows || []).slice();
         const now = Date.now();
-        const ttl = 10 * 60 * 1000;
+        const ttlMinutes = Math.max(1, Number(pluginData && pluginData.stillsTtlMinutes) || 10);
+        const ttl = ttlMinutes * 60 * 1000;
+        const maxPerBatch = Math.max(1, Number(pluginData && pluginData.stillsMaxWindows) || 16);
 
         // forget stills for windows that closed
         const known = {};
@@ -1184,7 +1289,7 @@ PluginComponent {
                 return af - bf;
             })
             .map(w => w.id)
-            .slice(0, 16);
+            .slice(0, maxPerBatch);
 
         // drop files for windows that are long gone
         Proc.runCommand("wsm.stillprune." + (++_stillSeq), ["sh", "-c",
@@ -1246,6 +1351,60 @@ PluginComponent {
                 }
                 pumpStills();
             });
+    }
+
+    // Bring back the last closed workspace: recreate and rename it, then restart
+    // the apps it had (their windows are gone, so this is a fresh launch).
+    function undoClose(done) {
+        const snap = _lastClosed;
+        if (!snap || (Date.now() - snap.ts) > closeUndoMs) {
+            _lastClosed = null;
+            if (done)
+                done(false, "nothing to undo");
+            return;
+        }
+        _lastClosed = null;
+
+        const restoreApps = () => {
+            const apps = (snap.windows || []).map(w => ({ name: w.name, cmd: w.cmd || w.appId, appId: w.appId })).filter(a => a.cmd);
+            if (apps.length === 0) {
+                publishStatus(`Reopened ${snap.name || "the workspace"}`);
+                publishLive();
+                if (done)
+                    done(true, "reopened");
+                return;
+            }
+            preflightApps(apps, (runnable) => {
+                spawnApps(runnable, () => {
+                    publishStatus(`Reopened ${snap.name || "the workspace"} with ${runnable.length} app${runnable.length === 1 ? "" : "s"}`);
+                    publishLive();
+                    if (done)
+                        done(true, "reopened");
+                });
+            });
+        };
+
+        if (!snap.name) {
+            // unnamed workspace: create a fresh one and relaunch
+            createWorkspace("", "", (ok, err) => {
+                if (!ok) {
+                    if (done)
+                        done(false, err || "could not recreate the workspace");
+                    return;
+                }
+                restoreApps();
+            });
+            return;
+        }
+
+        createWorkspace(snap.name, snap.emoji, (ok, err) => {
+            if (!ok) {
+                if (done)
+                    done(false, err || "could not recreate the workspace");
+                return;
+            }
+            restoreApps();
+        });
     }
 
     function publishLive() {
@@ -1361,9 +1520,17 @@ PluginComponent {
                     out.appId = a.appId;
                 if (a.alwaysLaunch)
                     out.alwaysLaunch = true;
+                if (a.gather)
+                    out.gather = true;
                 return out;
             })
         };
+
+        // keep a template's target output; it is what makes per-monitor profiles
+        // possible, and dropping it on save silently sent launches to the wrong place
+        const output = String(t.output || "").trim();
+        if (output)
+            clean.output = output;
 
         const list = templates.slice();
         let idx = originalName ? list.findIndex(x => x.name === originalName) : -1;
@@ -1386,6 +1553,92 @@ PluginComponent {
             if (done)
                 done(ok, ok ? "" : "failed to save templates.json");
         });
+    }
+
+    // Export every template as JSON, or write it to a path when one is given.
+    function exportTemplates(path, done) {
+        const payload = JSON.stringify({ version: 1, templates: templates }, null, 2);
+        const target = String(path || "").trim();
+        if (!target) {
+            if (done)
+                done(true, payload);
+            return;
+        }
+        const safe = payload.split("\n").map(l => l === "WSM_EOF" ? "WSM_EOF " : l).join("\n");
+        const script = "cat > '" + target.replace(/'/g, "'\\''") + "' <<'WSM_EOF'\n" + safe + "\nWSM_EOF";
+        Proc.runCommand("wsm.exportTemplates", ["sh", "-c", script], (out, code) => {
+            if (done)
+                done(code === 0, code === 0 ? target : (out || "could not write " + target));
+        });
+    }
+
+    // Import templates from a JSON file, replacing templates with the same name.
+    function importTemplates(path, done) {
+        const target = String(path || "").trim();
+        if (!target) {
+            if (done)
+                done(false, "a path is required");
+            return;
+        }
+        Proc.runCommand("wsm.importTemplates", ["sh", "-c", "cat '" + target.replace(/'/g, "'\\''") + "' 2>/dev/null"], (out, code) => {
+            let parsed = null;
+            try {
+                parsed = JSON.parse(out || "");
+            } catch (e) {
+                if (done)
+                    done(false, "not valid JSON: " + target);
+                return;
+            }
+            const incoming = (parsed && parsed.templates) || (Array.isArray(parsed) ? parsed : []);
+            const valid = incoming.filter(x => x && String(x.name || "").trim() !== "");
+            if (valid.length === 0) {
+                if (done)
+                    done(false, "no templates found in " + target);
+                return;
+            }
+            const list = templates.slice();
+            let added = 0;
+            let replaced = 0;
+            for (const item of valid) {
+                const i = list.findIndex(x => x.name === item.name);
+                if (i >= 0) {
+                    list[i] = item;
+                    replaced++;
+                } else {
+                    list.push(item);
+                    added++;
+                }
+            }
+            writeTemplates(list, (ok) => {
+                if (ok) {
+                    templates = list;
+                    publishTemplates();
+                    publishLive();
+                    publishStatus(`Imported ${added} new and replaced ${replaced} template${replaced === 1 ? "" : "s"}`);
+                }
+                if (done)
+                    done(ok, ok ? "imported" : "could not write templates.json");
+            });
+        });
+    }
+
+    // Ready-to-paste niri keybindings for every template.
+    function hotkeySnippets(prefix) {
+        const mod = String(prefix || "Mod+Ctrl").trim();
+        const used = {};
+        const lines = [];
+        for (const t of templates) {
+            const name = String(t.name || "").trim();
+            if (!name)
+                continue;
+            let key = (name.replace(/[^A-Za-z0-9]/g, "")[0] || "W").toUpperCase();
+            while (used[key])
+                key = String.fromCharCode(key.charCodeAt(0) + 1);
+            used[key] = true;
+            lines.push(`${mod}+${key} { spawn "dms" "ipc" "call" "workspaceManager" "activate" "${name}"; }`);
+        }
+        lines.push(`${mod}+W { spawn "dms" "ipc" "call" "dash" "toggle" "plugin_workspaceManager"; }`);
+        return lines.join("\n");
     }
 
     function deleteTemplate(name, done) {
@@ -1588,6 +1841,39 @@ PluginComponent {
 
         function reload(): string {
             root.loadTemplates();
+            return "QUEUED";
+        }
+
+        function exportTemplates(path: string): string {
+            root.exportTemplates(path, (ok, result) => {
+                if (!ok && ToastService)
+                    ToastService.showError("Workspace Manager", result || "Export failed");
+            });
+            return "QUEUED";
+        }
+
+        function importTemplates(path: string): string {
+            root.importTemplates(path, (ok, err) => {
+                if (!ok && ToastService)
+                    ToastService.showError("Workspace Manager", err || "Import failed");
+            });
+            return "QUEUED";
+        }
+
+        function hotkeys(prefix: string): string {
+            return root.hotkeySnippets(prefix);
+        }
+
+        function restoreWorkspaces(): string {
+            root.restoreWorkspaces();
+            return "QUEUED";
+        }
+
+        function undoClose(): string {
+            root.undoClose((ok, err) => {
+                if (!ok && ToastService)
+                    ToastService.showToast("Workspace Manager", err || "Nothing to undo");
+            });
             return "QUEUED";
         }
 

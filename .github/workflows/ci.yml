@@ -9,6 +9,13 @@ on:
 jobs:
   checks:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # compatibility: the minimum the manifest claims, and the version we
+        # actually develop against. Both have to lint, so a newer shell cannot
+        # quietly break a plugin that still says requires_dms ">=2.1.0".
+        shell: ${{ fromJSON(vars.DUX_SHELL_MATRIX || '["v2.1.0", "v2.1.2"]') }}
     steps:
       - uses: actions/checkout@v4
 
@@ -19,9 +26,9 @@ jobs:
         with:
           repository: duxlabs-dev/dux-shell
           path: .dux-shell
-          ref: ${{ vars.DUX_SHELL_REF || 'v2.1.2' }}
+          ref: ${{ matrix.shell }}
 
-      - name: Install qmllint and shellcheck
+      - name: Install qmllint, qmltestrunner and shellcheck
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq qt6-declarative-dev-tools shellcheck python3

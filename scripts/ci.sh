@@ -126,7 +126,30 @@ print(f"  ok: {len(keys)} settings keys, {len((templates or {}).get('templates',
 sys.exit(1 if problems else 0)
 PY
 
-# ------------------------------------------------------- 3. graph community labels
+# ------------------------------------------------------------- 3. logic tests
+# Qt Quick Test in offscreen mode: Logic.js has no compositor, shell or clipboard
+# dependencies precisely so this can run anywhere.
+step "logic tests"
+RUNNER=""
+for candidate in /usr/lib/qt6/bin/qmltestrunner qmltestrunner; do
+  if command -v "$candidate" >/dev/null 2>&1 || [[ -x "$candidate" ]]; then
+    RUNNER="$candidate"
+    break
+  fi
+done
+if [[ -n "$RUNNER" && -d tests ]]; then
+  if QT_QPA_PLATFORM=offscreen "$RUNNER" -input tests -o -,txt >/tmp/ci-tests.txt 2>&1; then
+    grep -E '^Totals:' /tmp/ci-tests.txt | sed 's/^/  /'
+    ok "logic tests passed"
+  else
+    bad "logic tests failed"
+    grep -E 'FAIL|Totals' /tmp/ci-tests.txt | head -20 | sed 's/^/    /'
+  fi
+else
+  printf '  skipped: qmltestrunner or tests/ not available\n'
+fi
+
+# ------------------------------------------------------- 4. graph community labels
 # graphify's fallback names each community after its busiest node ("steps",
 # "ref_showemptyworkspaces"). scripts/graph-labels.py applies curated names; this
 # catches the case where someone ran `graphify update .` and forgot to re-apply.
@@ -141,7 +164,7 @@ else
   printf '  skipped: no graphify-out/graph.json\n'
 fi
 
-# ------------------------------------------------------------------ 4. shell
+# ------------------------------------------------------------------ 5. shell
 step "shellcheck"
 if command -v shellcheck >/dev/null 2>&1; then
   if shellcheck -S warning bench/*.sh scripts/*.sh; then
@@ -153,7 +176,7 @@ else
   printf '  skipped: shellcheck not installed (CI installs it)\n'
 fi
 
-# --------------------------------------------------- 5. leftovers and hygiene
+# --------------------------------------------------- 6. leftovers and hygiene
 step "hygiene"
 # console.warn/error are how the daemon reports real failures (unparseable
 # templates.json, a failed spawn) and stay; console.log and the "[wsm]" debug tag

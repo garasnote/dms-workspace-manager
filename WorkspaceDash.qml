@@ -38,9 +38,24 @@ DashTabComponent {
     property string liveDraftEmoji: ""
     property string pendingDelete: ""
     property string closeArmId: ""
+    property bool undoArmed: false
     property string expandedId: ""
 
     readonly property string statusText: statusObj ? (statusObj.message || "") : ""
+    readonly property bool canUndoClose: root.undoArmed
+    // Undo stays offered for two minutes; the daemon keeps its own ten-minute copy.
+    onStatusTextChanged: {
+        if (root.statusText.indexOf("Closed ") === 0 || root.statusText.indexOf("Removed the name") === 0) {
+            root.undoArmed = true;
+            undoWindow.restart();
+        }
+    }
+
+    Timer {
+        id: undoWindow
+        interval: 120000
+        onTriggered: root.undoArmed = false
+    }
     readonly property bool showEmpty: !root.pluginData || root.pluginData.showEmptyWorkspaces === true
     readonly property bool compactRows: !!root.pluginData && root.pluginData.compactLiveRows === true
 
@@ -134,6 +149,16 @@ DashTabComponent {
 
     // Re-reading templates.json on open means hand edits show up without a
     // reload button; state updates themselves are event-driven.
+    // Put ready-to-paste keybindings on the clipboard. This is the one place the
+    // plugin writes to the clipboard on purpose, instead of borrowing it.
+    function copyHotkeys() {
+        const snippets = PluginService.getGlobalVar(pluginId, "hotkeys", "");
+        if (!snippets)
+            return;
+        Quickshell.execDetached(["sh", "-c", "printf '%s' \"$1\" | wl-copy", "wsm", snippets]);
+        root.send("refreshLive");
+    }
+
     // Focus one window from the mini-map and dismiss the panel, the way a dock
     // click would.
     function focusWindow(windowId) {
@@ -415,6 +440,23 @@ DashTabComponent {
                 onClicked: root.pane = 1
             }
 
+            Item {
+                width: Math.max(0, parent.width - 340)
+                height: 1
+            }
+
+            // Closing a workspace throws its windows away; this brings it back
+            // (the name, the emoji and a fresh launch of what was there).
+            DButton {
+                visible: root.canUndoClose
+                text: "Undo close"
+                iconName: "undo"
+                variant: "tonal"
+                onClicked: {
+                    root.send("undoClose");
+                    root.undoArmed = false;
+                }
+            }
         }
 
         StyledText {
@@ -886,6 +928,42 @@ DashTabComponent {
                         color: Theme.onSurfaceVariant
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode: Text.Wrap
+                    }
+
+                    // templates are portable: a friend can send you their file
+                    Row {
+                        width: parent.width
+                        spacing: Theme.spacingXS
+
+                        DButton {
+                            text: "Export…"
+                            iconName: "download"
+                            variant: "tonal"
+                            onClicked: root.send("exportTemplates", "/tmp/workspace-manager-templates.json")
+                        }
+
+                        DButton {
+                            text: "Import…"
+                            iconName: "upload"
+                            variant: "tonal"
+                            onClicked: root.send("importTemplates", "/tmp/workspace-manager-templates.json")
+                        }
+
+                        DButton {
+                            text: "Keys"
+                            iconName: "keyboard"
+                            variant: "tonal"
+                            onClicked: root.copyHotkeys()
+                        }
+
+                        StyledText {
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: Math.max(0, parent.width - 260)
+                            text: "/tmp/workspace-manager-templates.json · gist-safe, one JSON file"
+                            color: Theme.withAlpha(Theme.onSurfaceVariant, 0.8)
+                            font.pixelSize: Theme.fontSizeSmall
+                            elide: Text.ElideRight
+                        }
                     }
 
                     Repeater {

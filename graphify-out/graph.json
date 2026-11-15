@@ -16,7 +16,7 @@
    "file_type": "code",
    "norm_label": "adddraftapp()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L274"
+   "source_location": "L299"
   },
   {
    "id": "workspacedash_adoptpreview",
@@ -28,7 +28,7 @@
    "file_type": "code",
    "norm_label": "adoptpreview()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L152"
+   "source_location": "L177"
   },
   {
    "id": "workspacedash_appcmdof",
@@ -40,7 +40,7 @@
    "file_type": "code",
    "norm_label": "appcmdof()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L187"
+   "source_location": "L212"
   },
   {
    "id": "workspacedash_appidof",
@@ -52,7 +52,7 @@
    "file_type": "code",
    "norm_label": "appidof()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L183"
+   "source_location": "L208"
   },
   {
    "id": "workspacedash_appmissing",
@@ -64,7 +64,7 @@
    "file_type": "code",
    "norm_label": "appmissing()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L191"
+   "source_location": "L216"
   },
   {
    "id": "workspacedash_appname",
@@ -76,7 +76,7 @@
    "file_type": "code",
    "norm_label": "appname()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L179"
+   "source_location": "L204"
   },
   {
    "id": "workspacedash_armclose",
@@ -88,7 +88,7 @@
    "file_type": "code",
    "norm_label": "armclose()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L375"
+   "source_location": "L400"
   },
   {
    "id": "workspacedash_canceledit",
@@ -100,7 +100,7 @@
    "file_type": "code",
    "norm_label": "canceledit()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L250"
+   "source_location": "L275"
   },
   {
    "id": "workspacedash_capturefocused",
@@ -112,7 +112,7 @@
    "file_type": "code",
    "norm_label": "capturefocused()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L361"
+   "source_location": "L386"
   },
   {
    "id": "workspacedash_capturelive",
@@ -124,7 +124,7 @@
    "file_type": "code",
    "norm_label": "capturelive()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L368"
+   "source_location": "L393"
   },
   {
    "id": "workspacedash_clone",
@@ -136,7 +136,7 @@
    "file_type": "code",
    "norm_label": "clone()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L170"
+   "source_location": "L195"
   },
   {
    "id": "workspacedash_closeworkspace",
@@ -148,7 +148,19 @@
    "file_type": "code",
    "norm_label": "closeworkspace()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L380"
+   "source_location": "L405"
+  },
+  {
+   "id": "workspacedash_copyhotkeys",
+   "label": "copyHotkeys()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 0,
+   "community_name": "Dash UI: workspace cards and actions",
+   "file_type": "code",
+   "norm_label": "copyhotkeys()",
+   "source_file": "WorkspaceDash.qml",
+   "source_location": "L154"
   },
   {
    "id": "workspacedash_flicktop",
@@ -160,7 +172,7 @@
    "file_type": "code",
    "norm_label": "flicktop()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L130"
+   "source_location": "L145"
   },
   {
    "id": "workspacedash_focusedwindowid",
@@ -172,7 +184,7 @@
    "file_type": "code",
    "norm_label": "focusedwindowid()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L217"
+   "source_location": "L242"
   },
   {
    "id": "workspacedash_focuswindow",
@@ -184,7 +196,7 @@
    "file_type": "code",
    "norm_label": "focuswindow()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L139"
+   "source_location": "L164"
   },
   {
    "id": "workspacedash_groupedapps",
@@ -196,7 +208,7 @@
    "file_type": "code",
    "norm_label": "groupedapps()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L197"
+   "source_location": "L222"
   },
   {
    "id": "workspacedash_missingfor",
@@ -208,7 +220,7 @@
    "file_type": "code",
    "norm_label": "missingfor()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L174"
+   "source_location": "L199"
   },
   {
    "id": "workspacedash_onglobalvarchanged",
@@ -220,7 +232,7 @@
    "file_type": "code",
    "norm_label": "onglobalvarchanged()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L75"
+   "source_location": "L90"
   },
   {
    "id": "workspacedash_refresh",
@@ -232,7 +244,7 @@
    "file_type": "code",
    "norm_label": "refresh()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L147"
+   "source_location": "L172"
   },
   {
    "id": "workspacedash_removedraftapp",
@@ -244,7 +256,7 @@
    "file_type": "code",
    "norm_label": "removedraftapp()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L266"
+   "source_location": "L291"
   },
   {
    "id": "workspacedash_removepreviewapp",
@@ -256,7 +268,7 @@
    "file_type": "code",
    "norm_label": "removepreviewapp()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L316"
+   "source_location": "L341"
   },
   {
    "id": "workspacedash_requestdelete",
@@ -268,7 +280,7 @@
    "file_type": "code",
    "norm_label": "requestdelete()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L298"
+   "source_location": "L323"
   },
   {
    "id": "workspacedash_rowexpanded",
@@ -280,7 +292,7 @@
    "file_type": "code",
    "norm_label": "rowexpanded()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L223"
+   "source_location": "L248"
   },
   {
    "id": "workspacedash_saveedit",
@@ -292,7 +304,7 @@
    "file_type": "code",
    "norm_label": "saveedit()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L256"
+   "source_location": "L281"
   },
   {
    "id": "workspacedash_saveliveedit",
@@ -304,7 +316,7 @@
    "file_type": "code",
    "norm_label": "saveliveedit()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L353"
+   "source_location": "L378"
   },
   {
    "id": "workspacedash_savepreview",
@@ -316,7 +328,7 @@
    "file_type": "code",
    "norm_label": "savepreview()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L322"
+   "source_location": "L347"
   },
   {
    "id": "workspacedash_send",
@@ -328,7 +340,7 @@
    "file_type": "code",
    "norm_label": "send()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L163"
+   "source_location": "L188"
   },
   {
    "id": "workspacedash_startedit",
@@ -340,7 +352,7 @@
    "file_type": "code",
    "norm_label": "startedit()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L242"
+   "source_location": "L267"
   },
   {
    "id": "workspacedash_startliveedit",
@@ -352,7 +364,7 @@
    "file_type": "code",
    "norm_label": "startliveedit()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L346"
+   "source_location": "L371"
   },
   {
    "id": "workspacedash_togglealwayslaunch",
@@ -364,7 +376,7 @@
    "file_type": "code",
    "norm_label": "togglealwayslaunch()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L289"
+   "source_location": "L314"
   },
   {
    "id": "workspacedash_togglerow",
@@ -376,7 +388,7 @@
    "file_type": "code",
    "norm_label": "togglerow()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L229"
+   "source_location": "L254"
   },
   {
    "id": "workspacedash_workspacelabel",
@@ -388,7 +400,7 @@
    "file_type": "code",
    "norm_label": "workspacelabel()",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L234"
+   "source_location": "L259"
   },
   {
    "id": "workspacedaemon_emojiforworkspace",
@@ -400,7 +412,7 @@
    "file_type": "code",
    "norm_label": "emojiforworkspace()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L223"
+   "source_location": "L315"
   },
   {
    "id": "workspacedaemon_listtext",
@@ -412,7 +424,7 @@
    "file_type": "code",
    "norm_label": "listtext()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1412"
+   "source_location": "L1665"
   },
   {
    "id": "workspacedaemon_publishdiffs",
@@ -424,7 +436,7 @@
    "file_type": "code",
    "norm_label": "publishdiffs()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L704"
+   "source_location": "L777"
   },
   {
    "id": "workspacedaemon_publishdiffs_step",
@@ -436,7 +448,7 @@
    "file_type": "code",
    "norm_label": "step()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L709"
+   "source_location": "L782"
   },
   {
    "id": "workspacedaemon_publishlive",
@@ -448,7 +460,7 @@
    "file_type": "code",
    "norm_label": "publishlive()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1251"
+   "source_location": "L1410"
   },
   {
    "id": "workspacedaemon_stilluri",
@@ -460,7 +472,7 @@
    "file_type": "code",
    "norm_label": "stilluri()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1145"
+   "source_location": "L1248"
   },
   {
    "id": "workspacedaemon_activate",
@@ -472,7 +484,7 @@
    "file_type": "code",
    "norm_label": "activate()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L987"
+   "source_location": "L1085"
   },
   {
    "id": "workspacedaemon_findtemplatebyname",
@@ -484,7 +496,7 @@
    "file_type": "code",
    "norm_label": "findtemplatebyname()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L194"
+   "source_location": "L301"
   },
   {
    "id": "workspacedaemon_name",
@@ -496,7 +508,7 @@
    "file_type": "code",
    "norm_label": "name()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1522"
+   "source_location": "L1775"
   },
   {
    "id": "workspacedaemon_applyworkspaceicon",
@@ -508,7 +520,7 @@
    "file_type": "code",
    "norm_label": "applyworkspaceicon()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L215"
+   "source_location": "L307"
   },
   {
    "id": "workspacedaemon_createworkspace",
@@ -520,19 +532,91 @@
    "file_type": "code",
    "norm_label": "createworkspace()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L847"
+   "source_location": "L920"
   },
   {
-   "id": "workspacedaemon_launchtemplate",
-   "label": "launchTemplate()",
+   "id": "workspacedaemon_findworkspacebyname",
+   "label": "findWorkspaceByName()",
    "_callable": true,
    "_origin": "ast",
    "community": 15,
    "community_name": "Workspace creation and template launch",
    "file_type": "code",
-   "norm_label": "launchtemplate()",
+   "norm_label": "findworkspacebyname()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1018"
+   "source_location": "L432"
+  },
+  {
+   "id": "workspacedaemon_focusedoutputname",
+   "label": "focusedOutputName()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 15,
+   "community_name": "Workspace creation and template launch",
+   "file_type": "code",
+   "norm_label": "focusedoutputname()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L375"
+  },
+  {
+   "id": "workspacedaemon_focusedoutputworkspaces",
+   "label": "focusedOutputWorkspaces()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 15,
+   "community_name": "Workspace creation and template launch",
+   "file_type": "code",
+   "norm_label": "focusedoutputworkspaces()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L359"
+  },
+  {
+   "id": "workspacedaemon_focusoutput",
+   "label": "focusOutput()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 15,
+   "community_name": "Workspace creation and template launch",
+   "file_type": "code",
+   "norm_label": "focusoutput()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L385"
+  },
+  {
+   "id": "workspacedaemon_lastworkspaceidx",
+   "label": "lastWorkspaceIdx()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 15,
+   "community_name": "Workspace creation and template launch",
+   "file_type": "code",
+   "norm_label": "lastworkspaceidx()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L425"
+  },
+  {
+   "id": "workspacedaemon_lastworkspaceidxfor",
+   "label": "lastWorkspaceIdxFor()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 15,
+   "community_name": "Workspace creation and template launch",
+   "file_type": "code",
+   "norm_label": "lastworkspaceidxfor()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L415"
+  },
+  {
+   "id": "workspacedaemon_outputnames",
+   "label": "outputNames()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 15,
+   "community_name": "Workspace creation and template launch",
+   "file_type": "code",
+   "norm_label": "outputnames()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L369"
   },
   {
    "id": "workspacedaemon_renamefocused",
@@ -544,19 +628,19 @@
    "file_type": "code",
    "norm_label": "renamefocused()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L887"
+   "source_location": "L968"
   },
   {
-   "id": "workspacedaemon_schedulerehome",
-   "label": "scheduleRehome()",
+   "id": "workspacedaemon_restoreworkspaces",
+   "label": "restoreWorkspaces()",
    "_callable": true,
    "_origin": "ast",
    "community": 15,
    "community_name": "Workspace creation and template launch",
    "file_type": "code",
-   "norm_label": "schedulerehome()",
+   "norm_label": "restoreworkspaces()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L749"
+   "source_location": "L54"
   },
   {
    "id": "workspacedaemon_waitfor",
@@ -568,31 +652,7 @@
    "file_type": "code",
    "norm_label": "waitfor()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L306"
-  },
-  {
-   "id": "workspacedaemon_workspacefocused",
-   "label": "workspaceFocused()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 15,
-   "community_name": "Workspace creation and template launch",
-   "file_type": "code",
-   "norm_label": "workspacefocused()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L338"
-  },
-  {
-   "id": "workspacedaemon_workspacenamed",
-   "label": "workspaceNamed()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 15,
-   "community_name": "Workspace creation and template launch",
-   "file_type": "code",
-   "norm_label": "workspacenamed()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L334"
+   "source_location": "L455"
   },
   {
    "id": "workspacelauncher_executeitem",
@@ -652,7 +712,7 @@
    "file_type": "code",
    "norm_label": "clearpreview()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1328"
+   "source_location": "L1487"
   },
   {
    "id": "workspacedaemon_create",
@@ -664,19 +724,7 @@
    "file_type": "code",
    "norm_label": "create()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1438"
-  },
-  {
-   "id": "workspacedaemon_currentworkspacename",
-   "label": "currentWorkspaceName()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 2,
-   "community_name": "Daemon core: workspace bookkeeping",
-   "file_type": "code",
-   "norm_label": "currentworkspacename()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L287"
+   "source_location": "L1691"
   },
   {
    "id": "workspacedaemon_diff",
@@ -688,7 +736,7 @@
    "file_type": "code",
    "norm_label": "diff()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1475"
+   "source_location": "L1728"
   },
   {
    "id": "workspacedaemon_diffsummary",
@@ -700,7 +748,19 @@
    "file_type": "code",
    "norm_label": "diffsummary()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L690"
+   "source_location": "L763"
+  },
+  {
+   "id": "workspacedaemon_exporttemplates",
+   "label": "exportTemplates()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 2,
+   "community_name": "Daemon core: workspace bookkeeping",
+   "file_type": "code",
+   "norm_label": "exporttemplates()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1559"
   },
   {
    "id": "workspacedaemon_focusbyid",
@@ -712,31 +772,7 @@
    "file_type": "code",
    "norm_label": "focusbyid()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L406"
-  },
-  {
-   "id": "workspacedaemon_focusedoutputworkspaces",
-   "label": "focusedOutputWorkspaces()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 2,
-   "community_name": "Daemon core: workspace bookkeeping",
-   "file_type": "code",
-   "norm_label": "focusedoutputworkspaces()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L267"
-  },
-  {
-   "id": "workspacedaemon_focusedworkspacerecord",
-   "label": "focusedWorkspaceRecord()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 2,
-   "community_name": "Daemon core: workspace bookkeeping",
-   "file_type": "code",
-   "norm_label": "focusedworkspacerecord()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L263"
+   "source_location": "L573"
   },
   {
    "id": "workspacedaemon_focusid",
@@ -748,7 +784,7 @@
    "file_type": "code",
    "norm_label": "focusid()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1602"
+   "source_location": "L1888"
   },
   {
    "id": "workspacedaemon_focuswindow",
@@ -760,7 +796,7 @@
    "file_type": "code",
    "norm_label": "focuswindow()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1594"
+   "source_location": "L1880"
   },
   {
    "id": "workspacedaemon_forgeticon",
@@ -772,19 +808,43 @@
    "file_type": "code",
    "norm_label": "forgeticon()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1560"
+   "source_location": "L1813"
   },
   {
-   "id": "workspacedaemon_lastworkspaceidx",
-   "label": "lastWorkspaceIdx()",
+   "id": "workspacedaemon_hotkeys",
+   "label": "hotkeys()",
    "_callable": true,
    "_origin": "ast",
    "community": 2,
    "community_name": "Daemon core: workspace bookkeeping",
    "file_type": "code",
-   "norm_label": "lastworkspaceidx()",
+   "norm_label": "hotkeys()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L276"
+   "source_location": "L1863"
+  },
+  {
+   "id": "workspacedaemon_keysmatch",
+   "label": "keysMatch()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 2,
+   "community_name": "Daemon core: workspace bookkeeping",
+   "file_type": "code",
+   "norm_label": "keysmatch()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L664"
+  },
+  {
+   "id": "workspacedaemon_lastsegment",
+   "label": "lastSegment()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 2,
+   "community_name": "Daemon core: workspace bookkeeping",
+   "file_type": "code",
+   "norm_label": "lastsegment()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L659"
   },
   {
    "id": "workspacedaemon_launch",
@@ -796,7 +856,7 @@
    "file_type": "code",
    "norm_label": "launch()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1459"
+   "source_location": "L1712"
   },
   {
    "id": "workspacedaemon_launchall",
@@ -808,7 +868,7 @@
    "file_type": "code",
    "norm_label": "launchall()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1467"
+   "source_location": "L1720"
   },
   {
    "id": "workspacedaemon_list",
@@ -820,7 +880,19 @@
    "file_type": "code",
    "norm_label": "list()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1613"
+   "source_location": "L1899"
+  },
+  {
+   "id": "workspacedaemon_normalizeapp",
+   "label": "normalizeApp()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 2,
+   "community_name": "Daemon core: workspace bookkeeping",
+   "file_type": "code",
+   "norm_label": "normalizeapp()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L660"
   },
   {
    "id": "workspacedaemon_onwindowschanged",
@@ -832,7 +904,7 @@
    "file_type": "code",
    "norm_label": "onwindowschanged()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L70"
+   "source_location": "L169"
   },
   {
    "id": "workspacedaemon_onworkspaceschanged",
@@ -844,7 +916,7 @@
    "file_type": "code",
    "norm_label": "onworkspaceschanged()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L73"
+   "source_location": "L172"
   },
   {
    "id": "workspacedaemon_previewrecord",
@@ -856,7 +928,7 @@
    "file_type": "code",
    "norm_label": "previewrecord()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1491"
+   "source_location": "L1744"
   },
   {
    "id": "workspacedaemon_previewworkspace",
@@ -868,19 +940,7 @@
    "file_type": "code",
    "norm_label": "previewworkspace()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1496"
-  },
-  {
-   "id": "workspacedaemon_publishpreview",
-   "label": "publishPreview()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 2,
-   "community_name": "Daemon core: workspace bookkeeping",
-   "file_type": "code",
-   "norm_label": "publishpreview()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1302"
+   "source_location": "L1749"
   },
   {
    "id": "workspacedaemon_pumpwaiters",
@@ -892,7 +952,7 @@
    "file_type": "code",
    "norm_label": "pumpwaiters()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L311"
+   "source_location": "L460"
   },
   {
    "id": "workspacedaemon_record",
@@ -904,7 +964,7 @@
    "file_type": "code",
    "norm_label": "record()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1486"
+   "source_location": "L1739"
   },
   {
    "id": "workspacedaemon_rename",
@@ -916,7 +976,7 @@
    "file_type": "code",
    "norm_label": "rename()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1530"
+   "source_location": "L1783"
   },
   {
    "id": "workspacedaemon_savetemplate",
@@ -928,7 +988,7 @@
    "file_type": "code",
    "norm_label": "savetemplate()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1506"
+   "source_location": "L1759"
   },
   {
    "id": "workspacedaemon_setworkspacenamesshown",
@@ -940,7 +1000,7 @@
    "file_type": "code",
    "norm_label": "setworkspacenamesshown()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L238"
+   "source_location": "L330"
   },
   {
    "id": "workspacedaemon_shownames",
@@ -952,19 +1012,475 @@
    "file_type": "code",
    "norm_label": "shownames()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1581"
+   "source_location": "L1834"
+  },
+  {
+   "id": "tests_tst_logic_test_keysforapp_wrappedcommand",
+   "label": "test_keysForApp_wrappedCommand()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_keysforapp_wrappedcommand()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L59"
+  },
+  {
+   "id": "tests_tst_logic_test_keysmatchfloor",
+   "label": "test_keysMatchFloor()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_keysmatchfloor()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L26"
+  },
+  {
+   "id": "tests_tst_logic_test_lastsegment",
+   "label": "test_lastSegment()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_lastsegment()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L20"
+  },
+  {
+   "id": "tests_tst_logic_test_normalizeapp",
+   "label": "test_normalizeApp()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_normalizeapp()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L35"
+  },
+  {
+   "id": "tests_tst_logic_test_plan_alwayslaunchwins",
+   "label": "test_plan_alwaysLaunchWins()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_plan_alwayslaunchwins()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L108"
+  },
+  {
+   "id": "tests_tst_logic_test_plan_doesnotreusewindows",
+   "label": "test_plan_doesNotReuseWindows()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_plan_doesnotreusewindows()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L119"
+  },
+  {
+   "id": "tests_tst_logic_test_plan_matchesbycmdline",
+   "label": "test_plan_matchesByCmdline()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_plan_matchesbycmdline()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L131"
+  },
+  {
+   "id": "tests_tst_logic_test_plan_missing",
+   "label": "test_plan_missing()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_plan_missing()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L99"
+  },
+  {
+   "id": "tests_tst_logic_test_plan_moveable",
+   "label": "test_plan_moveable()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_plan_moveable()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L88"
+  },
+  {
+   "id": "tests_tst_logic_test_plan_present",
+   "label": "test_plan_present()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_plan_present()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L76"
+  },
+  {
+   "id": "tests_tst_logic_test_programof",
+   "label": "test_programOf()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_programof()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L67"
+  },
+  {
+   "id": "tests_tst_logic_test_sortcells",
+   "label": "test_sortCells()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_sortcells()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L139"
+  },
+  {
+   "id": "tests_tst_logic_test_templateapps_filtersempty",
+   "label": "test_templateApps_filtersEmpty()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "test_templateapps_filtersempty()",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L49"
+  },
+  {
+   "id": "logic_appmatcheswindow",
+   "label": "appMatchesWindow()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "appmatcheswindow()",
+   "source_file": "Logic.js",
+   "source_location": "L96"
+  },
+  {
+   "id": "logic_basename",
+   "label": "basename()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "basename()",
+   "source_file": "Logic.js",
+   "source_location": "L10"
+  },
+  {
+   "id": "logic_keysforapp",
+   "label": "keysForApp()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "keysforapp()",
+   "source_file": "Logic.js",
+   "source_location": "L54"
+  },
+  {
+   "id": "logic_keysforwindow",
+   "label": "keysForWindow()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "keysforwindow()",
+   "source_file": "Logic.js",
+   "source_location": "L69"
+  },
+  {
+   "id": "logic_keysmatch",
+   "label": "keysMatch()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "keysmatch()",
+   "source_file": "Logic.js",
+   "source_location": "L86"
+  },
+  {
+   "id": "logic_lastsegment",
+   "label": "lastSegment()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "lastsegment()",
+   "source_file": "Logic.js",
+   "source_location": "L16"
+  },
+  {
+   "id": "logic_normalizeapp",
+   "label": "normalizeApp()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "normalizeapp()",
+   "source_file": "Logic.js",
+   "source_location": "L30"
+  },
+  {
+   "id": "logic_planlaunch",
+   "label": "planLaunch()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "planlaunch()",
+   "source_file": "Logic.js",
+   "source_location": "L115"
+  },
+  {
+   "id": "logic_programof",
+   "label": "programOf()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "programof()",
+   "source_file": "Logic.js",
+   "source_location": "L156"
+  },
+  {
+   "id": "logic_pushunique",
+   "label": "pushUnique()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "pushunique()",
+   "source_file": "Logic.js",
+   "source_location": "L22"
+  },
+  {
+   "id": "logic_sortcells",
+   "label": "sortCells()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "sortcells()",
+   "source_file": "Logic.js",
+   "source_location": "L163"
+  },
+  {
+   "id": "logic_templateapps",
+   "label": "templateApps()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "templateapps()",
+   "source_file": "Logic.js",
+   "source_location": "L46"
+  },
+  {
+   "id": "scripts_graph_labels_main",
+   "label": "main()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 24,
+   "community_name": "graph-labels.py",
+   "file_type": "code",
+   "norm_label": "main()",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L58"
+  },
+  {
+   "id": "scripts_graph_labels_main_fix",
+   "label": "fix()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 24,
+   "community_name": "graph-labels.py",
+   "file_type": "code",
+   "norm_label": "fix()",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L106"
+  },
+  {
+   "id": "workspacedaemon_appmatcheswindow",
+   "label": "appMatchesWindow()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 25,
+   "community_name": "pumpRehome",
+   "file_type": "code",
+   "norm_label": "appmatcheswindow()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L665"
+  },
+  {
+   "id": "workspacedaemon_keysforapp",
+   "label": "keysForApp()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 25,
+   "community_name": "pumpRehome",
+   "file_type": "code",
+   "norm_label": "keysforapp()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L662"
+  },
+  {
+   "id": "workspacedaemon_keysforwindow",
+   "label": "keysForWindow()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 25,
+   "community_name": "pumpRehome",
+   "file_type": "code",
+   "norm_label": "keysforwindow()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L663"
+  },
+  {
+   "id": "workspacedaemon_pumprehome",
+   "label": "pumpRehome()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 25,
+   "community_name": "pumpRehome",
+   "file_type": "code",
+   "norm_label": "pumprehome()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L857"
+  },
+  {
+   "id": "workspacedaemon_workspacefocused",
+   "label": "workspaceFocused()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 25,
+   "community_name": "pumpRehome",
+   "file_type": "code",
+   "norm_label": "workspacefocused()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L505"
+  },
+  {
+   "id": "workspacedaemon_workspacenamed",
+   "label": "workspaceNamed()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 25,
+   "community_name": "pumpRehome",
+   "file_type": "code",
+   "norm_label": "workspacenamed()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L501"
+  },
+  {
+   "id": "workspacedaemon_collectwindows",
+   "label": "collectWindows()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 26,
+   "community_name": "collectWindows",
+   "file_type": "code",
+   "norm_label": "collectwindows()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L669"
+  },
+  {
+   "id": "workspacedaemon_currentworkspacename",
+   "label": "currentWorkspaceName()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 26,
+   "community_name": "collectWindows",
+   "file_type": "code",
+   "norm_label": "currentworkspacename()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L436"
+  },
+  {
+   "id": "workspacedaemon_focusedworkspacerecord",
+   "label": "focusedWorkspaceRecord()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 26,
+   "community_name": "collectWindows",
+   "file_type": "code",
+   "norm_label": "focusedworkspacerecord()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L355"
+  },
+  {
+   "id": "workspacedaemon_publishpreview",
+   "label": "publishPreview()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 26,
+   "community_name": "collectWindows",
+   "file_type": "code",
+   "norm_label": "publishpreview()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1461"
+  },
+  {
+   "id": "workspacedaemon_readcmdline",
+   "label": "readCmdline()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 26,
+   "community_name": "collectWindows",
+   "file_type": "code",
+   "norm_label": "readcmdline()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L701"
   },
   {
    "id": "workspacedaemon_windowlabel",
    "label": "windowLabel()",
    "_callable": true,
    "_origin": "ast",
-   "community": 2,
-   "community_name": "Daemon core: workspace bookkeeping",
+   "community": 26,
+   "community_name": "collectWindows",
    "file_type": "code",
    "norm_label": "windowlabel()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L609"
+   "source_location": "L717"
   },
   {
    "id": "workspacedaemon_closeworkspace",
@@ -976,7 +1492,7 @@
    "file_type": "code",
    "norm_label": "closeworkspace()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L930"
+   "source_location": "L1011"
   },
   {
    "id": "workspacedaemon_focusbyindex",
@@ -988,7 +1504,7 @@
    "file_type": "code",
    "norm_label": "focusbyindex()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L392"
+   "source_location": "L559"
   },
   {
    "id": "workspacedaemon_focusbyname",
@@ -1000,7 +1516,7 @@
    "file_type": "code",
    "norm_label": "focusbyname()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L380"
+   "source_location": "L547"
   },
   {
    "id": "workspacedaemon_focuswindowbyid",
@@ -1012,7 +1528,7 @@
    "file_type": "code",
    "norm_label": "focuswindowbyid()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L360"
+   "source_location": "L527"
   },
   {
    "id": "workspacedaemon_forgetworkspaceicon",
@@ -1024,7 +1540,7 @@
    "file_type": "code",
    "norm_label": "forgetworkspaceicon()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L230"
+   "source_location": "L322"
   },
   {
    "id": "workspacedaemon_movewindowto",
@@ -1036,7 +1552,7 @@
    "file_type": "code",
    "norm_label": "movewindowto()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L759"
+   "source_location": "L832"
   },
   {
    "id": "workspacedaemon_niri",
@@ -1048,7 +1564,7 @@
    "file_type": "code",
    "norm_label": "niri()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L346"
+   "source_location": "L513"
   },
   {
    "id": "workspacedaemon_niriaction",
@@ -1060,7 +1576,7 @@
    "file_type": "code",
    "norm_label": "niriaction()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L372"
+   "source_location": "L539"
   },
   {
    "id": "workspacedaemon_renameworkspacebyid",
@@ -1072,7 +1588,7 @@
    "file_type": "code",
    "norm_label": "renameworkspacebyid()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L902"
+   "source_location": "L983"
   },
   {
    "id": "workspacedaemon_setnamebyindex",
@@ -1084,19 +1600,7 @@
    "file_type": "code",
    "norm_label": "setnamebyindex()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L414"
-  },
-  {
-   "id": "workspacedaemon_spawnapps",
-   "label": "spawnApps()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 4,
-   "community_name": "niri IPC transport and workspace verbs",
-   "file_type": "code",
-   "norm_label": "spawnapps()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L468"
+   "source_location": "L581"
   },
   {
    "id": "workspacedaemon_spawnapps_next",
@@ -1108,7 +1612,7 @@
    "file_type": "code",
    "norm_label": "next()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L470"
+   "source_location": "L637"
   },
   {
    "id": "workspacedaemon_spawnshell",
@@ -1120,19 +1624,7 @@
    "file_type": "code",
    "norm_label": "spawnshell()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L431"
-  },
-  {
-   "id": "workspacedaemon_appmatcheswindow",
-   "label": "appMatchesWindow()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 7,
-   "community_name": "Launch diff and window reconciliation",
-   "file_type": "code",
-   "norm_label": "appmatcheswindow()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L549"
+   "source_location": "L598"
   },
   {
    "id": "workspacedaemon_basename",
@@ -1144,19 +1636,7 @@
    "file_type": "code",
    "norm_label": "basename()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L489"
-  },
-  {
-   "id": "workspacedaemon_collectwindows",
-   "label": "collectWindows()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 7,
-   "community_name": "Launch diff and window reconciliation",
-   "file_type": "code",
-   "norm_label": "collectwindows()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L561"
+   "source_location": "L658"
   },
   {
    "id": "workspacedaemon_computediff",
@@ -1168,79 +1648,19 @@
    "file_type": "code",
    "norm_label": "computediff()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L623"
+   "source_location": "L731"
   },
   {
-   "id": "workspacedaemon_findworkspacebyname",
-   "label": "findWorkspaceByName()",
+   "id": "workspacedaemon_launchtemplate",
+   "label": "launchTemplate()",
    "_callable": true,
    "_origin": "ast",
    "community": 7,
    "community_name": "Launch diff and window reconciliation",
    "file_type": "code",
-   "norm_label": "findworkspacebyname()",
+   "norm_label": "launchtemplate()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L283"
-  },
-  {
-   "id": "workspacedaemon_keysforapp",
-   "label": "keysForApp()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 7,
-   "community_name": "Launch diff and window reconciliation",
-   "file_type": "code",
-   "norm_label": "keysforapp()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L510"
-  },
-  {
-   "id": "workspacedaemon_keysforwindow",
-   "label": "keysForWindow()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 7,
-   "community_name": "Launch diff and window reconciliation",
-   "file_type": "code",
-   "norm_label": "keysforwindow()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L523"
-  },
-  {
-   "id": "workspacedaemon_keysmatch",
-   "label": "keysMatch()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 7,
-   "community_name": "Launch diff and window reconciliation",
-   "file_type": "code",
-   "norm_label": "keysmatch()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L539"
-  },
-  {
-   "id": "workspacedaemon_lastsegment",
-   "label": "lastSegment()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 7,
-   "community_name": "Launch diff and window reconciliation",
-   "file_type": "code",
-   "norm_label": "lastsegment()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L495"
-  },
-  {
-   "id": "workspacedaemon_normalizeapp",
-   "label": "normalizeApp()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 7,
-   "community_name": "Launch diff and window reconciliation",
-   "file_type": "code",
-   "norm_label": "normalizeapp()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L198"
+   "source_location": "L1116"
   },
   {
    "id": "workspacedaemon_preflightapps",
@@ -1252,43 +1672,31 @@
    "file_type": "code",
    "norm_label": "preflightapps()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L442"
+   "source_location": "L609"
   },
   {
-   "id": "workspacedaemon_pumprehome",
-   "label": "pumpRehome()",
+   "id": "workspacedaemon_schedulerehome",
+   "label": "scheduleRehome()",
    "_callable": true,
    "_origin": "ast",
    "community": 7,
    "community_name": "Launch diff and window reconciliation",
    "file_type": "code",
-   "norm_label": "pumprehome()",
+   "norm_label": "schedulerehome()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L784"
+   "source_location": "L822"
   },
   {
-   "id": "workspacedaemon_pushkey",
-   "label": "pushKey()",
+   "id": "workspacedaemon_spawnapps",
+   "label": "spawnApps()",
    "_callable": true,
    "_origin": "ast",
    "community": 7,
    "community_name": "Launch diff and window reconciliation",
    "file_type": "code",
-   "norm_label": "pushkey()",
+   "norm_label": "spawnapps()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L501"
-  },
-  {
-   "id": "workspacedaemon_readcmdline",
-   "label": "readCmdline()",
-   "_callable": true,
-   "_origin": "ast",
-   "community": 7,
-   "community_name": "Launch diff and window reconciliation",
-   "file_type": "code",
-   "norm_label": "readcmdline()",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L593"
+   "source_location": "L635"
   },
   {
    "id": "workspacedaemon_templateapps",
@@ -1300,7 +1708,19 @@
    "file_type": "code",
    "norm_label": "templateapps()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L209"
+   "source_location": "L661"
+  },
+  {
+   "id": "workspacedaemon_undoclose",
+   "label": "undoClose()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 7,
+   "community_name": "Launch diff and window reconciliation",
+   "file_type": "code",
+   "norm_label": "undoclose()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1358"
   },
   {
    "id": "workspacedaemon_defaulttemplates",
@@ -1312,7 +1732,7 @@
    "file_type": "code",
    "norm_label": "defaulttemplates()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L87"
+   "source_location": "L193"
   },
   {
    "id": "workspacedaemon_deletetemplate",
@@ -1324,7 +1744,31 @@
    "file_type": "code",
    "norm_label": "deletetemplate()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1391"
+   "source_location": "L1644"
+  },
+  {
+   "id": "workspacedaemon_hotkeysnippets",
+   "label": "hotkeySnippets()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 8,
+   "community_name": "Template persistence and status",
+   "file_type": "code",
+   "norm_label": "hotkeysnippets()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1626"
+  },
+  {
+   "id": "workspacedaemon_importtemplates",
+   "label": "importTemplates()",
+   "_callable": true,
+   "_origin": "ast",
+   "community": 8,
+   "community_name": "Template persistence and status",
+   "file_type": "code",
+   "norm_label": "importtemplates()",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1576"
   },
   {
    "id": "workspacedaemon_loadtemplates",
@@ -1336,7 +1780,7 @@
    "file_type": "code",
    "norm_label": "loadtemplates()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L124"
+   "source_location": "L230"
   },
   {
    "id": "workspacedaemon_publishstatus",
@@ -1348,7 +1792,7 @@
    "file_type": "code",
    "norm_label": "publishstatus()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L188"
+   "source_location": "L295"
   },
   {
    "id": "workspacedaemon_publishtemplates",
@@ -1360,7 +1804,7 @@
    "file_type": "code",
    "norm_label": "publishtemplates()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L181"
+   "source_location": "L287"
   },
   {
    "id": "workspacedaemon_savetemplatejson",
@@ -1372,7 +1816,7 @@
    "file_type": "code",
    "norm_label": "savetemplatejson()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1335"
+   "source_location": "L1494"
   },
   {
    "id": "workspacedaemon_writetemplates",
@@ -1384,7 +1828,7 @@
    "file_type": "code",
    "norm_label": "writetemplates()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L151"
+   "source_location": "L257"
   },
   {
    "id": "workspacedaemon_pullstills",
@@ -1396,7 +1840,7 @@
    "file_type": "code",
    "norm_label": "pullstills()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1157"
+   "source_location": "L1260"
   },
   {
    "id": "workspacedaemon_pumpstills",
@@ -1408,7 +1852,7 @@
    "file_type": "code",
    "norm_label": "pumpstills()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1227"
+   "source_location": "L1332"
   },
   {
    "id": "workspacedaemon_refreshlive",
@@ -1420,7 +1864,7 @@
    "file_type": "code",
    "norm_label": "refreshlive()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1549"
+   "source_location": "L1802"
   },
   {
    "id": "workspacedaemon_reload",
@@ -1432,7 +1876,7 @@
    "file_type": "code",
    "norm_label": "reload()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1589"
+   "source_location": "L1842"
   },
   {
    "id": "workspacedaemon_state",
@@ -1444,7 +1888,7 @@
    "file_type": "code",
    "norm_label": "state()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1618"
+   "source_location": "L1904"
   },
   {
    "id": "workspacedaemon_stillscript",
@@ -1456,7 +1900,7 @@
    "file_type": "code",
    "norm_label": "stillscript()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1199"
+   "source_location": "L1304"
   },
   {
    "id": "workspacedaemon_syncicons",
@@ -1468,7 +1912,7 @@
    "file_type": "code",
    "norm_label": "syncicons()",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1568"
+   "source_location": "L1821"
   },
   {
    "id": "workspacedash",
@@ -1776,6 +2220,17 @@
    "file_type": "code",
    "norm_label": "steps",
    "source_file": ".github/workflows/ci.yml",
+   "source_location": "L19"
+  },
+  {
+   "id": "github_workflows_ci_checks_strategy",
+   "label": "strategy",
+   "_origin": "ast",
+   "community": 11,
+   "community_name": "CI workflow",
+   "file_type": "code",
+   "norm_label": "strategy",
+   "source_file": ".github/workflows/ci.yml",
    "source_location": "L12"
   },
   {
@@ -1787,7 +2242,7 @@
    "file_type": "code",
    "norm_label": "dux_shell_dir",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L32"
+   "source_location": "L39"
   },
   {
    "id": "github_workflows_ci_env_qml_import_dir",
@@ -1798,7 +2253,7 @@
    "file_type": "code",
    "norm_label": "qml_import_dir",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L33"
+   "source_location": "L40"
   },
   {
    "id": "github_workflows_ci_jobs",
@@ -1821,6 +2276,17 @@
    "norm_label": "checks",
    "source_file": ".github/workflows/ci.yml",
    "source_location": "L10"
+  },
+  {
+   "id": "github_workflows_ci_matrix_shell",
+   "label": "shell",
+   "_origin": "ast",
+   "community": 11,
+   "community_name": "CI workflow",
+   "file_type": "code",
+   "norm_label": "shell",
+   "source_file": ".github/workflows/ci.yml",
+   "source_location": "L18"
   },
   {
    "id": "github_workflows_ci_name",
@@ -1897,7 +2363,7 @@
    "file_type": "code",
    "norm_label": "env",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L31"
+   "source_location": "L38"
   },
   {
    "id": "github_workflows_ci_steps_name",
@@ -1908,7 +2374,7 @@
    "file_type": "code",
    "norm_label": "name",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L17"
+   "source_location": "L24"
   },
   {
    "id": "github_workflows_ci_steps_run",
@@ -1919,7 +2385,7 @@
    "file_type": "code",
    "norm_label": "run",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L25"
+   "source_location": "L32"
   },
   {
    "id": "github_workflows_ci_steps_uses",
@@ -1930,7 +2396,7 @@
    "file_type": "code",
    "norm_label": "uses",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L13"
+   "source_location": "L20"
   },
   {
    "id": "github_workflows_ci_steps_with",
@@ -1941,7 +2407,29 @@
    "file_type": "code",
    "norm_label": "with",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L19"
+   "source_location": "L26"
+  },
+  {
+   "id": "github_workflows_ci_strategy_fail_fast",
+   "label": "fail-fast",
+   "_origin": "ast",
+   "community": 11,
+   "community_name": "CI workflow",
+   "file_type": "code",
+   "norm_label": "fail-fast",
+   "source_file": ".github/workflows/ci.yml",
+   "source_location": "L13"
+  },
+  {
+   "id": "github_workflows_ci_strategy_matrix",
+   "label": "matrix",
+   "_origin": "ast",
+   "community": 11,
+   "community_name": "CI workflow",
+   "file_type": "code",
+   "norm_label": "matrix",
+   "source_file": ".github/workflows/ci.yml",
+   "source_location": "L14"
   },
   {
    "id": "github_workflows_ci_with_path",
@@ -1952,7 +2440,7 @@
    "file_type": "code",
    "norm_label": "path",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L21"
+   "source_location": "L28"
   },
   {
    "id": "github_workflows_ci_with_ref",
@@ -1963,7 +2451,7 @@
    "file_type": "code",
    "norm_label": "ref",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L22"
+   "source_location": "L29"
   },
   {
    "id": "github_workflows_ci_with_repository",
@@ -1974,7 +2462,7 @@
    "file_type": "code",
    "norm_label": "repository",
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L20"
+   "source_location": "L27"
   },
   {
    "id": "bench_stills_hold",
@@ -2193,7 +2681,7 @@
    "node_kind": "heading",
    "norm_label": "license",
    "source_file": "README.md",
-   "source_location": "L207"
+   "source_location": "L231"
   },
   {
    "id": "readme_niri_workspace_manager",
@@ -2229,7 +2717,7 @@
    "node_kind": "heading",
    "norm_label": "roadmap",
    "source_file": "README.md",
-   "source_location": "L201"
+   "source_location": "L225"
   },
   {
    "id": "readme_settings",
@@ -2241,7 +2729,7 @@
    "node_kind": "heading",
    "norm_label": "settings",
    "source_file": "README.md",
-   "source_location": "L150"
+   "source_location": "L167"
   },
   {
    "id": "readme_templates",
@@ -2265,7 +2753,7 @@
    "node_kind": "heading",
    "norm_label": "the dash",
    "source_file": "README.md",
-   "source_location": "L117"
+   "source_location": "L118"
   },
   {
    "id": "readme_under_the_hood",
@@ -2277,7 +2765,19 @@
    "node_kind": "heading",
    "norm_label": "under the hood",
    "source_file": "README.md",
-   "source_location": "L182"
+   "source_location": "L206"
+  },
+  {
+   "id": "readme_undo_restore_share",
+   "label": "Undo, restore, share",
+   "_origin": "ast",
+   "community": 13,
+   "community_name": "Docs and publishing guide",
+   "file_type": "document",
+   "node_kind": "heading",
+   "norm_label": "undo, restore, share",
+   "source_file": "README.md",
+   "source_location": "L140"
   },
   {
    "id": "readme_what_it_does",
@@ -2301,7 +2801,7 @@
    "node_kind": "heading",
    "norm_label": "what \"launch\" actually does",
    "source_file": "README.md",
-   "source_location": "L103"
+   "source_location": "L104"
   },
   {
    "id": "readme_window_pictures",
@@ -2313,7 +2813,7 @@
    "node_kind": "heading",
    "norm_label": "window pictures",
    "source_file": "README.md",
-   "source_location": "L139"
+   "source_location": "L156"
   },
   {
    "id": "roadmap",
@@ -2337,7 +2837,7 @@
    "node_kind": "heading",
    "norm_label": "1.0",
    "source_file": "ROADMAP.md",
-   "source_location": "L88"
+   "source_location": "L105"
   },
   {
    "id": "roadmap_alpha_0_1_x_now",
@@ -2361,7 +2861,7 @@
    "node_kind": "heading",
    "norm_label": "beta \u2014 `0.2` \u2192 `0.9`",
    "source_file": "ROADMAP.md",
-   "source_location": "L53"
+   "source_location": "L70"
   },
   {
    "id": "roadmap_how_this_grows_and_how_it_does_not",
@@ -2373,7 +2873,7 @@
    "node_kind": "heading",
    "norm_label": "how this grows (and how it does not)",
    "source_file": "ROADMAP.md",
-   "source_location": "L102"
+   "source_location": "L119"
   },
   {
    "id": "roadmap_progress_against_beta_landed_early",
@@ -2409,7 +2909,7 @@
    "node_kind": "heading",
    "norm_label": "what would make me stop at 1.0",
    "source_file": "ROADMAP.md",
-   "source_location": "L126"
+   "source_location": "L143"
   },
   {
    "id": "appchip",
@@ -2584,6 +3084,50 @@
    "norm_label": "emojipalette.qml",
    "source_file": "EmojiPalette.qml",
    "source_location": "L1"
+  },
+  {
+   "id": "tests_tst_logic",
+   "label": "tst_logic.qml",
+   "_origin": "ast",
+   "community": 22,
+   "community_name": "tst_logic.qml",
+   "file_type": "code",
+   "norm_label": "tst_logic.qml",
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L1"
+  },
+  {
+   "id": "logic",
+   "label": "Logic.js",
+   "_origin": "ast",
+   "community": 23,
+   "community_name": "Logic.js",
+   "file_type": "code",
+   "norm_label": "logic.js",
+   "source_file": "Logic.js",
+   "source_location": "L1"
+  },
+  {
+   "id": "scripts_graph_labels",
+   "label": "graph-labels.py",
+   "_origin": "ast",
+   "community": 24,
+   "community_name": "graph-labels.py",
+   "file_type": "code",
+   "norm_label": "graph-labels.py",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L1"
+  },
+  {
+   "id": "scripts_graph_labels_rationale_2",
+   "label": "Give graphify's communities human names. graphify only invents labels when it\u2026",
+   "_origin": "ast",
+   "community": 24,
+   "community_name": "graph-labels.py",
+   "file_type": "rationale",
+   "norm_label": "give graphify's communities human names. graphify only invents labels when it...",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L2"
   },
   {
    "id": "plugin",
@@ -3301,16 +3845,60 @@
    "node_kind": "heading",
    "norm_label": "ipc",
    "source_file": "README.md",
-   "source_location": "L160"
+   "source_location": "L180"
   },
   {
-   "id": "ref_showemptyworkspaces",
-   "label": "ref_showemptyworkspaces",
+   "id": "ref_restoreworkspaces",
+   "label": "ref_restoreworkspaces",
    "community": 18,
    "community_name": "Settings pane",
    "external": true,
    "file_type": "concept",
-   "norm_label": "ref_showemptyworkspaces",
+   "norm_label": "ref_restoreworkspaces",
+   "source_file": "",
+   "type": "external"
+  },
+  {
+   "id": "json",
+   "label": "json",
+   "community": 24,
+   "community_name": "graph-labels.py",
+   "external": true,
+   "file_type": "concept",
+   "norm_label": "json",
+   "source_file": "",
+   "type": "external"
+  },
+  {
+   "id": "pathlib",
+   "label": "pathlib",
+   "community": 24,
+   "community_name": "graph-labels.py",
+   "external": true,
+   "file_type": "concept",
+   "norm_label": "pathlib",
+   "source_file": "",
+   "type": "external"
+  },
+  {
+   "id": "re",
+   "label": "re",
+   "community": 24,
+   "community_name": "graph-labels.py",
+   "external": true,
+   "file_type": "concept",
+   "norm_label": "re",
+   "source_file": "",
+   "type": "external"
+  },
+  {
+   "id": "sys",
+   "label": "sys",
+   "community": 24,
+   "community_name": "graph-labels.py",
+   "external": true,
+   "file_type": "concept",
+   "norm_label": "sys",
    "source_file": "",
    "type": "external"
   }
@@ -3325,13 +3913,13 @@
     {
      "confidence": "EXTRACTED",
      "source_file": ".github/workflows/ci.yml",
-     "source_location": "L13"
+     "source_location": "L20"
     }
    ],
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L18",
+   "source_location": "L25",
    "weight": 1.0
   },
   {
@@ -3343,23 +3931,23 @@
     {
      "confidence": "EXTRACTED",
      "source_file": ".github/workflows/ci.yml",
-     "source_location": "L17"
-    },
-    {
-     "confidence": "EXTRACTED",
-     "source_file": ".github/workflows/ci.yml",
      "source_location": "L24"
     },
     {
      "confidence": "EXTRACTED",
      "source_file": ".github/workflows/ci.yml",
-     "source_location": "L30"
+     "source_location": "L31"
+    },
+    {
+     "confidence": "EXTRACTED",
+     "source_file": ".github/workflows/ci.yml",
+     "source_location": "L37"
     }
    ],
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L39",
+   "source_location": "L46",
    "weight": 1.0
   },
   {
@@ -3371,18 +3959,18 @@
     {
      "confidence": "EXTRACTED",
      "source_file": ".github/workflows/ci.yml",
-     "source_location": "L25"
+     "source_location": "L32"
     },
     {
      "confidence": "EXTRACTED",
      "source_file": ".github/workflows/ci.yml",
-     "source_location": "L34"
+     "source_location": "L41"
     }
    ],
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L40",
+   "source_location": "L47",
    "weight": 1.0
   },
   {
@@ -3530,60 +4118,6 @@
   },
   {
    "source": "workspacedaemon",
-   "target": "workspacedaemon_pullstills",
-   "relation": "contains",
-   "_origin": "ast",
-   "also_seen": [
-    {
-     "confidence": "EXTRACTED",
-     "source_file": "WorkspaceDaemon.qml",
-     "source_location": "L1157"
-    }
-   ],
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1555",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_clearpreview",
-   "relation": "contains",
-   "_origin": "ast",
-   "also_seen": [
-    {
-     "confidence": "EXTRACTED",
-     "source_file": "WorkspaceDaemon.qml",
-     "source_location": "L1328"
-    }
-   ],
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1501",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_deletetemplate",
-   "relation": "contains",
-   "_origin": "ast",
-   "also_seen": [
-    {
-     "confidence": "EXTRACTED",
-     "source_file": "WorkspaceDaemon.qml",
-     "source_location": "L1391"
-    }
-   ],
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1514",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
    "target": "workspacedaemon_closeworkspace",
    "relation": "contains",
    "_origin": "ast",
@@ -3591,13 +4125,13 @@
     {
      "confidence": "EXTRACTED",
      "source_file": "WorkspaceDaemon.qml",
-     "source_location": "L930"
+     "source_location": "L1011"
     }
    ],
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1540",
+   "source_location": "L1793",
    "weight": 1.0
   },
   {
@@ -3609,13 +4143,139 @@
     {
      "confidence": "EXTRACTED",
      "source_file": "WorkspaceDaemon.qml",
-     "source_location": "L987"
+     "source_location": "L1085"
     }
    ],
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1451",
+   "source_location": "L1704",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_pullstills",
+   "relation": "contains",
+   "_origin": "ast",
+   "also_seen": [
+    {
+     "confidence": "EXTRACTED",
+     "source_file": "WorkspaceDaemon.qml",
+     "source_location": "L1260"
+    }
+   ],
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1808",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_undoclose",
+   "relation": "contains",
+   "_origin": "ast",
+   "also_seen": [
+    {
+     "confidence": "EXTRACTED",
+     "source_file": "WorkspaceDaemon.qml",
+     "source_location": "L1358"
+    }
+   ],
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1872",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_clearpreview",
+   "relation": "contains",
+   "_origin": "ast",
+   "also_seen": [
+    {
+     "confidence": "EXTRACTED",
+     "source_file": "WorkspaceDaemon.qml",
+     "source_location": "L1487"
+    }
+   ],
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1754",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_exporttemplates",
+   "relation": "contains",
+   "_origin": "ast",
+   "also_seen": [
+    {
+     "confidence": "EXTRACTED",
+     "source_file": "WorkspaceDaemon.qml",
+     "source_location": "L1559"
+    }
+   ],
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1847",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_importtemplates",
+   "relation": "contains",
+   "_origin": "ast",
+   "also_seen": [
+    {
+     "confidence": "EXTRACTED",
+     "source_file": "WorkspaceDaemon.qml",
+     "source_location": "L1576"
+    }
+   ],
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1855",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_deletetemplate",
+   "relation": "contains",
+   "_origin": "ast",
+   "also_seen": [
+    {
+     "confidence": "EXTRACTED",
+     "source_file": "WorkspaceDaemon.qml",
+     "source_location": "L1644"
+    }
+   ],
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1767",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_restoreworkspaces",
+   "relation": "contains",
+   "_origin": "ast",
+   "also_seen": [
+    {
+     "confidence": "EXTRACTED",
+     "source_file": "WorkspaceDaemon.qml",
+     "source_location": "L54"
+    }
+   ],
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1867",
    "weight": 1.0
   },
   {
@@ -3835,6 +4495,150 @@
    "weight": 1.0
   },
   {
+   "source": "logic_appmatcheswindow",
+   "target": "logic_keysmatch",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L99",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_keysforapp",
+   "target": "logic_normalizeapp",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L55",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_keysforapp",
+   "target": "logic_pushunique",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L58",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_keysforapp",
+   "target": "logic_lastsegment",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L59",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_keysforapp",
+   "target": "logic_basename",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L63",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_keysforwindow",
+   "target": "logic_pushunique",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L73",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_keysforwindow",
+   "target": "logic_lastsegment",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L75",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_keysforwindow",
+   "target": "logic_basename",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L79",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_planlaunch",
+   "target": "logic_keysforapp",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L129",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_planlaunch",
+   "target": "logic_appmatcheswindow",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L133",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_planlaunch",
+   "target": "logic_keysforwindow",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L133",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_programof",
+   "target": "logic_basename",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "Logic.js",
+   "source_location": "L158",
+   "weight": 1.0
+  },
+  {
    "source": "scripts_ci_sh__entry",
    "target": "scripts_ci_step",
    "relation": "calls",
@@ -3871,6 +4675,42 @@
    "weight": 1.0
   },
   {
+   "source": "scripts_graph_labels_main",
+   "target": "json",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L62",
+   "weight": 1.0
+  },
+  {
+   "source": "scripts_graph_labels_main",
+   "target": "re",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L94",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_activate",
+   "target": "workspacedaemon_focusbyindex",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1094",
+   "weight": 1.0
+  },
+  {
    "source": "workspacedaemon_activate",
    "target": "workspacedaemon_findtemplatebyname",
    "relation": "calls",
@@ -3879,7 +4719,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1002",
+   "source_location": "L1100",
    "weight": 1.0
   },
   {
@@ -3891,7 +4731,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1003",
+   "source_location": "L1101",
    "weight": 1.0
   },
   {
@@ -3903,7 +4743,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1007",
+   "source_location": "L1105",
    "weight": 1.0
   },
   {
@@ -3915,31 +4755,19 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1008",
+   "source_location": "L1106",
    "weight": 1.0
   },
   {
-   "source": "workspacedaemon_activate",
-   "target": "workspacedaemon_focusbyindex",
+   "source": "workspacedaemon_closeworkspace",
+   "target": "workspacedaemon_collectwindows",
    "relation": "calls",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L996",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon_appmatcheswindow",
-   "target": "workspacedaemon_keysmatch",
-   "relation": "calls",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "context": "call",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L552",
+   "source_location": "L1030",
    "weight": 1.0
   },
   {
@@ -3951,7 +4779,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L950",
+   "source_location": "L1033",
    "weight": 1.0
   },
   {
@@ -3963,7 +4791,31 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L951",
+   "source_location": "L1034",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_closeworkspace",
+   "target": "workspacedaemon_emojiforworkspace",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1041",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_closeworkspace",
+   "target": "workspacedaemon_windowlabel",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1046",
    "weight": 1.0
   },
   {
@@ -3975,7 +4827,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L958",
+   "source_location": "L1055",
    "weight": 1.0
   },
   {
@@ -3987,7 +4839,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L962",
+   "source_location": "L1059",
    "weight": 1.0
   },
   {
@@ -3999,7 +4851,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L963",
+   "source_location": "L1060",
    "weight": 1.0
   },
   {
@@ -4011,7 +4863,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L584",
+   "source_location": "L692",
    "weight": 1.0
   },
   {
@@ -4023,7 +4875,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L624",
+   "source_location": "L732",
    "weight": 1.0
   },
   {
@@ -4035,7 +4887,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L626",
+   "source_location": "L734",
    "weight": 1.0
   },
   {
@@ -4047,7 +4899,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L626",
+   "source_location": "L734",
    "weight": 1.0
   },
   {
@@ -4059,43 +4911,19 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L640",
+   "source_location": "L748",
    "weight": 1.0
   },
   {
-   "source": "workspacedaemon_computediff",
-   "target": "workspacedaemon_keysforapp",
+   "source": "workspacedaemon_createworkspace",
+   "target": "workspacedaemon_focusoutput",
    "relation": "calls",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L651",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon_computediff",
-   "target": "workspacedaemon_appmatcheswindow",
-   "relation": "calls",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "context": "call",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L655",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon_computediff",
-   "target": "workspacedaemon_keysforwindow",
-   "relation": "calls",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "context": "call",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L655",
+   "source_location": "L925",
    "weight": 1.0
   },
   {
@@ -4107,7 +4935,19 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L851",
+   "source_location": "L931",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_createworkspace",
+   "target": "workspacedaemon_lastworkspaceidxfor",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L931",
    "weight": 1.0
   },
   {
@@ -4119,7 +4959,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L852",
+   "source_location": "L932",
    "weight": 1.0
   },
   {
@@ -4131,7 +4971,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L863",
+   "source_location": "L943",
    "weight": 1.0
   },
   {
@@ -4143,7 +4983,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L864",
+   "source_location": "L944",
    "weight": 1.0
   },
   {
@@ -4155,7 +4995,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L864",
+   "source_location": "L944",
    "weight": 1.0
   },
   {
@@ -4167,7 +5007,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L876",
+   "source_location": "L956",
    "weight": 1.0
   },
   {
@@ -4179,7 +5019,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L288",
+   "source_location": "L437",
    "weight": 1.0
   },
   {
@@ -4191,7 +5031,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1398",
+   "source_location": "L1651",
    "weight": 1.0
   },
   {
@@ -4203,7 +5043,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1401",
+   "source_location": "L1654",
    "weight": 1.0
   },
   {
@@ -4215,7 +5055,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1402",
+   "source_location": "L1655",
    "weight": 1.0
   },
   {
@@ -4227,7 +5067,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1403",
+   "source_location": "L1656",
    "weight": 1.0
   },
   {
@@ -4239,7 +5079,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L393",
+   "source_location": "L560",
    "weight": 1.0
   },
   {
@@ -4251,7 +5091,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L398",
+   "source_location": "L565",
    "weight": 1.0
   },
   {
@@ -4263,7 +5103,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L381",
+   "source_location": "L548",
    "weight": 1.0
   },
   {
@@ -4275,7 +5115,67 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L386",
+   "source_location": "L553",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_focusoutput",
+   "target": "workspacedaemon_focusedoutputname",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L392",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_focusoutput",
+   "target": "workspacedaemon_outputnames",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L397",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_focusoutput",
+   "target": "workspacedaemon_niriaction",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L404",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_focusoutput",
+   "target": "workspacedaemon_niri",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L405",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_focusoutput",
+   "target": "workspacedaemon_waitfor",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L406",
    "weight": 1.0
   },
   {
@@ -4287,7 +5187,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L364",
+   "source_location": "L531",
    "weight": 1.0
   },
   {
@@ -4299,91 +5199,55 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L368",
+   "source_location": "L535",
    "weight": 1.0
   },
   {
-   "source": "workspacedaemon_keysforapp",
-   "target": "workspacedaemon_normalizeapp",
+   "source": "workspacedaemon_importtemplates",
+   "target": "workspacedaemon_writetemplates",
    "relation": "calls",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L511",
+   "source_location": "L1612",
    "weight": 1.0
   },
   {
-   "source": "workspacedaemon_keysforapp",
-   "target": "workspacedaemon_pushkey",
+   "source": "workspacedaemon_importtemplates",
+   "target": "workspacedaemon_publishtemplates",
    "relation": "calls",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L514",
+   "source_location": "L1615",
    "weight": 1.0
   },
   {
-   "source": "workspacedaemon_keysforapp",
-   "target": "workspacedaemon_lastsegment",
+   "source": "workspacedaemon_importtemplates",
+   "target": "workspacedaemon_publishlive",
    "relation": "calls",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L515",
+   "source_location": "L1616",
    "weight": 1.0
   },
   {
-   "source": "workspacedaemon_keysforapp",
-   "target": "workspacedaemon_basename",
+   "source": "workspacedaemon_importtemplates",
+   "target": "workspacedaemon_publishstatus",
    "relation": "calls",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L519",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon_keysforwindow",
-   "target": "workspacedaemon_pushkey",
-   "relation": "calls",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "context": "call",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L526",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon_keysforwindow",
-   "target": "workspacedaemon_lastsegment",
-   "relation": "calls",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "context": "call",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L527",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon_keysforwindow",
-   "target": "workspacedaemon_basename",
-   "relation": "calls",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "context": "call",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L532",
+   "source_location": "L1617",
    "weight": 1.0
   },
   {
@@ -4395,7 +5259,19 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L277",
+   "source_location": "L426",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_lastworkspaceidxfor",
+   "target": "workspacedaemon_lastworkspaceidx",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L418",
    "weight": 1.0
   },
   {
@@ -4407,7 +5283,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1022",
+   "source_location": "L1120",
    "weight": 1.0
   },
   {
@@ -4419,7 +5295,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1034",
+   "source_location": "L1132",
    "weight": 1.0
   },
   {
@@ -4431,7 +5307,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1040",
+   "source_location": "L1138",
    "weight": 1.0
   },
   {
@@ -4443,7 +5319,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1044",
+   "source_location": "L1143",
    "weight": 1.0
   },
   {
@@ -4455,7 +5331,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1066",
+   "source_location": "L1165",
    "weight": 1.0
   },
   {
@@ -4467,7 +5343,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1073",
+   "source_location": "L1172",
    "weight": 1.0
   },
   {
@@ -4479,7 +5355,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1074",
+   "source_location": "L1173",
    "weight": 1.0
   },
   {
@@ -4491,7 +5367,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1091",
+   "source_location": "L1190",
    "weight": 1.0
   },
   {
@@ -4503,7 +5379,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1096",
+   "source_location": "L1195",
    "weight": 1.0
   },
   {
@@ -4515,7 +5391,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1108",
+   "source_location": "L1207",
    "weight": 1.0
   },
   {
@@ -4527,7 +5403,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1113",
+   "source_location": "L1212",
    "weight": 1.0
   },
   {
@@ -4539,7 +5415,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1114",
+   "source_location": "L1213",
    "weight": 1.0
   },
   {
@@ -4551,7 +5427,19 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1114",
+   "source_location": "L1213",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_launchtemplate",
+   "target": "workspacedaemon_focusoutput",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1226",
    "weight": 1.0
   },
   {
@@ -4563,7 +5451,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1130",
+   "source_location": "L1233",
    "weight": 1.0
   },
   {
@@ -4575,7 +5463,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1417",
+   "source_location": "L1670",
    "weight": 1.0
   },
   {
@@ -4587,7 +5475,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L126",
+   "source_location": "L232",
    "weight": 1.0
   },
   {
@@ -4599,7 +5487,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L127",
+   "source_location": "L233",
    "weight": 1.0
   },
   {
@@ -4611,7 +5499,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L144",
+   "source_location": "L250",
    "weight": 1.0
   },
   {
@@ -4623,7 +5511,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L762",
+   "source_location": "L835",
    "weight": 1.0
   },
   {
@@ -4635,7 +5523,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L770",
+   "source_location": "L843",
    "weight": 1.0
   },
   {
@@ -4647,7 +5535,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L450",
+   "source_location": "L617",
    "weight": 1.0
   },
   {
@@ -4659,7 +5547,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L717",
+   "source_location": "L790",
    "weight": 1.0
   },
   {
@@ -4671,7 +5559,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L725",
+   "source_location": "L798",
    "weight": 1.0
   },
   {
@@ -4683,7 +5571,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1261",
+   "source_location": "L1420",
    "weight": 1.0
   },
   {
@@ -4695,7 +5583,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1271",
+   "source_location": "L1430",
    "weight": 1.0
   },
   {
@@ -4707,7 +5595,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1281",
+   "source_location": "L1440",
    "weight": 1.0
   },
   {
@@ -4719,7 +5607,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1297",
+   "source_location": "L1456",
    "weight": 1.0
   },
   {
@@ -4731,7 +5619,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1305",
+   "source_location": "L1464",
    "weight": 1.0
   },
   {
@@ -4743,7 +5631,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1309",
+   "source_location": "L1468",
    "weight": 1.0
   },
   {
@@ -4755,7 +5643,19 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1311",
+   "source_location": "L1470",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_publishtemplates",
+   "target": "workspacedaemon_hotkeysnippets",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L290",
    "weight": 1.0
   },
   {
@@ -4767,7 +5667,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1196",
+   "source_location": "L1301",
    "weight": 1.0
   },
   {
@@ -4779,7 +5679,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L785",
+   "source_location": "L858",
    "weight": 1.0
   },
   {
@@ -4791,7 +5691,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L793",
+   "source_location": "L866",
    "weight": 1.0
   },
   {
@@ -4803,7 +5703,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L801",
+   "source_location": "L874",
    "weight": 1.0
   },
   {
@@ -4815,7 +5715,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L801",
+   "source_location": "L874",
    "weight": 1.0
   },
   {
@@ -4827,7 +5727,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L801",
+   "source_location": "L874",
    "weight": 1.0
   },
   {
@@ -4839,7 +5739,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L803",
+   "source_location": "L876",
    "weight": 1.0
   },
   {
@@ -4851,7 +5751,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L826",
+   "source_location": "L899",
    "weight": 1.0
   },
   {
@@ -4863,7 +5763,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L829",
+   "source_location": "L902",
    "weight": 1.0
   },
   {
@@ -4875,7 +5775,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1237",
+   "source_location": "L1342",
    "weight": 1.0
   },
   {
@@ -4887,7 +5787,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1247",
+   "source_location": "L1352",
    "weight": 1.0
   },
   {
@@ -4899,7 +5799,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L894",
+   "source_location": "L975",
    "weight": 1.0
   },
   {
@@ -4911,7 +5811,19 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L896",
+   "source_location": "L977",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_renameworkspacebyid",
+   "target": "workspacedaemon_niri",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1003",
    "weight": 1.0
   },
   {
@@ -4923,7 +5835,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L910",
+   "source_location": "L991",
    "weight": 1.0
   },
   {
@@ -4935,7 +5847,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L913",
+   "source_location": "L994",
    "weight": 1.0
   },
   {
@@ -4947,19 +5859,91 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L914",
+   "source_location": "L995",
    "weight": 1.0
   },
   {
-   "source": "workspacedaemon_renameworkspacebyid",
-   "target": "workspacedaemon_niri",
+   "source": "workspacedaemon_restoreworkspaces",
+   "target": "workspacedaemon_createworkspace",
    "relation": "calls",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L922",
+   "source_location": "L104",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_restoreworkspaces",
+   "target": "workspacedaemon_waitfor",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L111",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_restoreworkspaces",
+   "target": "workspacedaemon_publishstatus",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L83",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_restoreworkspaces",
+   "target": "workspacedaemon_publishlive",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L84",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_restoreworkspaces",
+   "target": "workspacedaemon_emojiforworkspace",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L90",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_restoreworkspaces",
+   "target": "workspacedaemon_findworkspacebyname",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L92",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_restoreworkspaces",
+   "target": "workspacedaemon_applyworkspaceicon",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L94",
    "weight": 1.0
   },
   {
@@ -4971,7 +5955,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1358",
+   "source_location": "L1517",
    "weight": 1.0
   },
   {
@@ -4983,7 +5967,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1377",
+   "source_location": "L1544",
    "weight": 1.0
   },
   {
@@ -4995,7 +5979,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1380",
+   "source_location": "L1547",
    "weight": 1.0
   },
   {
@@ -5007,7 +5991,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1382",
+   "source_location": "L1549",
    "weight": 1.0
   },
   {
@@ -5019,7 +6003,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1383",
+   "source_location": "L1550",
    "weight": 1.0
   },
   {
@@ -5031,7 +6015,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1384",
+   "source_location": "L1551",
    "weight": 1.0
   },
   {
@@ -5043,7 +6027,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L415",
+   "source_location": "L582",
    "weight": 1.0
   },
   {
@@ -5055,7 +6039,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L425",
+   "source_location": "L592",
    "weight": 1.0
   },
   {
@@ -5067,7 +6051,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L478",
+   "source_location": "L645",
    "weight": 1.0
   },
   {
@@ -5079,7 +6063,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L482",
+   "source_location": "L649",
    "weight": 1.0
   },
   {
@@ -5091,7 +6075,67 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L432",
+   "source_location": "L599",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_undoclose",
+   "target": "workspacedaemon_publishstatus",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1371",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_undoclose",
+   "target": "workspacedaemon_publishlive",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1372",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_undoclose",
+   "target": "workspacedaemon_preflightapps",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1377",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_undoclose",
+   "target": "workspacedaemon_spawnapps",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1378",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon_undoclose",
+   "target": "workspacedaemon_createworkspace",
+   "relation": "calls",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "call",
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1389",
    "weight": 1.0
   },
   {
@@ -5103,7 +6147,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L339",
+   "source_location": "L506",
    "weight": 1.0
   },
   {
@@ -5115,7 +6159,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L278",
+   "source_location": "L303",
    "weight": 1.0
   },
   {
@@ -5127,7 +6171,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L192",
+   "source_location": "L217",
    "weight": 1.0
   },
   {
@@ -5139,7 +6183,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L192",
+   "source_location": "L217",
    "weight": 1.0
   },
   {
@@ -5151,7 +6195,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L369",
+   "source_location": "L394",
    "weight": 1.0
   },
   {
@@ -5163,7 +6207,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L382",
+   "source_location": "L407",
    "weight": 1.0
   },
   {
@@ -5175,7 +6219,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L142",
+   "source_location": "L167",
    "weight": 1.0
   },
   {
@@ -5187,7 +6231,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L148",
+   "source_location": "L173",
    "weight": 1.0
   },
   {
@@ -5199,7 +6243,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L269",
+   "source_location": "L294",
    "weight": 1.0
   },
   {
@@ -5211,7 +6255,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L301",
+   "source_location": "L326",
    "weight": 1.0
   },
   {
@@ -5223,7 +6267,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L259",
+   "source_location": "L284",
    "weight": 1.0
   },
   {
@@ -5235,7 +6279,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L263",
+   "source_location": "L288",
    "weight": 1.0
   },
   {
@@ -5247,7 +6291,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L356",
+   "source_location": "L381",
    "weight": 1.0
   },
   {
@@ -5259,7 +6303,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L333",
+   "source_location": "L358",
    "weight": 1.0
   },
   {
@@ -5271,7 +6315,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L244",
+   "source_location": "L269",
    "weight": 1.0
   },
   {
@@ -5283,7 +6327,7 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L292",
+   "source_location": "L317",
    "weight": 1.0
   },
   {
@@ -5307,12 +6351,60 @@
    "confidence_score": 1.0,
    "context": "call",
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L709",
+   "source_location": "L782",
+   "weight": 1.0
+  },
+  {
+   "source": "scripts_graph_labels",
+   "target": "json",
+   "relation": "imports",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "import",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L22",
+   "weight": 1.0
+  },
+  {
+   "source": "scripts_graph_labels",
+   "target": "re",
+   "relation": "imports",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "import",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L23",
+   "weight": 1.0
+  },
+  {
+   "source": "scripts_graph_labels",
+   "target": "sys",
+   "relation": "imports",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "import",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L24",
+   "weight": 1.0
+  },
+  {
+   "source": "scripts_graph_labels",
+   "target": "pathlib",
+   "relation": "imports_from",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "context": "import",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L25",
    "weight": 1.0
   },
   {
    "source": "workspacesettings",
-   "target": "ref_showemptyworkspaces",
+   "target": "ref_restoreworkspaces",
    "relation": "imports_from",
    "_origin": "ast",
    "confidence": "EXTRACTED",
@@ -5484,7 +6576,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L19",
+   "source_location": "L26",
    "weight": 1.0
   },
   {
@@ -5495,7 +6587,29 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L31",
+   "source_location": "L38",
+   "weight": 1.0
+  },
+  {
+   "source": "github_workflows_ci_checks_strategy",
+   "target": "github_workflows_ci_strategy_fail_fast",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": ".github/workflows/ci.yml",
+   "source_location": "L13",
+   "weight": 1.0
+  },
+  {
+   "source": "github_workflows_ci_checks_strategy",
+   "target": "github_workflows_ci_strategy_matrix",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": ".github/workflows/ci.yml",
+   "source_location": "L14",
    "weight": 1.0
   },
   {
@@ -5522,13 +6636,24 @@
   },
   {
    "source": "github_workflows_ci_jobs_checks",
-   "target": "github_workflows_ci_checks_steps",
+   "target": "github_workflows_ci_checks_strategy",
    "relation": "contains",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
    "source_location": "L12",
+   "weight": 1.0
+  },
+  {
+   "source": "github_workflows_ci_jobs_checks",
+   "target": "github_workflows_ci_checks_steps",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": ".github/workflows/ci.yml",
+   "source_location": "L19",
    "weight": 1.0
   },
   {
@@ -5583,7 +6708,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L32",
+   "source_location": "L39",
    "weight": 1.0
   },
   {
@@ -5594,7 +6719,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L33",
+   "source_location": "L40",
    "weight": 1.0
   },
   {
@@ -5605,7 +6730,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L20",
+   "source_location": "L27",
    "weight": 1.0
   },
   {
@@ -5616,7 +6741,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L21",
+   "source_location": "L28",
    "weight": 1.0
   },
   {
@@ -5627,7 +6752,18 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": ".github/workflows/ci.yml",
-   "source_location": "L22",
+   "source_location": "L29",
+   "weight": 1.0
+  },
+  {
+   "source": "github_workflows_ci_strategy_matrix",
+   "target": "github_workflows_ci_matrix_shell",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": ".github/workflows/ci.yml",
+   "source_location": "L18",
    "weight": 1.0
   },
   {
@@ -5815,6 +6951,138 @@
    "confidence_score": 1.0,
    "source_file": ".github/workflows/release.yml",
    "source_location": "L51",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_basename",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L10",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_planlaunch",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L115",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_programof",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L156",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_lastsegment",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L16",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_sortcells",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L163",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_pushunique",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L22",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_normalizeapp",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L30",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_templateapps",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L46",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_keysforapp",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L54",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_keysforwindow",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L69",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_keysmatch",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L86",
+   "weight": 1.0
+  },
+  {
+   "source": "logic",
+   "target": "logic_appmatcheswindow",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "Logic.js",
+   "source_location": "L96",
    "weight": 1.0
   },
   {
@@ -6287,7 +7555,18 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "README.md",
-   "source_location": "L117",
+   "source_location": "L118",
+   "weight": 1.0
+  },
+  {
+   "source": "readme_niri_workspace_manager",
+   "target": "readme_undo_restore_share",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "README.md",
+   "source_location": "L140",
    "weight": 1.0
   },
   {
@@ -6298,7 +7577,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "README.md",
-   "source_location": "L139",
+   "source_location": "L156",
    "weight": 1.0
   },
   {
@@ -6309,7 +7588,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "README.md",
-   "source_location": "L150",
+   "source_location": "L167",
    "weight": 1.0
   },
   {
@@ -6320,18 +7599,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "README.md",
-   "source_location": "L160",
-   "weight": 1.0
-  },
-  {
-   "source": "readme_niri_workspace_manager",
-   "target": "readme_under_the_hood",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "README.md",
-   "source_location": "L182",
+   "source_location": "L180",
    "weight": 1.0
   },
   {
@@ -6347,13 +7615,24 @@
   },
   {
    "source": "readme_niri_workspace_manager",
+   "target": "readme_under_the_hood",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "README.md",
+   "source_location": "L206",
+   "weight": 1.0
+  },
+  {
+   "source": "readme_niri_workspace_manager",
    "target": "readme_roadmap",
    "relation": "contains",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "README.md",
-   "source_location": "L201",
+   "source_location": "L225",
    "weight": 1.0
   },
   {
@@ -6364,7 +7643,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "README.md",
-   "source_location": "L207",
+   "source_location": "L231",
    "weight": 1.0
   },
   {
@@ -6408,7 +7687,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "README.md",
-   "source_location": "L103",
+   "source_location": "L104",
    "weight": 1.0
   },
   {
@@ -6435,13 +7714,24 @@
   },
   {
    "source": "roadmap_roadmap",
+   "target": "roadmap_1_0",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "ROADMAP.md",
+   "source_location": "L105",
+   "weight": 1.0
+  },
+  {
+   "source": "roadmap_roadmap",
    "target": "roadmap_how_this_grows_and_how_it_does_not",
    "relation": "contains",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "ROADMAP.md",
-   "source_location": "L102",
+   "source_location": "L119",
    "weight": 1.0
   },
   {
@@ -6452,7 +7742,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "ROADMAP.md",
-   "source_location": "L126",
+   "source_location": "L143",
    "weight": 1.0
   },
   {
@@ -6463,7 +7753,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "ROADMAP.md",
-   "source_location": "L53",
+   "source_location": "L70",
    "weight": 1.0
   },
   {
@@ -6478,17 +7768,6 @@
    "weight": 1.0
   },
   {
-   "source": "roadmap_roadmap",
-   "target": "roadmap_1_0",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "ROADMAP.md",
-   "source_location": "L88",
-   "weight": 1.0
-  },
-  {
    "source": "scripts_ci",
    "target": "scripts_ci_sh__entry",
    "relation": "contains",
@@ -6500,6 +7779,160 @@
    "weight": 1.0
   },
   {
+   "source": "scripts_graph_labels",
+   "target": "scripts_graph_labels_main",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L58",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_plan_alwayslaunchwins",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L108",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_plan_doesnotreusewindows",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L119",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_plan_matchesbycmdline",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L131",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_sortcells",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L139",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_lastsegment",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L20",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_keysmatchfloor",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L26",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_normalizeapp",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L35",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_templateapps_filtersempty",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L49",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_keysforapp_wrappedcommand",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L59",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_programof",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L67",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_plan_present",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L76",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_plan_moveable",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L88",
+   "weight": 1.0
+  },
+  {
+   "source": "tests_tst_logic",
+   "target": "tests_tst_logic_test_plan_missing",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "tests/tst_logic.qml",
+   "source_location": "L99",
+   "weight": 1.0
+  },
+  {
    "source": "workspacedaemon",
    "target": "workspacedaemon_launchtemplate",
    "relation": "contains",
@@ -6507,7 +7940,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1018",
+   "source_location": "L1116",
    "weight": 1.0
   },
   {
@@ -6518,7 +7951,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1145",
+   "source_location": "L1248",
    "weight": 1.0
   },
   {
@@ -6529,7 +7962,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1199",
+   "source_location": "L1304",
    "weight": 1.0
   },
   {
@@ -6540,18 +7973,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1227",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_loadtemplates",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L124",
+   "source_location": "L1332",
    "weight": 1.0
   },
   {
@@ -6562,7 +7984,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1251",
+   "source_location": "L1410",
    "weight": 1.0
   },
   {
@@ -6573,7 +7995,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1302",
+   "source_location": "L1461",
    "weight": 1.0
   },
   {
@@ -6584,7 +8006,18 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1335",
+   "source_location": "L1494",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_hotkeysnippets",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1626",
    "weight": 1.0
   },
   {
@@ -6595,667 +8028,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1412",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_create",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1438",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_launch",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1459",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_launchall",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1467",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_diff",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1475",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_record",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1486",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_previewrecord",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1491",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_previewworkspace",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1496",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_savetemplate",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1506",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_writetemplates",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L151",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_name",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1522",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_rename",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1530",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_refreshlive",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1549",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_forgeticon",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1560",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_syncicons",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1568",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_shownames",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1581",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_reload",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1589",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_focuswindow",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1594",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_focusid",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1602",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_list",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1613",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_state",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L1618",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_publishtemplates",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L181",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_publishstatus",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L188",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_findtemplatebyname",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L194",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_normalizeapp",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L198",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_templateapps",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L209",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_applyworkspaceicon",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L215",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_emojiforworkspace",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L223",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_forgetworkspaceicon",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L230",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_setworkspacenamesshown",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L238",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_focusedworkspacerecord",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L263",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_focusedoutputworkspaces",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L267",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_lastworkspaceidx",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L276",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_findworkspacebyname",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L283",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_currentworkspacename",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L287",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_waitfor",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L306",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_pumpwaiters",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L311",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_workspacenamed",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L334",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_workspacefocused",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L338",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_niri",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L346",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_focuswindowbyid",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L360",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_niriaction",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L372",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_focusbyname",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L380",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_focusbyindex",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L392",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_focusbyid",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L406",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_setnamebyindex",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L414",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_spawnshell",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L431",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_preflightapps",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L442",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_spawnapps",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L468",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_basename",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L489",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_lastsegment",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L495",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_pushkey",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L501",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_keysforapp",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L510",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_keysforwindow",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L523",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_keysmatch",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L539",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_appmatcheswindow",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L549",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_collectwindows",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L561",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_readcmdline",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L593",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_windowlabel",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L609",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_computediff",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L623",
-   "weight": 1.0
-  },
-  {
-   "source": "workspacedaemon",
-   "target": "workspacedaemon_diffsummary",
-   "relation": "contains",
-   "_origin": "ast",
-   "confidence": "EXTRACTED",
-   "confidence_score": 1.0,
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L690",
+   "source_location": "L1665",
    "weight": 1.0
   },
   {
@@ -7266,18 +8039,29 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L70",
+   "source_location": "L169",
    "weight": 1.0
   },
   {
    "source": "workspacedaemon",
-   "target": "workspacedaemon_publishdiffs",
+   "target": "workspacedaemon_create",
    "relation": "contains",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L704",
+   "source_location": "L1691",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_launch",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1712",
    "weight": 1.0
   },
   {
@@ -7288,51 +8072,205 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L73",
+   "source_location": "L172",
    "weight": 1.0
   },
   {
    "source": "workspacedaemon",
-   "target": "workspacedaemon_schedulerehome",
+   "target": "workspacedaemon_launchall",
    "relation": "contains",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L749",
+   "source_location": "L1720",
    "weight": 1.0
   },
   {
    "source": "workspacedaemon",
-   "target": "workspacedaemon_movewindowto",
+   "target": "workspacedaemon_diff",
    "relation": "contains",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L759",
+   "source_location": "L1728",
    "weight": 1.0
   },
   {
    "source": "workspacedaemon",
-   "target": "workspacedaemon_pumprehome",
+   "target": "workspacedaemon_record",
    "relation": "contains",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L784",
+   "source_location": "L1739",
    "weight": 1.0
   },
   {
    "source": "workspacedaemon",
-   "target": "workspacedaemon_createworkspace",
+   "target": "workspacedaemon_previewrecord",
    "relation": "contains",
    "_origin": "ast",
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L847",
+   "source_location": "L1744",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_previewworkspace",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1749",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_savetemplate",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1759",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_name",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1775",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_rename",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1783",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_refreshlive",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1802",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_forgeticon",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1813",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_syncicons",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1821",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_shownames",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1834",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_reload",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1842",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_hotkeys",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1863",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focuswindow",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1880",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focusid",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1888",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_list",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1899",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_state",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L1904",
    "weight": 1.0
   },
   {
@@ -7343,7 +8281,557 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L87",
+   "source_location": "L193",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_loadtemplates",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L230",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_writetemplates",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L257",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_publishtemplates",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L287",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_publishstatus",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L295",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_findtemplatebyname",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L301",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_applyworkspaceicon",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L307",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_emojiforworkspace",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L315",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_forgetworkspaceicon",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L322",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_setworkspacenamesshown",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L330",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focusedworkspacerecord",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L355",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focusedoutputworkspaces",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L359",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_outputnames",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L369",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focusedoutputname",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L375",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focusoutput",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L385",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_lastworkspaceidxfor",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L415",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_lastworkspaceidx",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L425",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_findworkspacebyname",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L432",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_currentworkspacename",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L436",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_waitfor",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L455",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_pumpwaiters",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L460",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_workspacenamed",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L501",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_workspacefocused",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L505",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_niri",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L513",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focuswindowbyid",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L527",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_niriaction",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L539",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focusbyname",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L547",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focusbyindex",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L559",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_focusbyid",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L573",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_setnamebyindex",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L581",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_spawnshell",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L598",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_preflightapps",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L609",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_spawnapps",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L635",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_basename",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L658",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_lastsegment",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L659",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_normalizeapp",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L660",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_templateapps",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L661",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_keysforapp",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L662",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_keysforwindow",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L663",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_keysmatch",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L664",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_appmatcheswindow",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L665",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_collectwindows",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L669",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_readcmdline",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L701",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_windowlabel",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L717",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_computediff",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L731",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_diffsummary",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L763",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_publishdiffs",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L777",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_schedulerehome",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L822",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_movewindowto",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L832",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_pumprehome",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L857",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedaemon",
+   "target": "workspacedaemon_createworkspace",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDaemon.qml",
+   "source_location": "L920",
    "weight": 1.0
   },
   {
@@ -7354,7 +8842,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L887",
+   "source_location": "L968",
    "weight": 1.0
   },
   {
@@ -7365,7 +8853,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L902",
+   "source_location": "L983",
    "weight": 1.0
   },
   {
@@ -7376,7 +8864,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L470",
+   "source_location": "L637",
    "weight": 1.0
   },
   {
@@ -7387,7 +8875,18 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L130",
+   "source_location": "L145",
+   "weight": 1.0
+  },
+  {
+   "source": "workspacedash",
+   "target": "workspacedash_copyhotkeys",
+   "relation": "contains",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "WorkspaceDash.qml",
+   "source_location": "L154",
    "weight": 1.0
   },
   {
@@ -7398,7 +8897,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L139",
+   "source_location": "L164",
    "weight": 1.0
   },
   {
@@ -7409,7 +8908,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L147",
+   "source_location": "L172",
    "weight": 1.0
   },
   {
@@ -7420,7 +8919,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L152",
+   "source_location": "L177",
    "weight": 1.0
   },
   {
@@ -7431,7 +8930,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L163",
+   "source_location": "L188",
    "weight": 1.0
   },
   {
@@ -7442,7 +8941,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L170",
+   "source_location": "L195",
    "weight": 1.0
   },
   {
@@ -7453,7 +8952,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L174",
+   "source_location": "L199",
    "weight": 1.0
   },
   {
@@ -7464,7 +8963,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L179",
+   "source_location": "L204",
    "weight": 1.0
   },
   {
@@ -7475,7 +8974,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L183",
+   "source_location": "L208",
    "weight": 1.0
   },
   {
@@ -7486,7 +8985,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L187",
+   "source_location": "L212",
    "weight": 1.0
   },
   {
@@ -7497,7 +8996,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L191",
+   "source_location": "L216",
    "weight": 1.0
   },
   {
@@ -7508,7 +9007,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L197",
+   "source_location": "L222",
    "weight": 1.0
   },
   {
@@ -7519,7 +9018,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L217",
+   "source_location": "L242",
    "weight": 1.0
   },
   {
@@ -7530,7 +9029,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L223",
+   "source_location": "L248",
    "weight": 1.0
   },
   {
@@ -7541,7 +9040,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L229",
+   "source_location": "L254",
    "weight": 1.0
   },
   {
@@ -7552,7 +9051,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L234",
+   "source_location": "L259",
    "weight": 1.0
   },
   {
@@ -7563,7 +9062,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L242",
+   "source_location": "L267",
    "weight": 1.0
   },
   {
@@ -7574,7 +9073,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L250",
+   "source_location": "L275",
    "weight": 1.0
   },
   {
@@ -7585,7 +9084,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L256",
+   "source_location": "L281",
    "weight": 1.0
   },
   {
@@ -7596,7 +9095,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L266",
+   "source_location": "L291",
    "weight": 1.0
   },
   {
@@ -7607,7 +9106,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L274",
+   "source_location": "L299",
    "weight": 1.0
   },
   {
@@ -7618,7 +9117,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L289",
+   "source_location": "L314",
    "weight": 1.0
   },
   {
@@ -7629,7 +9128,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L298",
+   "source_location": "L323",
    "weight": 1.0
   },
   {
@@ -7640,7 +9139,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L316",
+   "source_location": "L341",
    "weight": 1.0
   },
   {
@@ -7651,7 +9150,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L322",
+   "source_location": "L347",
    "weight": 1.0
   },
   {
@@ -7662,7 +9161,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L346",
+   "source_location": "L371",
    "weight": 1.0
   },
   {
@@ -7673,7 +9172,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L353",
+   "source_location": "L378",
    "weight": 1.0
   },
   {
@@ -7684,7 +9183,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L361",
+   "source_location": "L386",
    "weight": 1.0
   },
   {
@@ -7695,7 +9194,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L368",
+   "source_location": "L393",
    "weight": 1.0
   },
   {
@@ -7706,7 +9205,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L375",
+   "source_location": "L400",
    "weight": 1.0
   },
   {
@@ -7717,7 +9216,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L380",
+   "source_location": "L405",
    "weight": 1.0
   },
   {
@@ -7728,7 +9227,7 @@
    "confidence": "EXTRACTED",
    "confidence_score": 1.0,
    "source_file": "WorkspaceDash.qml",
-   "source_location": "L75",
+   "source_location": "L90",
    "weight": 1.0
   },
   {
@@ -7985,6 +9484,17 @@
    "weight": 1.0
   },
   {
+   "source": "scripts_graph_labels_rationale_2",
+   "target": "scripts_graph_labels",
+   "relation": "rationale_for",
+   "_origin": "ast",
+   "confidence": "EXTRACTED",
+   "confidence_score": 1.0,
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L2",
+   "weight": 1.0
+  },
+  {
    "source": "readme",
    "target": "roadmap",
    "relation": "references",
@@ -7996,15 +9506,39 @@
    "weight": 1.0
   },
   {
-   "source": "workspacedaemon_templateapps",
-   "target": "workspacedaemon_normalizeapp",
+   "source": "logic_planlaunch",
+   "target": "logic_normalizeapp",
    "relation": "indirect_call",
    "_origin": "ast",
    "confidence": "INFERRED",
    "confidence_score": 0.85,
    "context": "argument",
-   "source_file": "WorkspaceDaemon.qml",
-   "source_location": "L210",
+   "source_file": "Logic.js",
+   "source_location": "L116",
+   "weight": 1.0
+  },
+  {
+   "source": "logic_templateapps",
+   "target": "logic_normalizeapp",
+   "relation": "indirect_call",
+   "_origin": "ast",
+   "confidence": "INFERRED",
+   "confidence_score": 0.85,
+   "context": "argument",
+   "source_file": "Logic.js",
+   "source_location": "L48",
+   "weight": 1.0
+  },
+  {
+   "source": "scripts_graph_labels_main",
+   "target": "scripts_graph_labels_main_fix",
+   "relation": "indirect_call",
+   "_origin": "ast",
+   "confidence": "INFERRED",
+   "confidence_score": 0.85,
+   "context": "argument",
+   "source_file": "scripts/graph-labels.py",
+   "source_location": "L114",
    "weight": 1.0
   },
   {
@@ -8040,7 +9574,7 @@
    "confidence_score": 0.95,
    "context": "activate",
    "source_file": "ROADMAP.md",
-   "source_location": "L67",
+   "source_location": "L84",
    "weight": 1.0
   },
   {
@@ -8124,7 +9658,7 @@
    "confidence_score": 0.95,
    "context": "pullStills",
    "source_file": "README.md",
-   "source_location": "L180",
+   "source_location": "L204",
    "weight": 1.0
   },
   {
@@ -8148,7 +9682,7 @@
    "confidence_score": 0.95,
    "context": "refreshLive",
    "source_file": "README.md",
-   "source_location": "L180",
+   "source_location": "L204",
    "weight": 1.0
   },
   {
@@ -8160,7 +9694,19 @@
    "confidence_score": 0.95,
    "context": "reload",
    "source_file": "README.md",
-   "source_location": "L180",
+   "source_location": "L204",
+   "weight": 1.0
+  },
+  {
+   "source": "readme_ipc",
+   "target": "workspacedaemon_restoreworkspaces",
+   "relation": "references",
+   "_origin": "ast",
+   "confidence": "INFERRED",
+   "confidence_score": 0.95,
+   "context": "restoreWorkspaces",
+   "source_file": "README.md",
+   "source_location": "L197",
    "weight": 1.0
   },
   {
@@ -8172,7 +9718,7 @@
    "confidence_score": 0.95,
    "context": "state",
    "source_file": "README.md",
-   "source_location": "L178",
+   "source_location": "L202",
    "weight": 1.0
   },
   {
@@ -8184,10 +9730,34 @@
    "confidence_score": 0.95,
    "context": "syncIcons",
    "source_file": "README.md",
-   "source_location": "L179",
+   "source_location": "L203",
+   "weight": 1.0
+  },
+  {
+   "source": "readme_ipc",
+   "target": "workspacedaemon_undoclose",
+   "relation": "references",
+   "_origin": "ast",
+   "confidence": "INFERRED",
+   "confidence_score": 0.95,
+   "context": "undoClose",
+   "source_file": "README.md",
+   "source_location": "L196",
+   "weight": 1.0
+  },
+  {
+   "source": "readme_undo_restore_share",
+   "target": "workspacedaemon_undoclose",
+   "relation": "references",
+   "_origin": "ast",
+   "confidence": "INFERRED",
+   "confidence_score": 0.95,
+   "context": "undoClose",
+   "source_file": "README.md",
+   "source_location": "L144",
    "weight": 1.0
   }
  ],
  "hyperedges": [],
- "built_at_commit": "57ac83427c81760213d463a21ac57f3ef70a568c"
+ "built_at_commit": "b3b08b31117f3561bb3d7e47afc325364aff35ac"
 }
