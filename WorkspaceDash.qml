@@ -663,6 +663,13 @@ DashTabComponent {
                                     }
                                 }
 
+                                Local.EmojiPalette {
+                                    width: parent.width
+                                    visible: liveCard.editing
+                                    current: root.liveDraftEmoji
+                                    onPicked: emoji => root.liveDraftEmoji = emoji
+                                }
+
                                 // close confirm strip
                                 Row {
                                     width: parent.width

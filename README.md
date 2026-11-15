@@ -117,7 +117,9 @@ guessing. Turn it off in settings if you would rather handle that yourself.
 ## The dash
 
 **Live** — one card per workspace: emoji, name, output, window count, a mini-map
-of the real layout, and **Focus**, **Save…**, **Rename**, **Close**. Click any
+of the real layout, and **Focus**, **Save…**, **Rename**, **Close**. Rename takes a
+name plus an emoji; a small palette offers the usual suspects and the text field
+takes anything else. Click any
 window in a mini-map to focus it. Cards can collapse to a single line if you keep
 many workspaces.
 

@@ -5,3 +5,6 @@ graphify-out/*
 !graphify-out/graph.json
 !graphify-out/graph.html
 !graphify-out/GRAPH_REPORT.md
+
+# template backups written by the daemon
+templates.json.bak

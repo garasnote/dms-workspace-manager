@@ -149,11 +149,12 @@ if grep -nE 'console\.log\(' ./*.qml >/tmp/ci-console.txt 2>/dev/null; then
 else
   ok "no console.log in QML"
 fi
-if grep -n '\[wsm\]' ./*.qml >/tmp/ci-wsm.txt 2>/dev/null; then
+# catches [wsm] and every variant of it ([wsmdbg], [wsm.trace], ...)
+if grep -nE '\[wsm' ./*.qml >/tmp/ci-wsm.txt 2>/dev/null; then
   bad "development debug tags left in QML:"
   sed 's/^/    /' /tmp/ci-wsm.txt
 else
-  ok "no [wsm] debug tags"
+  ok "no [wsm...] debug tags"
 fi
 
 if grep -rn 'TODO\|FIXME\|XXX' ./*.qml >/tmp/ci-todo.txt 2>/dev/null; then

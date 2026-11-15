@@ -29,6 +29,21 @@ If your workspaces look wrong, that is what this stage is for.
   side effect on shared state and deserves a way to say "not now".
 - No logic tests. CI checks syntax and manifests, not behaviour.
 
+### Progress against beta (landed early)
+
+- [x] **Launch pre-flight** — each app's command is resolved before spawning.
+      `Opened 1 app for "JobApp" — not found: ghost` instead of a cheerful count.
+- [x] **Crash-safe template writes** — write to `templates.json.tmp`, keep one
+      `.bak`, then rename.
+- [x] **Serialised launches** — a second `activate` during a launch reports
+      `already launching` instead of racing over the clipboard and spawn queue.
+- [x] **Emoji for workspaces** — a 36-emoji palette under the rename field, plus
+      the free-text field for anything else. Deliberately not a searchable
+      thousand-emoji picker: naming a workspace is a two-second decision.
+
+Remaining beta items: multi-monitor, undo for Close, restart story, stills
+defaults, logic tests, compatibility matrix, registry listing.
+
 ---
 
 ## Beta — `0.2` → `0.9`
@@ -94,7 +109,7 @@ Ranked by value per unit of annoyance, not by novelty:
 | Hotkey snippets generated per template | low-medium — one click instead of copy-paste from docs | small | maybe |
 | Workspace-scoped window rules (generate niri kdl from a template) | medium, but risks becoming a window-rule configurator | large | only if asked repeatedly |
 | More bar widgets (per-template launcher buttons) | low — the launcher already does this | medium | no |
-| Animations, themes, emoji pickers | low | small | no |
+| A searchable thousand-emoji picker | low — a 36-emoji palette covers naming | small | shipped the palette instead |
 | i18n | unknown demand | medium | not until asked |
 
 **Explicit non-goals.** This is not a general app launcher (DMS has one), not a

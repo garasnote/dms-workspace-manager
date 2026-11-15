@@ -40,6 +40,7 @@ PluginComponent {
     property bool _stillBusy: false
     property int _stillSeq: 0
     property int _stillActive: 0
+    property bool _launchActive: false
 
     // Let the panel paint before forking a shell per window; captures compete with
     // the first frame otherwise, even though the measured open latency is dominated
@@ -151,7 +152,19 @@ PluginComponent {
         const payload = JSON.stringify({ version: 1, templates: list }, null, 2);
         // Guard the heredoc delimiter against content collisions.
         const safe = payload.split("\n").map(l => l === "WSM_EOF" ? "WSM_EOF " : l).join("\n");
-        const script = `mkdir -p "$(dirname '${templatesPath}')" && cat > '${templatesPath}' <<'WSM_EOF'\n${safe}\nWSM_EOF`;
+        const file = templatesPath;
+        // Write beside the target and rename, so a crash mid-write cannot leave a
+        // truncated templates.json behind. Keep one previous copy.
+        const script = [
+            "dir=$(dirname '" + file + "')",
+            "mkdir -p \"$dir\"",
+            "tmp='" + file + ".tmp.$$'",
+            "cat > \"$tmp\" <<'WSM_EOF'",
+            safe,
+            "WSM_EOF",
+            "[ -s '" + file + "' ] && cp -f '" + file + "' '" + file + ".bak'",
+            "mv -f \"$tmp\" '" + file + "'"
+        ].join("\n");
 
         Proc.runCommand("wsm.writeTemplates", ["sh", "-c", script], (stdout, exitCode) => {
             if (exitCode !== 0) {
@@ -421,6 +434,34 @@ PluginComponent {
                 console.warn("[workspaceManager] spawn failed:", cmd, out);
             if (done)
                 done(code === 0);
+        });
+    }
+
+    // Resolve the first token of every app through the shell before spawning, so a
+    // typo'd command shows up as "not found" instead of a cheerful app count.
+    function preflightApps(apps, done) {
+        const list = apps || [];
+        if (list.length === 0) {
+            done([], []);
+            return;
+        }
+        const progs = list.map(a => {
+            const first = String(a.cmd || "").trim().split(/\s+/)[0];
+            return basename(first).replace(/'/g, "'\\''");
+        });
+        const script = progs.map(p => "command -v '" + p + "' >/dev/null 2>&1 && echo FOUND || echo MISSING").join("; ");
+        Proc.runCommand("wsm.preflight." + (++_niriSeq), ["sh", "-c", script], (out, code) => {
+            const lines = String(out || "").trim().split("\n");
+            const runnable = [];
+            const missing = [];
+            list.forEach((a, i) => {
+                const verdict = (lines[i] || "").trim();
+                if (code === 0 && verdict === "FOUND")
+                    runnable.push(a);
+                else
+                    missing.push(a);
+            });
+            done(runnable, missing);
         });
     }
 
@@ -975,10 +1016,24 @@ PluginComponent {
     // Launch only what is missing on the target workspace. `force` re-runs every
     // app in the template (app entries with alwaysLaunch still always run).
     function launchTemplate(name, force, done) {
+        // Two activate presses 200 ms apart used to run two capture/spawn passes
+        // over the same workspace and the same clipboard.
+        if (_launchActive) {
+            publishStatus(`"${name}" is already launching`);
+            if (done)
+                done(false, "a launch is already in progress");
+            return;
+        }
+        _launchActive = true;
+        const finish = (ok, err) => {
+            _launchActive = false;
+            if (done)
+                done(ok, err);
+        };
+
         const t = findTemplateByName(name);
         if (!t) {
-            if (done)
-                done(false, `template not found: ${name}`);
+            finish(false, `template not found: ${name}`);
             return;
         }
 
@@ -1015,25 +1070,32 @@ PluginComponent {
 
             const spawnNow = () => {
                 const before = (NiriService.windows || []).map(w => w.id);
-                spawnApps(apps, () => {
-                    let summary;
-                    if (apps.length === 0 && moves.length === 0)
-                        summary = `"${name}" is already complete`;
-                    else if (apps.length === 0)
-                        summary = `Moved ${moves.length} window${moves.length === 1 ? "" : "s"} onto "${name}"`;
-                    else if (moves.length === 0)
-                        summary = `Opened ${apps.length} app${apps.length === 1 ? "" : "s"} for "${name}"`;
-                    else
-                        summary = `Opened ${apps.length} and moved ${moves.length} window${moves.length === 1 ? "" : "s"} for "${name}"`;
-                    publishStatus(summary);
-                    publishLive();
-                    // window rules aside, niri places a window on whatever
-                    // workspace is focused when it maps, so sweep strays back.
-                    if (wsName && (apps.length > 0 || moves.length > 0)
-                        && (pluginData && pluginData.rehomeWindows) !== false)
-                        scheduleRehome(apps, wsName, before, null);
-                    if (done)
-                        done(true, summary);
+                preflightApps(apps, (runnable, missing) => {
+                    spawnApps(runnable, () => {
+                        const missingNames = missing.map(a => a.name || a.cmd);
+                        let summary;
+                        if (runnable.length === 0 && moves.length === 0 && missing.length === 0)
+                            summary = `"${name}" is already complete`;
+                        else if (runnable.length === 0 && moves.length === 0)
+                            summary = `Nothing to launch for "${name}": ${missingNames.join(", ")} not found in PATH`;
+                        else if (runnable.length === 0)
+                            summary = `Moved ${moves.length} window${moves.length === 1 ? "" : "s"} onto "${name}"`
+                                + (missing.length ? ` — not found: ${missingNames.join(", ")}` : "");
+                        else if (moves.length === 0)
+                            summary = `Opened ${runnable.length} app${runnable.length === 1 ? "" : "s"} for "${name}"`
+                                + (missing.length ? ` — not found: ${missingNames.join(", ")}` : "");
+                        else
+                            summary = `Opened ${runnable.length} and moved ${moves.length} window${moves.length === 1 ? "" : "s"} for "${name}"`
+                                + (missing.length ? ` — not found: ${missingNames.join(", ")}` : "");
+                        publishStatus(summary);
+                        publishLive();
+                        // window rules aside, niri places a window on whatever
+                        // workspace is focused when it maps, so sweep strays back.
+                        if (wsName && (runnable.length > 0 || moves.length > 0)
+                            && (pluginData && pluginData.rehomeWindows) !== false)
+                            scheduleRehome(runnable, wsName, before, null);
+                        finish(true, summary);
+                    });
                 });
             };
 
@@ -1055,8 +1117,7 @@ PluginComponent {
                             return;
                         }
                         publishStatus(`Could not focus "${wsName}" — nothing was launched`);
-                        if (done)
-                            done(false, `could not focus "${wsName}"; no apps were launched`);
+                        finish(false, `could not focus "${wsName}"; no apps were launched`);
                     });
                 });
             };
@@ -1069,8 +1130,7 @@ PluginComponent {
             createWorkspace(wsName, emoji, (ok, err) => {
                 if (!ok) {
                     publishStatus(err || "Could not create the workspace");
-                    if (done)
-                        done(false, err || "could not create workspace");
+                    finish(false, err || "could not create workspace");
                     return;
                 }
                 focusVerified();
