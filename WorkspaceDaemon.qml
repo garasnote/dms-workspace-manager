@@ -51,8 +51,17 @@ PluginComponent {
     // and the emoji map in DMS settings then points at workspaces that no longer
     // exist. If the user opted in, recreate the named workspaces declared by
     // templates once the compositor is reachable, and re-apply their emoji.
+    // Startup restore, in two deliberately separate halves.
+    //
+    // Creating workspaces has to work by focusing them (niri has no "create
+    // without showing it"), so it moves the view around and leaves you parked on
+    // the last one. That is fine when you ask for it and wrong as a default, hence:
+    // labels are quiet and on, creation is explicit and off, and either way the
+    // focus goes back where it was.
     function restoreWorkspaces() {
-        if (!pluginData || pluginData.restoreWorkspaces !== true)
+        const wantCreate = pluginData && pluginData.restoreCreateWorkspaces === true;
+        const wantLabels = !pluginData || pluginData.restoreLabels !== false;
+        if (!wantCreate && !wantLabels)
             return;
 
         const names = [];
@@ -64,33 +73,53 @@ PluginComponent {
         if (names.length === 0)
             return;
 
+        // remember where the user actually is, so restore does not steal it
+        const startedOn = focusedWorkspaceRecord();
+        const startedName = startedOn ? (startedOn.name || "") : "";
+        const startedId = startedOn ? startedOn.id : null;
+
         const failed = [];
         let created = 0;
         let relabelled = 0;
         const pending = names.slice();
 
+        const returnFocus = () => {
+            if (created === 0)
+                return;
+            if (startedName)
+                focusByName(startedName, () => {});
+            else if (startedId !== null)
+                focusById(startedId, () => {});
+        };
+
+        const report = () => {
+            const parts = [];
+            if (created > 0)
+                parts.push(`created ${created} workspace${created === 1 ? "" : "s"}`);
+            if (relabelled > 0)
+                parts.push(`re-applied ${relabelled} label${relabelled === 1 ? "" : "s"}`);
+            if (failed.length > 0)
+                parts.push(`could not create ${failed.join(", ")}`);
+            if (parts.length > 0) {
+                publishStatus(parts.join(" · "));
+                publishLive();
+            }
+        };
+
         const next = () => {
             const name = pending.shift();
             if (name === undefined) {
-                const parts = [];
-                if (created > 0)
-                    parts.push(`restored ${created} workspace${created === 1 ? "" : "s"}`);
-                if (relabelled > 0)
-                    parts.push(`re-applied ${relabelled} label${relabelled === 1 ? "" : "s"}`);
-                if (failed.length > 0)
-                    parts.push(`could not create ${failed.join(", ")}`);
-                if (parts.length > 0) {
-                    publishStatus(parts.join(" · "));
-                    publishLive();
-                }
+                returnFocus();
+                report();
                 return;
             }
 
             const template = templates.find(x => String(x.workspace || "").trim() === name);
             const emoji = emojiForWorkspace(name) || (template && template.emoji) || "";
+            const existing = findWorkspaceByName(name);
 
-            if (findWorkspaceByName(name)) {
-                if (emoji) {
+            if (existing) {
+                if (wantLabels && emoji) {
                     applyWorkspaceIcon(name, emoji);
                     relabelled++;
                 }
@@ -98,10 +127,14 @@ PluginComponent {
                 return;
             }
 
-            // A create can lose a race with the compositor while the session is
-            // still coming up, so give each name two goes before reporting it.
+            if (!wantCreate) {
+                // label-only mode: nothing to do for a workspace that is not there
+                next();
+                return;
+            }
+
             const attempt = (tries) => {
-                createWorkspace(name, emoji, (ok, err) => {
+                createWorkspace(name, emoji, (ok) => {
                     if (ok) {
                         created++;
                         next();
@@ -1819,16 +1852,41 @@ PluginComponent {
         }
 
         function syncIcons(): string {
-            let n = 0;
+            // Apply the templates' emoji, then drop glyph entries whose workspace
+            // no longer exists. Without the prune the bar keeps a map entry for
+            // every workspace that was ever named — including ones deleted on
+            // purpose — and a re-created name would inherit a stale glyph.
+            let applied = 0;
             for (const t of root.templates) {
                 const wsName = (t.workspace || t.name || "").trim();
                 if (wsName && t.emoji) {
                     root.applyWorkspaceIcon(wsName, t.emoji);
-                    n++;
+                    applied++;
                 }
             }
+
+            const live = {};
+            for (const ws of (NiriService.allWorkspaces || [])) {
+                if (ws.name)
+                    live[ws.name] = true;
+            }
+            const declared = {};
+            for (const t of root.templates)
+                declared[(t.workspace || t.name || "").trim()] = true;
+
+            let pruned = 0;
+            if (typeof SettingsData !== "undefined" && SettingsData.removeWorkspaceNameIcon) {
+                const known = SettingsData.workspaceNameIcons || {};
+                for (const name in known) {
+                    if (!live[name] && !declared[name]) {
+                        SettingsData.removeWorkspaceNameIcon(name);
+                        pruned++;
+                    }
+                }
+            }
+
             root.publishLive();
-            return "OK: applied " + n + " workspace icons";
+            return "OK: applied " + applied + " icons, pruned " + pruned + " stale";
         }
 
         function showNames(on: string): string {

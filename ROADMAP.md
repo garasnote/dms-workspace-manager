@@ -47,9 +47,11 @@ If your workspaces look wrong, that is what this stage is for.
 
 - [x] **Undo for Close** — the closed workspace's name, emoji and windows are kept
       for ten minutes; Undo recreates it and restarts what was there.
-- [x] **Restart story** — opt-in setting recreates the workspaces named by
-      templates when the shell starts, and re-applies their emoji (two attempts per
-      name, because a create can lose a race with a starting compositor).
+- [x] **Restart story** — split in two after using it: labels are re-applied
+      quietly at startup (creates nothing), while *recreating* workspaces is a
+      separate opt-in that also returns focus to where you were. Creating them
+      unasked meant every boot walked the view through a row of empty named
+      workspaces and parked you on the last one.
 - [x] **Multi-monitor** — a template can name an `output`; creation focuses that
       monitor first and waits until niri confirms it. Verified against a real
       second output.

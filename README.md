@@ -142,10 +142,14 @@ closest equivalent.
 - **Undo close** — closing a workspace keeps its name, emoji and window list for
   ten minutes; the dash offers **Undo close** and the daemon exposes
   `undoClose`.
-- **Recreate workspaces at startup** — a setting. Workspace names live in the
-  compositor and vanish with it; with this on, every workspace named by a template
-  is recreated (empty) when the shell starts and its emoji is re-applied. Apps are
-  not started — that is what keybindings are for.
+- **Labels at startup** — workspaces' names live in the compositor, the emoji in
+  the bar does not. On start the plugin re-applies the label of any workspace that
+  exists. It never creates anything, so startup stays quiet.
+- **Recreating workspaces at startup** is a *separate*, off-by-default setting.
+  niri can only create a workspace by focusing it, so enabling it walks the view
+  through the new empty workspaces and then returns focus to where you were. It is
+  rarely worth it: pressing a template's keybinding creates and names its
+  workspace on demand.
 - **Export / import** — `/tmp/workspace-manager-templates.json` via the buttons in
   the Templates pane, or `exportTemplates <path>` / `importTemplates <path>`.
   Import replaces templates with the same name and appends the rest, so sharing a
@@ -172,7 +176,8 @@ the tiles fall back to app icons with no clipboard involvement at all.
 | Fix up windows after a launch | on | move misplaced windows, adopt windows from apps that will not start twice |
 | Window stills | on | real pictures in the mini-map, cached ten minutes |
 | Show empty workspaces | off | niri keeps empty filler workspaces; this shows them |
-| Recreate named workspaces at startup | off | re-create workspaces declared by templates after a restart |
+| Re-apply workspace labels at startup | on | set the emoji for workspaces that exist; creates nothing |
+| Recreate declared workspaces at startup | off | create the workspaces templates declare, then return focus |
 | Window stills cache | 10 min | how long a captured picture stays fresh |
 | Window stills per batch | 16 | cap on captures per panel open |
 | Compact rows | off | one line per workspace instead of the full preview |

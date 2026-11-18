@@ -22,29 +22,17 @@ PluginSettings {
     }
 
     ToggleSetting {
-        settingKey: "restoreWorkspaces"
-        label: "Recreate named workspaces at startup"
-        description: "Workspace names live in the compositor and disappear when niri restarts, which leaves the emoji in the bar pointing at nothing. With this on, every workspace named by a template is recreated (empty) when the shell starts, and labels are re-applied. Apps are not started — use a keybinding for that."
+        settingKey: "restoreLabels"
+        label: "Re-apply workspace labels at startup"
+        description: "Workspace names live in the compositor; the emoji the bar shows for them does not. This quietly re-applies the label of any workspace that exists when the shell starts. It never creates anything."
+        defaultValue: true
+    }
+
+    ToggleSetting {
+        settingKey: "restoreCreateWorkspaces"
+        label: "Recreate declared workspaces at startup"
+        description: "Also create the workspaces your templates declare, empty, so they exist before you launch anything. niri can only create a workspace by focusing it, so the view moves through them and then returns to where you were. Off by default: pressing the template's keybinding creates and names its workspace on demand anyway."
         defaultValue: false
-    }
-
-    SliderSetting {
-        settingKey: "stillsTtlMinutes"
-        label: "Window stills cache (minutes)"
-        description: "How long a captured window picture stays fresh. Opening the panel after this expires captures one fresh batch."
-        defaultValue: 10
-        minimum: 1
-        maximum: 120
-        unit: " min"
-    }
-
-    SliderSetting {
-        settingKey: "stillsMaxWindows"
-        label: "Window stills per batch"
-        description: "Upper bound on how many windows get captured when the panel opens, so a 40-window session does not borrow the clipboard 40 times in a row."
-        defaultValue: 16
-        minimum: 4
-        maximum: 64
     }
 
     ToggleSetting {
